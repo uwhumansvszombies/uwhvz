@@ -104,6 +104,6 @@ venv.bak/
 .mypy_cache/
 
 .vscode
-uwhvz/db.sqlite3
-uwhvz/static/**/*.css
-uwhvz/static/**/*.css.map
+tmp
+static/**/*.css
+static/**/*.css.map
