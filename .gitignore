@@ -105,5 +105,3 @@ venv.bak/
 
 .vscode
 tmp
-static/**/*.css
-static/**/*.css.map
