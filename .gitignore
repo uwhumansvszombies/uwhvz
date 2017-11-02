@@ -105,3 +105,5 @@ venv.bak/
 
 .vscode
 uwhvz/db.sqlite3
+uwhvz/static/**/*.css
+uwhvz/static/**/*.css.map
