@@ -1,8 +1,22 @@
+{% load sass_tags %}
+
 <html>
     <head>
         <title>{% block title %}{% endblock %}</title>
+        <link href="{% sass_src 'scss/style.scss' %}" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        {% block content %}{% endblock %}
+        <div>
+            <ul>
+                <li><a href="{% url 'index' %}">Humans Vs Zombies</a></li>
+                {% if user.is_authenticated %}
+                    <li style="float: right"><a href="{% url 'logout' %}">Logout</a></li>
+                    <li style="float: right"><a>Welcome, {% firstof user.get_short_name user.get_username %}</a></li>
+                {% else %}
+                    <li style="float: right"><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div style="height: 100%">{% block content %}{% endblock %}</div>
     </body>
 </html>
