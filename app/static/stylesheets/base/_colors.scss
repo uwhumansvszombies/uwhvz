@@ -1,0 +1,53 @@
+////
+/// Site color palette lives here.
+/// @group utilities
+////
+
+$color-palette-data: (
+  'charcoal': (
+    'light': #484e53,
+    'base': #292d2f,
+    'dark': #181b1e
+  ),
+
+  'sky': (
+    'lightest': #fdfdfd,
+    'lighter': #f8f8f8,
+    'light': #dbdbdb,
+    'base': #bfbfbf,
+    'dark': #737373
+  ),
+
+  'ink': (
+    'lightest': #8b9198,
+    'lighter': #515867,
+    'light': #273240,
+    'base': #14181f
+  ),
+
+  'black': (
+    'base': #000
+  ),
+
+  'white': (
+    'base': #fff
+  )
+);
+
+///
+/// Returns a color given the associated name.
+/// @param {String} $hue - the basic color family.
+/// @param {String} $variant [base] - the brightness of the hue. Defaults to 'base'.
+/// @return {Color} - the desired color.
+
+@function color($hue, $variant: 'base') {
+  $color-spectrum: if(map-has-key($color-palette-data, $hue), map-get($color-palette-data, $hue), null);
+
+  @if $color-spectrum {
+    @if map-has-key($color-spectrum, $variant) {
+      @return map-get($color-spectrum, $variant);
+    }
+  }
+
+  @error "Unknown `#{$hue}/#{$variant}` in the color palette.";
+}

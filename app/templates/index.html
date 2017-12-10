@@ -1,9 +1,14 @@
 {% extends "base.html" %}
+{% load sass_tags %}
 
 {% block title %}Index{% endblock %}
 
+{% block styles %}
+  <link href="{% sass_src 'stylesheets/style.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block content %}
-<div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center;">
-    <h1>Humans vs Zombies</h1>
+<div>
+  <h1>Humans vs Zombies</h1>
 </div>
 {% endblock %}

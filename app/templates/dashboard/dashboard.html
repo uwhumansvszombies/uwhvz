@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load sass_tags %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block styles %}
+  <link href="{% sass_src 'stylesheets/style.scss' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+  <header class="context-bar">
+    <h1 class="">Humans vs Zombies</h1>
+    <a href="#">Log out</a>
+  </header>
+  <nav class="navigation navigation--sidebar">
+    <ul>
+    <li>
+        <a href="">Report a Stun/Tag</a>
+      </li>
+      <li>
+        <a href="">Moderator Controls</a>
+      </li>
+    </ul>
+  </nav>
+  <main>
+    <p>Hello</p>
+  </main>
+{% endblock %}

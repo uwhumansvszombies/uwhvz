@@ -1,0 +1,168 @@
+////
+/// All variable, function, and mixin declarations for typography live here.
+/// @group typography, @group utilities
+////
+
+///
+/// Variable: font weights
+/// Syntax: $fw-[weight]
+
+$fw-light: 300;
+$fw-regular: 400;
+
+
+$font-family-data: (
+  'default': #{ "-apple-system, 'BlinkMacSystemFont', 'San Francisco', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif" },
+  'body': #{ "'Roboto', 'Helvetica Neue', sans-serif" },
+  'heading': #{ "'Roboto Condensed', 'Roboto', 'Helvetica Neue', sans-serif" },
+  'title': #{ "'Komu', 'Roboto Condensed', 'Roboto', sans-serif" }
+);
+
+///
+/// Returns a font-family declaration given the associated name.
+/// @param {String} $variant [default] - the family name. Defaults to 'default'.
+/// @returns {String} - the desired font family declaration.
+
+@function ff($variant: 'default') {
+  @if map-has-key($font-family-data, $variant) {
+    @return map-get($font-family-data, $variant);
+  } @else {
+    @error "#{$variant} does not exist in font family data.";
+  }
+}
+
+
+$line-height-data: (
+  'tightest': 1,
+  'tighter': 1.1,
+  'tight': 1.25,
+  'base': 1.5,
+  'loose': 1.625
+);
+
+///
+/// Returns a line-height given the associated name.
+/// @param {String} $variant [base] - the variant name. Defaults to 'base'.
+/// @returns {Number} - the desired line-height.
+
+@function lh($variant: 'base') {
+  @if map-has-key($line-height-data, $variant) {
+    @return map-get($line-height-data, $variant);
+  } @else {
+    @error "#{$variant} does not exist in line height data.";
+  }
+}
+
+
+///
+/// Default text styles for extra small text
+
+@mixin type-xsmall {
+  font-size: 0.7rem;
+  line-height: lh('loose');
+
+  @media (min-width: breakpoint('xl')) {
+    font-size: 0.775rem;
+  }
+
+  @media (min-width: breakpoint('xxl')) {
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: breakpoint('xxxl')) {
+    font-size: 0.9375rem;
+  }
+}
+
+@mixin type-small {
+  font-size: 0.875rem;
+  line-height: lh('loose');
+
+  @media (min-width: breakpoint('xl')) {
+    font-size: 0.9375rem;
+  }
+  
+  @media (min-width: breakpoint('xxl')) {
+    font-size: 1rem;
+  }
+
+  @media (min-width: breakpoint('xxxl')) {
+    font-size: 1.125rem;
+  }
+}
+
+///
+/// Default body typography styles
+
+@mixin type-body {
+  font-size: 0.95rem;
+  line-height: lh('loose');
+
+  @media (min-width: breakpoint('xs')) {
+    font-size: 1rem;
+  }
+
+  @media (min-width: breakpoint('xl')) {
+    font-size: 1.125rem;
+  }
+
+  @media (min-width: breakpoint('xxl')) {
+    font-size: 1.25rem;
+  }
+}
+
+///
+/// Default heading styles
+
+@mixin type-heading {
+  font-size: 1.75rem;
+  line-height: lh('tight');
+
+  @media (min-width: breakpoint('sm')) {
+    font-size: 2rem;
+  }
+
+  @media (min-width: breakpoint('xl')) {
+    font-size: 2.25rem;
+  }
+
+  @media (min-width: breakpoint('xxl')) {
+    font-size: 2.5rem;
+  }
+}
+
+///
+/// Default title styles
+
+@mixin type-title {
+  padding: 0;
+  font-size: 0.9375rem;
+  line-height: lh('tightest');
+  letter-spacing: 0.0714em;
+  text-transform: uppercase;
+
+  @media (min-width: breakpoint('xs')) {
+    font-size: 1.125rem;
+  }
+}
+
+///
+/// Alternative type styles for block-styled links
+
+@mixin type-link-alt($border-breakpoint: true, $border-width-breakpoint: breakpoint('sm')) {
+  padding-bottom: 0.125em;
+  border-bottom: 1px solid transparent;
+  text-transform: uppercase;
+
+  @if $border-breakpoint {
+    @media (min-width: $border-width-breakpoint) {
+      border-bottom-width: 2px;
+    }
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    padding-bottom: 0.375em;
+  }
+}

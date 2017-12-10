@@ -1,0 +1,28 @@
+////
+/// Standard site breakpoint data live here.
+/// @group utilities
+////
+
+$breakpoints-data: (
+  'xxs': 400px,
+  'xs': 600px,
+  'sm': 768px,
+  'md': 950px,
+  'lg': 1024px,
+  'xl': 1180px,
+  'xxl': 1400px,
+  'xxxl': 1600px,
+);
+
+///
+/// Returns a breakpoint given the associated name.
+/// @param {String} $value [md] - the breakpoint name. Defaults to 'md'.
+/// @return {Number} - the desired breakpoint.
+
+@function breakpoint($value: 'md') {
+  @if map-has-key($breakpoints-data, $value) {
+    @return map-get($breakpoints-data, $value);
+  }
+
+  @error "Unknown `#{$value}` in the breakpoints data.";
+}

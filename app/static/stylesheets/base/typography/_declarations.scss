@@ -1,0 +1,68 @@
+////
+/// Font declarations for all fonts used throughout the site.
+/// @group typography, @group utilities
+////
+
+///
+/// Font declaration mixin.
+/// @param $name - name of the font and its corresponding file.
+/// @param $file-weight [regular] - filename of the font weight. Defaults to 'regular'.
+/// @param $font-weight [normal] - font weight. Defaults to normal.
+/// @param $font-style [normal] - font style. Defaults to normal.
+@mixin font-face($name, $file-weight: 'regular', $font-weight: normal, $font-style: normal) {
+  
+  $dest: '../fonts/#{$name}/#{$name}';
+
+  font-family: $name;
+  src: url('#{$dest}-#{$file-weight}.eot');
+  src: url('#{$dest}-#{$file-weight}.eot?#iefix') format('embedded-opentype'),
+        url('#{$dest}-#{$file-weight}.woff') format('woff'),
+        url('#{$dest}-#{$file-weight}.ttf') format('truetype');
+  font-weight: #{$font-weight};
+  font-style: #{$font-style};
+}
+
+///
+/// Font declarations for the Roboto font.
+/// @group fonts
+
+@font-face {
+  @include font-face('roboto', 'light', 300);
+}
+
+@font-face {
+  @include font-face('roboto', 'light-italic', 300, italic);
+}
+
+@font-face {
+  @include font-face('roboto');
+}
+
+@font-face {
+  @include font-face('roboto', 'italic', $font-style: italic);
+}
+
+///
+/// Font declarations for the Roboto Condensed font.
+/// @group fonts
+
+@font-face {
+  @include font-face('roboto-condensed', 'light', 300);
+}
+
+@font-face {
+  @include font-face('roboto-condensed', 'light-italic', 300, italic);
+}
+
+@font-face {
+  @include font-face('roboto-condensed', 'bold', 700);
+}
+
+
+///
+/// Font declarations for the Komu font.
+/// @group fonts
+
+@font-face {
+  @include font-face('komu');
+}

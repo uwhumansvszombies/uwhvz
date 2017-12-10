@@ -1,0 +1,24 @@
+////
+/// Standard HTML element styles live here.
+/// @group foundation
+////
+
+html {
+  font-family: ff();
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font: 100%/#{lh('loose')} ff('body');
+  word-wrap: break-word;
+  vertical-align: baseline;
+}
+
+ul {
+  display: block;
+}
