@@ -1,11 +1,20 @@
 ////
 /// Site color palette lives here.
-/// @group utilities
+/// @group utilities, @group foundation
 ////
 
 $color-palette-data: (
+  'orange': (
+    'base': #db6c00
+  ),
+
+  'green': (
+    'base': #73b700
+  ),
+
   'charcoal': (
-    'light': #484e53,
+    'lighter': #484e53,
+    'light': #35393c,
     'base': #292d2f,
     'dark': #181b1e
   ),
@@ -13,7 +22,7 @@ $color-palette-data: (
   'sky': (
     'lightest': #fdfdfd,
     'lighter': #f8f8f8,
-    'light': #dbdbdb,
+    'light': #dfdfdf,
     'base': #bfbfbf,
     'dark': #737373
   ),

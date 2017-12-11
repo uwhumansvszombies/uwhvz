@@ -20,7 +20,7 @@ h2 {
 /// Basic text elements
 
 p {
-  // @include type-body;
+  @include type-body;
 
   &:first-of-type {
     margin-top: 0;
@@ -29,16 +29,9 @@ p {
 
 
 a {
-  padding-bottom: 1px;
   display: inline;
-  border-bottom: 1px solid;
   font-weight: $fw-regular;
-  text-decoration: none;
   transition: $default-transition;
-
-  @media (min-width: breakpoint()) {
-    border-bottom-width: 2px;
-  }
 
   &:active,
   &:focus,
@@ -54,30 +47,11 @@ a {
 h1 {
   @include type-title;
 
-  @media (min-width: breakpoint('sm')) and (min-height: breakpoint('xxs')) {
-    display: none;
-  }
+  font-family: ff('title');
 }
 
 h2 {
   @include type-heading;
-
-  font-family: ff('title');
-}
-
-.type-headline {
-  @media (min-width: breakpoint('xl')) and (min-height: breakpoint('xxs')) {
-    display: block;
-  }
-
-  &__top {
-    position: relative;
-    left: 0;
-
-    @media (min-width: breakpoint('xl')) and (min-height: breakpoint('xxs')) {
-      left: -2em;
-    }
-  }
 }
 
 h3 {
@@ -91,21 +65,21 @@ h3 {
 
 .th--light {
   h1 {
-    color: color('ink', 'light');
+    color: color('ink');
   }
 
   h2 {
-    color: color('ink');
+    color: color('ink', 'light');
   }
 }
 
 
 .th--dark {
   h1 {
-    color: color('sky');
+    color: color('sky', 'light');
   }
 
   h2 {
-    color: color('sky', 'light');
+    color: color('sky');
   }
 }

@@ -1,0 +1,46 @@
+////
+///
+///
+////
+
+.site-header {
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-flow: row nowrap;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  background: color('charcoal', 'dark');
+  color: color('sky', 'lighter');
+  box-shadow: 0 2px 8px 2px rgba(31, 32, 32, 0.85);
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: inline-block;
+  }
+
+  li {
+    display: inline;
+  }
+
+  a {
+    display: inline-block;
+  }
+}
+
+.site-logo > a {
+  color: color('sky', 'light');
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.site-logo__img {
+  width: 30%;
+  max-height: 100%;
+  max-width: 100%;
+}

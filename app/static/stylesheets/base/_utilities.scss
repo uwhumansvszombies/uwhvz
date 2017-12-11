@@ -1,31 +1,8 @@
 ////
-/// All global variables live here.
+/// All utility variables & functions live here.
 /// @group utilities
 ////
-  
-////
-/// Default site element border-radii live here.
-/// @group utilities
-////
-
-$border-radius-data: (
-  'base': 4px
-);
-
-///
-/// Returns a border-radius value given the associated keyword.
-/// @param {String} $key [base] - the keyword. Defaults to 'base'.
-/// @returns {Integer} - the border radius value.
-
-@function radius($key: 'base') {
-  @if map-has-key($border-radius-data, $key){
-    @return map-get($border-radius-data, $key);
-  }
-
-  @error "Unknown `#{$key}` in border-radius data.";
-}
 
 ///
 /// transitions
 $default-transition: all 240ms ease-in-out;
-  
