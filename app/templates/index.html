@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load sass_tags %}
+{% load static %}
 
 {% block title %}Index{% endblock %}
 
@@ -7,8 +8,28 @@
   <link href="{% sass_src 'stylesheets/style.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
+{% block navigation %}
+<ul>
+  <li class="site-nav__item">
+      <a href="#news" class="site-nav__link site-nav__link--landing">Latest News</a>
+    </li>
+    <li class="site-nav__item">
+      <a href="#schedule" class="site-nav__link site-nav__link--landing">Weeklong Schedule</a>
+    </li>
+</ul>
+<a href="" class="btn btn--landing">Login</a>
+{% endblock %}
+
 {% block content %}
-<div>
-  <h1>Humans vs Zombies</h1>
-</div>
+<main class="th--dark">
+  <section class="ui-section nameplate">
+    <img src="{% static 'img/uwhvz-logo.png' %}" class="site-logo__img">
+  </section>
+  <section class="ui-section" id="news">
+    <h1>Latest News</h1>
+  </section>
+  <section class="ui-section" id="schedule">
+    <h1>Weeklong Schedule</h1>
+  </section>
+</main>
 {% endblock %}

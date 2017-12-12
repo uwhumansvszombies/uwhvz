@@ -7,22 +7,16 @@
   <link href="{% sass_src 'stylesheets/style.scss' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
+{% block navigation %}
+<ul>
+  {% if user.is_authenticated %}
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+    <li><a>Welcome, {% firstof user.get_short_name user.get_username %}</a></li>
+  {% else %}
+    <li><a href="{% url 'login' %}">Login</a></li>
+  {% endif %}
+</ul>
+{% endblock %}
+
 {% block content %}
-  <header class="context-bar">
-    <h1 class="">Humans vs Zombies</h1>
-    <a href="#">Log out</a>
-  </header>
-  <nav class="navigation navigation--sidebar">
-    <ul>
-    <li>
-        <a href="">Report a Stun/Tag</a>
-      </li>
-      <li>
-        <a href="">Moderator Controls</a>
-      </li>
-    </ul>
-  </nav>
-  <main>
-    <p>Hello</p>
-  </main>
 {% endblock %}

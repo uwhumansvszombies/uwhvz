@@ -4,21 +4,18 @@
   <head>
     <title>{% block title %}{% endblock %}</title>
     <link rel="preload" as="font" type="font/woff" href="{% static 'fonts/komu/komu-regular.woff' %}" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="{% static 'fonts/komu/komu-regular.woff2' %}" crossorigin>
+    <link rel="preload" as="font" type="font/woff" href="{% static 'fonts/roboto/roboto-regular.woff' %}" crossorigin>
+    <link rel="preload" as="font" type="font/woff" href="{% static 'fonts/roboto-condensed/roboto-condensed-regular.woff' %}" crossorigin>
     {% block styles %}{% endblock %}
   </head>
   <body>
-    <nav class="navigation">
-      <ul>
-        <li><a href="{% url 'index' %}">Humans Vs Zombies</a></li>
-        {% if user.is_authenticated %}
-          <li><a href="{% url 'logout' %}">Logout</a></li>
-          <li><a>Welcome, {% firstof user.get_short_name user.get_username %}</a></li>
-        {% else %}
-          <li><a href="{% url 'login' %}">Login</a></li>
-        {% endif %}
-      </ul>
-    </div>
-    <main>{% block content %}{% endblock %}</main>
+    <header class="site-header">
+      <h1 class="site-logo">
+        <a href="{% url 'index' %}">UWaterloo <span class="text-highlight--human">Humans</span> vs <span class="text-highlight--zombie">Zombies</span></a></h1>
+      <nav class="site-navigation">
+        {% block navigation %}{% endblock %}
+      </nav>
+    </header>
+    {% block content %}{% endblock %}
   </body>
 </html>
