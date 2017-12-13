@@ -25,14 +25,14 @@
 
 ///
 /// Font declarations for the Roboto font.
-/// @group fonts
+/// @group fonts 
 
 @font-face {
-  @include font-face('roboto', 'light', 300);
+  @include font-face('roboto', $file-weight: 'light', $font-weight: 300);
 }
 
 @font-face {
-  @include font-face('roboto', 'lightitalic', 300, italic);
+  @include font-face('roboto', $file-weight: 'lightitalic', $font-weight: 300, $font-style: italic);
 }
 
 @font-face {
@@ -40,15 +40,15 @@
 }
 
 @font-face {
-  @include font-face('roboto', 'italic', $font-style: italic);
+  @include font-face('roboto', $file-weight: 'italic', $font-style: italic);
 }
 
 @font-face {
-  @include font-face('roboto', 'bold', 700);
+  @include font-face('roboto', $file-weight: 'bold', $font-weight: 700);
 }
 
 @font-face {
-  @include font-face('roboto', 'bolditalic', 700, italic);
+  @include font-face('roboto', $file-weight: 'bolditalic', $font-weight: 700, $font-style: italic);
 }
 
 
@@ -57,11 +57,11 @@
 /// @group fonts
 
 @font-face {
-  @include font-face('roboto-condensed', 'Roboto Condensed', 'light', 300);
+  @include font-face('roboto-condensed', 'Roboto Condensed', $file-weight: 'light', $font-weight: 300);
 }
 
 @font-face {
-  @include font-face('roboto-condensed', 'Roboto Condensed', 'lightitalic', 300, italic);
+  @include font-face('roboto-condensed', 'Roboto Condensed', $file-weight: 'lightitalic', $font-weight: 300, $font-style: italic);
 }
 
 @font-face {
@@ -73,11 +73,11 @@
 }
 
 @font-face {
-  @include font-face('roboto-condensed', 'Roboto Condensed', 'bold', 700);
+  @include font-face('roboto-condensed', 'Roboto Condensed', $file-weight: 'bold', $font-weight: 700);
 }
 
 @font-face {
-  @include font-face('roboto-condensed', 'Roboto Condensed', 'bolditalic', 700);
+  @include font-face('roboto-condensed', 'Roboto Condensed', $file-weight: 'bolditalic', $font-weight: 700);
 }
 
 
