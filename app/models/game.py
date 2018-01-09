@@ -13,7 +13,7 @@ class GameManager(models.Manager):
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.TextField(default="UW Weeklong")
+    name = models.CharField(default='UW HvZ Weeklong', max_length=100)
     is_active = models.BooleanField(default=False)
     is_started = models.BooleanField(default=False)
 
