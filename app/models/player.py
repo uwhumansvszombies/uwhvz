@@ -5,7 +5,7 @@ from django.db import models
 from enumfields import Enum, EnumField
 
 from .game import Game
-from .user import User
+from app.accounts import User
 
 
 class Role(Enum):
@@ -19,6 +19,9 @@ class Player(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     code = models.CharField(max_length=6, unique=True)
     role = EnumField(Role, max_length=1)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     def value(self, at):
         """

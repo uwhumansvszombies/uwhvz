@@ -102,6 +102,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'app.User'
+
+AUTHENTICATION_BACKENDS = (
+    'app.accounts.UserModelBackend',
+    'django.contrib.auth.backends.ModelBackend'
+)
+
 LOGIN_REDIRECT_URL = '/dashboard'
 LOGOUT_REDIRECT_URL = '/'
 

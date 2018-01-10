@@ -2,20 +2,8 @@ import uuid
 
 from django.db import models
 
+from .managers import TagManager
 from .player import Player
-
-
-class TagManager(models.Manager):
-    def create_tag(self, initiator, receiver, time_tagged, location, description):
-         # validate that this is a valid tag. I.e. initiator.role != receiver.role
-        tagged_at = time_tagged
-
-        tag = self.model(initiator=initiator,
-                         receiver=receiver,
-                         tagged_at=tagged_at,
-                         location=location,
-                         description=description)
-        return tag
 
 
 class Tag(models.Model):
@@ -24,12 +12,21 @@ class Tag(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     initiator = models.ForeignKey(
-        Player, on_delete=models.CASCADE, related_name='initiator_tags')
+        Player,
+        on_delete=models.CASCADE,
+        related_name='initiator_tags'
+    )
     receiver = models.ForeignKey(
-        Player, on_delete=models.CASCADE, related_name='receiver_tags')
+        Player,
+        on_delete=models.CASCADE,
+        related_name='receiver_tags'
+    )
     tagged_at = models.DateTimeField()
     location = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     tags = TagManager()
 
