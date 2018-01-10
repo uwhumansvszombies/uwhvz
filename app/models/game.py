@@ -2,18 +2,15 @@ import uuid
 
 from django.db import models
 
-
-class GameManager(models.Manager):
-    def create_game(self, name):
-        game = self.model(name=name)
-
-        game.save(using=self._db)
-        return game
+from .managers import GameManager
 
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(default='UW HvZ Weeklong', max_length=100)
+    name = models.CharField(max_length=100)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
     games = GameManager()
 
