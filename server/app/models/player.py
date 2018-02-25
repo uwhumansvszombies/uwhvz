@@ -4,20 +4,36 @@ from datetime import timedelta
 from django.db import models
 from enumfields import Enum, EnumField
 
-from app.accounts import User
+from .user import User
 from .game import Game
 
 
-class Player(models.Model):
-    class Role(Enum):
-        HUMAN = 'H'
-        ZOMBIE = 'Z'
+class PlayerManager(models.Manager):
+    def create_player(self, user):
+        code = ''.join(random.choices(
+            string.ascii_uppercase + string.digits, k=6))
 
+        # For set of all supply codes, each code must be unique
+        while self.filter(code=code):
+            code = ''.join(random.choices(
+                string.ascii_uppercase + string.digits, k=6))
+
+        player = self.model(user=user, code=code)
+        player.save(using=self._db)
+        return player
+
+
+class PlayerRole(Enum):
+    HUMAN = 'H'
+    ZOMBIE = 'Z'
+
+
+class Player(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     code = models.CharField(max_length=6, unique=True)
-    role = EnumField(enum=Role, max_length=1)
+    role = EnumField(enum=PlayerRole, max_length=1)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -27,7 +43,7 @@ class Player(models.Model):
         Point value of a Human/Zombie player.
         Humans are worth 5 points as a kill, Zombies have their own scoring.
         """
-        if self.role == Player.Role.HUMAN:
+        if self.role == PlayerRole.HUMAN:
             return 5
         eight_hours_ago = at - timedelta(hours=8)
         return max(0, 5 - self.receiver_tags

@@ -2,7 +2,12 @@ import uuid
 
 from django.db import models
 
-from .managers import GameManager
+
+class GameManager(models.Manager):
+    def create_game(self, name):
+        game = self.model(name=name)
+        game.save(using=self._db)
+        return game
 
 
 class Game(models.Model):

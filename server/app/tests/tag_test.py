@@ -3,8 +3,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from app.accounts import User
-from app.models import Game, Player, Tag
+from app.models import Game, Player, Tag, User
 
 
 class PlayerValueTest(TestCase):

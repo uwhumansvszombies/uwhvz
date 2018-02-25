@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from app.accounts import User
+from .user import User
 from .game import Game
 
 
