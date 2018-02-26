@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from app.accounts import User
-from app.models import Player, SupplyCode, Game, Tag
+from app.models import Player, SupplyCode, Game, Tag, User
 
 
 @admin.register(Player)
