@@ -1,11 +1,13 @@
+import random
+import string
 import uuid
 from datetime import timedelta
 
 from django.db import models
 from enumfields import Enum, EnumField
 
-from .user import User
 from .game import Game
+from .user import User
 
 
 class PlayerManager(models.Manager):
@@ -26,6 +28,7 @@ class PlayerManager(models.Manager):
 class PlayerRole(Enum):
     HUMAN = 'H'
     ZOMBIE = 'Z'
+    SPECTATOR = 'S'
 
 
 class Player(models.Model):
@@ -37,6 +40,8 @@ class Player(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    objects = PlayerManager()
 
     def value(self, at):
         """

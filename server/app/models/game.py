@@ -19,10 +19,5 @@ class Game(models.Model):
 
     objects = GameManager()
 
-    """
-    todo: figure out how to start the weeklong at midnight and
-    assign roles, assign roles, email players about what team they're on, etc.
-    """
-
     def __str__(self):
         return self.game_name

@@ -46,5 +46,4 @@ class Tag(models.Model):
     objects = TagManager()
 
     def __str__(self):
-        return f'{self.initiator} ({self.initiator.role}) --> ' + \
-               f'{self.receiver} ({self.receiver.role})'
+        return f'{self.initiator} ({self.initiator.role}) --> {self.receiver} ({self.receiver.role})'
