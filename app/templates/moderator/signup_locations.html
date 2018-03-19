@@ -1,0 +1,24 @@
+{% extends "moderator/moderator_base.html" %}
+
+{% block title %}Player List{% endblock %}
+
+{% block content %}
+<h3>Signup Locations</h3>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Location</th>
+        <th scope="col">Number of Signups</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for location in signup_locations %}
+    <tr>
+        <td>{{ location.location }}</td>
+        <td>{{ location.player_set.count }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
