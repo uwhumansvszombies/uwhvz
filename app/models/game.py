@@ -2,6 +2,8 @@ import uuid
 
 from django.db import models
 
+from .user import User
+
 
 class GameManager(models.Manager):
     def create_game(self, name):
@@ -12,7 +14,14 @@ class GameManager(models.Manager):
 
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    game_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+
+    started_on = models.DateTimeField(null=True)
+    started_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='started_games', null=True)
+
+    ended_on = models.DateTimeField(null=True)
+    ended_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ended_games', null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -20,4 +29,4 @@ class Game(models.Model):
     objects = GameManager()
 
     def __str__(self):
-        return self.game_name
+        return self.name
