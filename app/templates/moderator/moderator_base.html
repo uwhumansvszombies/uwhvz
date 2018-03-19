@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+        body {
+          font-size: .875rem;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 100; /* Behind the navbar */
+          padding: 0;
+          box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+
+        .sidebar-sticky {
+          position: -webkit-sticky;
+          position: sticky;
+          top: 48px; /* Height of navbar */
+          height: calc(100vh - 48px);
+          padding-top: .5rem;
+          overflow-x: hidden;
+          overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        }
+
+        .sidebar .nav-link {
+          font-weight: 500;
+          color: #666;
+        }
+
+        .sidebar .nav-link:hover {
+          color: #222;
+        }
+
+        .sidebar-heading {
+          font-size: .75rem;
+          text-transform: uppercase;
+        }
+
+        .navbar-brand {
+          padding-top: .75rem;
+          padding-bottom: .75rem;
+          font-size: 1rem;
+          background-color: rgba(0, 0, 0, .25);
+          box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+        }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark sticky-top flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'index' %}">UW Humans vs Zombies</a>
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                {% if user.is_authenticated %}
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'player list' %}">Player List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Add Player</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Signup Locations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Manage OZ List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Generate Supply Codes</a>
+                        </li>
+                    </ul>
+
+                    <!--<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">-->
+                        <!--<span>Saved reports</span>-->
+                    <!--</h6>-->
+
+                    <!--<ul class="nav flex-column mb-2">-->
+                        <!--</li>-->
+                        <!--<li class="nav-item">-->
+                            <!--<a class="nav-link" href="#">Another Section Item</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                </div>
+            </nav>
+
+            <main class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+</body>
+</html>

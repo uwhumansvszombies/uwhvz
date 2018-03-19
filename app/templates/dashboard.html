@@ -3,5 +3,7 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-    <h1>Index</h1>
+    <h1>Dashboard</h1>
+
+    <h2>Hello {{ request.user.username }}</h2>
 {% endblock %}
