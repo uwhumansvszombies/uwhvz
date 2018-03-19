@@ -1,4 +1,4 @@
 Django==2.0.2
 django-enumfields==0.9.0
 argon2-cffi==18.1.0
-
+django-sass-processor==0.5.8
