@@ -15,7 +15,6 @@ class GameManager(models.Manager):
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
-    is_active = models.BooleanField(default=False)
 
     started_on = models.DateTimeField(null=True)
     started_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='started_games', null=True)

@@ -5,6 +5,13 @@
 {% block content %}
 <h3>Add Player</h3>
 
+<form action="{% url 'add player' %}" method="post">
+    {% csrf_token %}
 
+    <label>Email</label>
+    <input type="email" name="email">
+
+    <input type="submit" value="Signup">
+</form>
 
 {% endblock %}

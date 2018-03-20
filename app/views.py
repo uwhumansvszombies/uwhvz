@@ -22,6 +22,8 @@ def player_list(request):
 
 @user_passes_test(is_moderator)
 def add_player(request):
+    if request.method == 'POST':
+        print("post!!!")
     return render(request, 'moderator/add_player.html')
 
 

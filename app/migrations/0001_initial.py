@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('username', models.CharField(error_messages={'unique': 'An account with that username already exists.'}, help_text='You need a username so we can identify you. Maximum 150 characters, containing any letters, numbers, periods (.), dashes (-), or underscores (_).', max_length=150, unique=True, validators=[app.models.user.UsernameValidator()])),
+                ('username', models.CharField(error_messages={'unique': 'An account with that username already exists.'}, help_text='You need a username so we can identify you. Maximum 150 characters, containing any letters, numbers, periods (.), dashes (-), or underscores (_).', max_length=150, unique=True, validators=[])),
                 ('first_name', models.CharField(max_length=100, verbose_name='First name')),
                 ('last_name', models.CharField(max_length=100, verbose_name='Last name')),
                 ('email', models.EmailField(error_messages={'unique': 'An account with that email address already exists.'}, help_text='Please enter a valid email address - we promise not to spam your inbox!', max_length=254, unique=True, verbose_name='email address')),
