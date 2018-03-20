@@ -1,0 +1,13 @@
+.ui-layout {
+  width: calc(100% - 7.5rem);
+  height: auto;
+  display: flex;
+  flex-flow: row wrap;
+  position: fixed;
+  top: 5rem;
+  left: 7.5rem;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  overflow-y: auto;
+}

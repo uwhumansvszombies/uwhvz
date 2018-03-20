@@ -1,0 +1,21 @@
+////
+/// Sitewide logo styles live here.
+/// @group components, @layout default
+////
+
+.logo {
+  width: 120px;
+}
+
+
+.th--light {
+  .logo--dark {
+
+  }
+}
+
+.th--light {
+  .logo--light {
+    display: none;
+  }
+}
