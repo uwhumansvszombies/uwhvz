@@ -40,6 +40,7 @@ class Player(models.Model):
     role = EnumField(enum=PlayerRole, max_length=1)
 
     signup_location = models.ForeignKey(SignupLocation, on_delete=models.CASCADE)
+    in_oz_pool = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
