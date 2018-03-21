@@ -27,6 +27,15 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(email, password, **extra_fields)
 
+    def create_staff(self, email=None, password=None, ** extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', False)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Staff must have is_staff=True.')
+
+        return self._create_user(email, password, **extra_fields)
+
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -52,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         _('email address'),
         unique=True,
-        help_text=_('Please enter a valid email address - we promise not to spam your inbox!'),
+        help_text=_('Please enter a valid email address.'),
         error_messages={
             'unique': _("An account with that email address already exists."),
         },
@@ -67,7 +76,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=True,
         help_text=_(
             'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
+            'Deselect this instead of deleting accounts.'
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
@@ -100,3 +109,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def is_moderator(self):
+        return True if self.groups.filter(name='Moderator').count() > 0 or self.is_superuser else False

@@ -1,0 +1,9 @@
+////
+/// Default card styles live here.
+/// @group components, @layout default
+////
+
+.ui-card {
+  background: color('sky', 'lightest');
+  box-shadow: 0 0 20px 4px rgba(color('sky'), 0.3);
+}

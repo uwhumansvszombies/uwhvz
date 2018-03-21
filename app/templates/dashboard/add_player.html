@@ -1,8 +1,11 @@
-{% extends "moderator/moderator_base.html" %}
+{% extends "dashboard/base.html" %}
 
 {% block title %}Add Player{% endblock %}
 
-{% block content %}
+{% block pagetitle %}Moderator Actions{% endblock %}
+{% block pagesubtitle %}Add Player{% endblock %}
+
+{% block subcontent %}
 <h3>Add Player</h3>
 
 <form action="{% url 'add player' %}" method="post">

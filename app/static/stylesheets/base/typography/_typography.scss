@@ -1,0 +1,119 @@
+////
+/// All default styles for standard typography elements live here.
+/// @group typography
+////
+
+p {
+  margin: 0 0 1em 0;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+h1,
+h2 {
+  // Chrome fix for extra font bolding
+  font-weight: $fw-regular;
+}
+
+
+///
+/// Basic text elements
+
+p {
+  @include type-body;
+}
+
+
+a {
+  font-weight: $fw-regular;
+  transition: $default-transition;
+
+  &:active,
+  &:focus,
+  &:hover {
+    transition: $default-transition;
+  }
+}
+
+
+///
+/// Headings
+
+h1 {
+  @include type-title;
+}
+
+h2 {
+  @include type-heading;
+
+  font-family: ff('heading');
+}
+
+h3 {
+  @include type-title;
+  
+  font-family: ff('body');
+}
+
+h4 {
+  @include type-body;
+
+  margin-bottom: 1em;
+  font-family: ff('body');
+  font-style: italic;
+}
+
+
+.th--light {
+  h1 {
+    color: color('ink', 'light');
+  }
+
+  h2 {
+    color: color('ink');
+  }
+
+  p > a {
+    color: color('red');
+    border-bottom-color: color('red');
+  }
+
+  .type-headline--highlight {
+    color: color('red');
+  }
+
+  .nameplate__heading > .type-headline--highlight {
+    @media (min-width: breakpoint('sm')) {
+      color: color('ink');
+    }
+  }
+}
+
+
+.th--dark {
+  h1 {
+    color: color('sky');
+  }
+
+  h2 {
+    color: color('sky', 'light');
+  }
+
+  p > a {
+    color: color('gold');
+    border-bottom-color: color('gold');
+  }
+
+  .type-headline--highlight {
+    color: color('gold');
+  }
+
+  .nameplate__heading > .type-headline--highlight {
+    @media (min-width: breakpoint('sm')) {
+      color: color('sky', 'light');
+    }
+  }
+}
