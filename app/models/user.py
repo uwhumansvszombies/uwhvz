@@ -1,6 +1,6 @@
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
@@ -25,15 +25,6 @@ class UserManager(BaseUserManager):
     def create_user(self, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
-
-    def create_staff(self, email=None, password=None, ** extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', False)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Staff must have is_staff=True.')
-
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
@@ -111,4 +102,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def is_moderator(self):
-        return True if self.groups.filter(name='Moderator').count() > 0 or self.is_superuser else False
+        return self.groups.filter(name='Moderator').exists() or self.is_superuser

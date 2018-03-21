@@ -1,8 +1,8 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from .models import Player, SignupLocation
-from .util import is_moderator
+from .util import moderator_required
 
 
 def index(request):
@@ -14,20 +14,20 @@ def dashboard(request):
     return render(request, 'dashboard/index.html')
 
 
-@user_passes_test(is_moderator)
+@moderator_required
 def player_list(request):
     players = Player.objects.all()
     return render(request, 'dashboard/player_list.html', {'players': players})
 
 
-@user_passes_test(is_moderator)
+@moderator_required
 def add_player(request):
     if request.method == 'POST':
         print("post!!!")
     return render(request, 'dashboard/add_player.html')
 
 
-@user_passes_test(is_moderator)
+@moderator_required
 def signup_locations(request):
     locations = SignupLocation.objects.all()
     return render(request, 'dashboard/signup_locations.html', {'signup_locations': locations})

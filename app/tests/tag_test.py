@@ -9,8 +9,8 @@ from app.models import Game, Player, Tag, User, PlayerRole, SignupLocation
 class PlayerValueTest(TestCase):
     def setUp(self):
         game = Game.objects.create_game(name='Test Game 2018')
-        tiff = User.objects.create_user(username='tiff', email='tiff@email.com')
-        tris = User.objects.create_user(username='tris', email='tris@email.com')
+        tiff = User.objects.create_user(email='tiff@email.com')
+        tris = User.objects.create_user(email='tris@email.com')
         signup_location = SignupLocation.objects.create_signup_location('SLC')
         self.tiff = Player.objects.create_player(tiff, game, PlayerRole.HUMAN, signup_location)
         self.tris = Player.objects.create_player(tris, game, PlayerRole.ZOMBIE, signup_location)
@@ -54,8 +54,8 @@ class PlayerValueTest(TestCase):
 class PlayerScoreTest(TestCase):
     def setUp(self):
         game = Game.objects.create_game(name='Test Game 2018')
-        tiff = User.objects.create_user(username='tiff', email='tiff@email.com')
-        tris = User.objects.create_user(username='tris', email='tris@email.com')
+        tiff = User.objects.create_user(email='tiff@email.com')
+        tris = User.objects.create_user(email='tris@email.com')
         signup_location = SignupLocation.objects.create_signup_location('SLC')
         self.tiff = Player.objects.create_player(tiff, game, PlayerRole.HUMAN, signup_location)
         self.tris = Player.objects.create_player(tris, game, PlayerRole.ZOMBIE, signup_location)
