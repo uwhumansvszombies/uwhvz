@@ -9,19 +9,19 @@
 <h3>Signup Locations</h3>
 
 <table>
-    <thead>
-    <tr>
-        <th>Location</th>
-        <th>Number of Signups</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for location in signup_locations %}
-    <tr>
-        <td>{{ location.location }}</td>
-        <td>{{ location.player_set.count }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
+  <thead>
+  <tr>
+    <th>Location</th>
+    <th>Number of Signups</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for location in signup_locations %}
+  <tr>
+    <td>{{ location.location }}</td>
+    <td>{{ location.player_set.count }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
 </table>
 {% endblock %}

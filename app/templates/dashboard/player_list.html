@@ -9,25 +9,25 @@
 <h3>Player List</h3>
 
 <table>
-    <thead>
-    <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for player in players %}
-    <tr>
-        <td>{{ player.user.first_name }}</td>
-        <td>{{ player.user.last_name }}</td>
-        <td>{{ player.user.username }}</td>
-        <td>{{ player.user.email }}</td>
-        <td>{{ player.role }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
+  <thead>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Username</th>
+    <th>Email</th>
+    <th>Role</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for player in players %}
+  <tr>
+    <td>{{ player.user.first_name }}</td>
+    <td>{{ player.user.last_name }}</td>
+    <td>{{ player.user.username }}</td>
+    <td>{{ player.user.email }}</td>
+    <td>{{ player.role }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
 </table>
 {% endblock %}
