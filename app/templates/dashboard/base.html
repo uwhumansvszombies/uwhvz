@@ -1,7 +1,7 @@
-{% extends "base.html" %} 
-{% load static %} {% load sass_tags %} {% load svg %} 
+{% extends "base.html" %}
+{% load static %} {% load sass_tags %} {% load svg %}
 
-{% block title %}Index{% endblock %} 
+{% block title %}Index{% endblock %}
 
 {% block content %}
 <nav class="ui-context-bar">
@@ -43,10 +43,18 @@
       <a href="{% url 'signup locations' %}">Signup Locations</a>
     </li>
     <li>
-      <a href="#">Manage OZ List</a>
+      <a href="#">Manage OZ Pool</a>
     </li>
     <li>
       <a href="#">Generate Supply Codes</a>
+    </li>
+  </ul>
+  {% endif %}
+
+  {% if user.is_staff %}
+  <ul class="ui-sidebar-nav">
+    <li>
+      <a href="/admin">Django Admin</a>
     </li>
   </ul>
   {% endif %}

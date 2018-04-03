@@ -9,12 +9,11 @@
 <h3>Add Player</h3>
 
 <form action="{% url 'add player' %}" method="post">
-    {% csrf_token %}
+  {% csrf_token %}
 
-    <label>Email</label>
-    <input type="email" name="email">
-
-    <input type="submit" value="Signup">
+  <label>Email</label>
+  <input type="email" name="email">
+  <input type="submit" value="Signup">
 </form>
 
 {% endblock %}
