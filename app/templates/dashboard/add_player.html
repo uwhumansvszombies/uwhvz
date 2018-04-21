@@ -1,19 +1,17 @@
 {% extends "dashboard/base.html" %}
 
 {% block title %}Add Player{% endblock %}
-
 {% block pagetitle %}Moderator Actions{% endblock %}
 {% block pagesubtitle %}Add Player{% endblock %}
 
 {% block subcontent %}
-<h3>Add Player</h3>
-
-<form action="{% url 'add player' %}" method="post">
-  {% csrf_token %}
-
-  <label>Email</label>
-  <input type="email" name="email">
-  <input type="submit" value="Signup">
-</form>
-
+<div class="card">
+  <h3 class="card-header m-0">Add Player</h3>
+  <form action="{% url 'add player' %}" method="post" class="card-body">
+    {% csrf_token %}
+    <label>Email</label>
+    <input type="email" name="email">
+    <input type="submit" value="Signup" class="btn btn-primary">
+  </form>
+</div>
 {% endblock %}

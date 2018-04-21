@@ -4,5 +4,31 @@
 {% block pagesubtitle %}Welcome, {{ request.user.get_full_name }}{% endblock %}
 
 {% block subcontent %}
-test
+<div class="card">
+  <h1 class="card-header">Report A Tag</h1>
+    <form action="{% url 'report tag' %}" method="post" class="card-body">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Other Player's Code</label>
+        <input class="form-control" type="input" name="playerCode">
+      </div>
+      <div class="form-group">
+        <label>Estimated Date</label>
+        <input class="form-control" type="date">
+      </div>
+      <div class="form-group">
+        <label>Estimated Time</label>
+        <input class="form-control" type="time">
+      </div>
+      <div class="form-group">
+          <label>Estimated Location</label>
+          <input class="form-control" type="input" placeholder="e.g. MC first floor, outside DC, etc.">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" rows="3"></textarea>
+      </div>
+      <input class="form-control" type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
 {% endblock %}

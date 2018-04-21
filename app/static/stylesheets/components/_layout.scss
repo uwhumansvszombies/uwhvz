@@ -3,11 +3,19 @@
   height: auto;
   display: flex;
   flex-flow: row wrap;
-  position: fixed;
-  top: 5rem;
-  left: 7.5rem;
   justify-content: center;
   align-content: center;
   align-items: center;
+  position: relative;
+  top: 5rem;
+  left: 7.5rem;
   overflow-y: auto;
+}
+
+.ui-layout__item {
+  width: 80%;
+  height: auto;
+  padding: 2em 0;
+  margin: 0 auto;
+  position: relative;
 }

@@ -4,22 +4,17 @@
 ////
 
 ///
-/// Font declaration mixin.
+/// Font declaration mixin for external fonts.
 /// @param $name - name of the font and its corresponding file.
 /// @param $file-weight [regular] - filename of the font weight. Defaults to 'regular'.
 /// @param $font-weight [normal] - font weight. Defaults to normal.
 /// @param $font-style [normal] - font style. Defaults to normal.
-@mixin font-face($name, $file-weight: 'regular', $font-weight: normal, $font-style: normal) {
-
-  $dest: '/static/fonts/#{$name}/#{$name}';
-
-  font-family: $name;
-  src: url('#{$dest}-#{$file-weight}.eot');
-  src: url('#{$dest}-#{$file-weight}.eot?#iefix') format('embedded-opentype'),
-       url('#{$dest}-#{$file-weight}.woff') format('woff'),
-       url('#{$dest}-#{$file-weight}.ttf') format('truetype');
-  font-weight: #{$font-weight};
-  font-style: #{$font-style};
+@mixin font-face($name, $url) {
+    font-family: $name;
+    src: url('#{$url}.eot');
+    src: url('#{$url}.eot?#iefix') format('embedded-opentype'),
+         url('#{$url}.woff') format('woff'),
+         url('#{$url}.ttf') format('truetype');
 }
 
 ///
