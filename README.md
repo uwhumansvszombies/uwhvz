@@ -9,7 +9,6 @@ New UW HvZ website, built on Django. Front-end uses custom styling via Sass/SCSS
 To start a local server do the following:
 ```bash
 git clone git@github.com:tiffanynwyeung/uwhvz.git
-cd uwhvz/server
 python3.6 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
