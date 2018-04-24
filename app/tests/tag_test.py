@@ -74,3 +74,6 @@ class PlayerScoreTest(TestCase):
             Tag.objects.create(initiator=self.tiff, receiver=self.tris,
                                tagged_at=now - timedelta(hours=3 - i))
         self.assertEqual(self.tiff.score(), 5 + 4 + 3)
+
+    def test_failing(self):
+        self.assertEqual(1, -1)
