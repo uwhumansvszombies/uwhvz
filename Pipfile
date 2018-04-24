@@ -9,6 +9,7 @@ django-inline-svg = "*"
 django-sass-processor = "*"
 libsass = "*"
 Django = "*"
+argon2-cffi = "*"
 
 [dev-packages]
 
