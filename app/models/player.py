@@ -7,12 +7,11 @@ from django.db import models
 from enumfields import Enum, EnumField
 
 from .game import Game
-from .signup_locations import SignupLocation
 from .user import User
 
 
 class PlayerManager(models.Manager):
-    def create_player(self, user, game, role, signup_location):
+    def create_player(self, user, game, role):
         code = ''.join(random.choices(
             string.ascii_uppercase + string.digits, k=6))
 
@@ -21,8 +20,8 @@ class PlayerManager(models.Manager):
             code = ''.join(random.choices(
                 string.ascii_uppercase + string.digits, k=6))
 
-        player = self.model(user=user, game=game, code=code, role=role, signup_location=signup_location)
-        player.save(using=self._db)
+        player = self.model(user=user, game=game, code=code, role=role)
+        player.save()
         return player
 
 
@@ -39,7 +38,6 @@ class Player(models.Model):
     code = models.CharField(max_length=6, unique=True)
     role = EnumField(enum=PlayerRole, max_length=1)
 
-    signup_location = models.ForeignKey(SignupLocation, on_delete=models.CASCADE)
     in_oz_pool = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -9,7 +9,23 @@
   <h3 class="card-header m-0">Add Player</h3>
   <form action="{% url 'add player' %}" method="post" class="card-body">
     {% csrf_token %}
-    <label>Email</label>
+    <label>Game:</label>
+    <select name="game">
+      {% for game in games %}
+        {% if not game.ended_on %}
+          <option value="{{ game.name }}">{{ game.name }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+
+    <label>Location:</label>
+    <select name="signup_location">
+      {% for location in signup_locations %}
+        <option value="{{ location.location }}">{{ location.location }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Email:</label>
     <input type="email" name="email">
     <input type="submit" value="Signup" class="btn btn-primary">
   </form>

@@ -18,7 +18,7 @@ class SupplyCodeManager(models.Manager):
                 string.ascii_uppercase + string.digits, k=6))
 
         supply_code = self.model(code=code)
-        supply_code.save(using=self._db)
+        supply_code.save()
         return supply_code
 
 
