@@ -17,7 +17,7 @@ class TagManager(models.Manager):
             location=location,
             description=description,
         )
-        tag.save(using=self._db)
+        tag.save()
         return tag
 
 

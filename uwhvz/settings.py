@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SITE_URL = 'http://127.0.0.1:8000'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -66,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app.util.site_url',
             ],
         },
     },

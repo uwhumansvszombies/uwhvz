@@ -6,7 +6,7 @@ from django.db import models
 class SignupLocationManager(models.Manager):
     def create_signup_location(self, location):
         signup_location = self.model(location=location)
-        signup_location.save(using=self._db)
+        signup_location.save()
         return signup_location
 
 
