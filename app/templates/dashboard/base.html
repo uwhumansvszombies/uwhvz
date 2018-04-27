@@ -34,13 +34,13 @@
   {% if user.is_moderator %}
   <ul class="ui-sidebar-nav">
     <li>
-      <a href="{% url 'player list' %}">Player List</a>
+      <a href="{% url 'player_list' %}">Player List</a>
     </li>
     <li>
-      <a href="{% url 'add player' %}">Add Player</a>
+      <a href="{% url 'add_player' %}">Add Player</a>
     </li>
     <li>
-      <a href="{% url 'signup locations' %}">Signup Locations</a>
+      <a href="{% url 'signup_locations' %}">Signup Locations</a>
     </li>
     <li>
       <a href="#">Manage OZ Pool</a>
@@ -54,7 +54,7 @@
   {% if user.is_staff %}
   <ul class="ui-sidebar-nav">
     <li>
-      <a href="/admin">Django Admin</a>
+      <a href="{% url 'admin:index' %}">Django Admin</a>
     </li>
   </ul>
   {% endif %}

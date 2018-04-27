@@ -6,7 +6,7 @@
 {% block subcontent %}
 <div class="card">
   <h1 class="card-header">Report A Tag</h1>
-    <form action="{% url 'report tag' %}" method="post" class="card-body">
+    <form action="{% url 'report_tag' %}" method="post" class="card-body">
       {% csrf_token %}
       <div class="form-group">
         <label>Other Player's Code</label>

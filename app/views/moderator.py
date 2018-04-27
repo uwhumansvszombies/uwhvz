@@ -1,34 +1,7 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from .models import Player, SignupLocation, SignupToken, Game
-from .util import moderator_required, send_mail_template, check_argument
-
-
-def index(request):
-    return render(request, 'index.html')
-
-
-def signup(request, signup_token):
-    token = SignupToken.objects.get(pk=signup_token)
-
-
-@login_required
-def dashboard(request):
-    return render(request, 'dashboard/index.html')
-
-
-@login_required
-def report_tag(request):
-    if request.method == 'POST':
-        # Find the player using the code from the request
-        # Do the tag using TagManager
-        # Report any errors if there are any
-        messages.add_message(request, messages.ERROR, "There was an error reporting a tag:")
-        # Report success if it worked!
-
-    return render(request, 'dashboard/index.html')
+from app.models import Player, SignupLocation, SignupToken, Game
+from app.util import moderator_required, send_mail_template, check_argument
 
 
 @moderator_required
