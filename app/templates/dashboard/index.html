@@ -1,13 +1,13 @@
 {% extends "dashboard/base.html" %}
 
 {% block pagetitle %}Dashboard{% endblock %}
-{% block pagesubtitle %}Welcome, {{ request.user.get_full_name }}{% endblock %}
+{% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %}
 
 {% block subcontent %}
 <div class="card">
   <h1 class="card-header">Report A Tag</h1>
-    <form action="{% url 'report_tag' %}" method="post" class="card-body">
-      {% csrf_token %}
+    <form action="{{ url('report_tag') }}" method="post" class="card-body">
+      {{ csrf_input }}
       <div class="form-group">
         <label>Other Player's Code</label>
         <input class="form-control" type="input" name="playerCode">

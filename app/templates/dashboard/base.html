@@ -1,13 +1,12 @@
 {% extends "base.html" %}
-{% load static %} {% load sass_tags %} {% load svg %}
 
 {% block title %}Index{% endblock %}
 
 {% block content %}
 <nav class="ui-context-bar">
   <div class="ui-context-bar__panel">
-    <a href="{% url 'dashboard' %}">
-      {% svg 'site-logo-dark' %} {% svg 'site-logo-light' %}
+    <a href="{{ url('dashboard') }}">
+      {{ svg('site-logo-dark') }} {{ svg('site-logo-light') }}
     </a>
   </div>
   <div class="ui-context-bar__panel" id="contextbar-title">
@@ -18,9 +17,9 @@
   </div>
   <div class="ui-context-bar__panel">
     {% if user.is_authenticated %}
-    <a class="ui-context-bar__link" href="{% url 'logout' %}">Logout</a>
+    <a class="ui-context-bar__link" href="{{ url('logout') }}">Logout</a>
     {% else %}
-    <a class="ui-context-bar__link" href="{% url 'login' %}">Login</a>
+    <a class="ui-context-bar__link" href="{{ url('login') }}">Login</a>
     {% endif %}
   </div>
 </nav>
@@ -28,19 +27,19 @@
 <nav class="ui-sidebar">
   <ul class="ui-sidebar-nav">
     <li>
-      <a href="{% url 'dashboard' %}">Dashboard</a>
+      <a href="{{ url('dashboard') }}">Dashboard</a>
     </li>
   </ul>
   {% if user.is_moderator %}
   <ul class="ui-sidebar-nav">
     <li>
-      <a href="{% url 'player_list' %}">Player List</a>
+      <a href="{{ url('player_list') }}">Player List</a>
     </li>
     <li>
-      <a href="{% url 'add_player' %}">Add Player</a>
+      <a href="{{ url('add_player') }}">Add Player</a>
     </li>
     <li>
-      <a href="{% url 'signup_locations' %}">Signup Locations</a>
+      <a href="{{ url('signup_locations') }}">Signup Locations</a>
     </li>
     <li>
       <a href="#">Manage OZ Pool</a>
@@ -54,7 +53,7 @@
   {% if user.is_staff %}
   <ul class="ui-sidebar-nav">
     <li>
-      <a href="{% url 'admin:index' %}">Django Admin</a>
+      <a href="{{ url('admin:index') }}">Django Admin</a>
     </li>
   </ul>
   {% endif %}

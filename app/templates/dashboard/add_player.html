@@ -7,8 +7,8 @@
 {% block subcontent %}
 <div class="card">
   <h3 class="card-header m-0">Add Player</h3>
-  <form action="{% url 'add_player' %}" method="post" class="card-body">
-    {% csrf_token %}
+  <form action="{{ url('add_player') }}" method="post" class="card-body">
+    {{ csrf_input }}
     <label>Game:</label>
     <select name="game">
       {% for game in games %}
