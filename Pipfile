@@ -10,6 +10,7 @@ django-sass-processor = "*"
 libsass = "*"
 Django = "*"
 argon2-cffi = "*"
+jinja2 = "*"
 
 [dev-packages]
 

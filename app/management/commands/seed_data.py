@@ -82,7 +82,7 @@ class Command(BaseCommand):
         fall_game = Game.objects.create_game('Fall 2018')
 
         for i in range(0, 25):
-            Player.objects.create_player(users[i], spring_game, random.choice(roles), random.choice(signup_locations))
+            Player.objects.create_player(users[i], spring_game, random.choice(roles))
 
         for i in range(25, 50):
-            Player.objects.create_player(users[i], fall_game, random.choice(roles), random.choice(signup_locations))
+            Player.objects.create_player(users[i], fall_game, random.choice(roles))
