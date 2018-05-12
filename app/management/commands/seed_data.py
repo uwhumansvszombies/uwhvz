@@ -67,10 +67,10 @@ class Command(BaseCommand):
 
         roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, PlayerRole.SPECTATOR]
 
-        signup_locations = [SignupLocation.objects.create_signup_location('SLC'),
-                            SignupLocation.objects.create_signup_location('Online'),
-                            SignupLocation.objects.create_signup_location('EIT'),
-                            SignupLocation.objects.create_signup_location('DC')]
+        SignupLocation.objects.create_signup_location('SLC')
+        SignupLocation.objects.create_signup_location('Online')
+        SignupLocation.objects.create_signup_location('EIT')
+        SignupLocation.objects.create_signup_location('DC')
 
         users = []
         for name in names:

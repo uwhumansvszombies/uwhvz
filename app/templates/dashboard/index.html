@@ -1,34 +1,52 @@
+{% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
 {% block pagetitle %}Dashboard{% endblock %}
 {% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %}
 
 {% block subcontent %}
-<div class="card">
-  <h1 class="card-header">Report A Tag</h1>
+
+<div class="ui-layout--dashboard">
+  <div class="ui-layout--dashboard__info">
+    {{ card('My Code', player.code) }}
+    {{ card('My Score', player.score()) }}
+    {{ card('Team', player.role) }}
+    {{ card('Team Score', team_score) }}
+  </div>
+
+  {% call card('Report Tag') %}
     <form action="{{ url('report_tag') }}" method="post" class="card-body">
       {{ csrf_input }}
-      <div class="form-group">
-        <label>Other Player's Code</label>
-        <input class="form-control" type="input" name="playerCode">
+      <div class="ui-form-group">
+        <label class="ui-input--label">Other Player's Code</label>
+        <input class="ui-input" type="text" name="playerCode" placeholder="e.g. A1B2C3">
       </div>
-      <div class="form-group">
-        <label>Estimated Date</label>
-        <input class="form-control" type="date">
+      <div class="ui-form-group">
+        <label class="ui-input--label">Date of Tag</label>
+        <input class="ui-input" type="date">
       </div>
-      <div class="form-group">
-        <label>Estimated Time</label>
-        <input class="form-control" type="time">
+      <div class="ui-form-group">
+        <label class="ui-input--label">Time</label>
+        <input class="ui-input" type="time">
       </div>
-      <div class="form-group">
-          <label>Estimated Location</label>
-          <input class="form-control" type="input" placeholder="e.g. MC first floor, outside DC, etc.">
+      <div class="ui-form-group">
+        <label class="ui-input--label">Location (optional)</label>
+        <input class="ui-input" type="text" placeholder="e.g. RCH, DC Green">
       </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea class="form-control" rows="3"></textarea>
+      <div class="ui-form-group">
+        <label class="ui-input--label">Description (optional)</label>
+        <textarea class="ui-input" rows="3" placeholder="Tell us how you tagged the player..."></textarea>
       </div>
-      <input class="form-control" type="submit" value="Submit" class="btn btn-primary">
+      <div style="margin-top: 16px; width: 100%; display: flex; justify-content: center">
+        <input class="ui-button" type="submit" value="Submit">
+      </div>
     </form>
+  {% endcall %}
+
+  {% call card('Enter Supply Code', class='ui-layout--dashboard__supply') %}
+    <form action="#" method="post">
+      <input class="ui-input" type="text" placeholder="e.g. A1B2C3">
+    </form>
+  {% endcall %}
 </div>
 {% endblock %}

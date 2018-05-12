@@ -17,6 +17,7 @@
   justify-content: space-between;
   background: color('ink');
   z-index: 99;
+  box-shadow: 0 1px 4px 2px color('grey', 'dark');
 }
 
 .ui-context-bar__panel {
