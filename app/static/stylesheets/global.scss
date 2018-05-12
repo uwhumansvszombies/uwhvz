@@ -5,6 +5,7 @@
 
 @import 'base/normalize';
 @import 'base/foundation';
+@import 'base/theme';
 @import 'base/typography/typography';
 
 // Fonts
@@ -12,6 +13,9 @@
 
 // General Layout
 @import 'components/layout';
+@import 'components/card';
+@import 'components/input';
+@import 'components/button';
 
 // Navigation
 @import 'components/context-bar';

@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from app.models import Player
+
 
 def index(request):
     return render(request, 'index.html')
@@ -9,7 +11,9 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard/index.html')
+    player = request.user.player_set.get()
+    team_score = sum([p.score() for p in Player.objects.all()])
+    return render(request, 'dashboard/index.html', {'player': player, 'team_score': team_score})
 
 
 @login_required

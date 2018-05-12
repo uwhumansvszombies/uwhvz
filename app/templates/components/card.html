@@ -1,0 +1,10 @@
+{% macro card(title, subtitle=None, class='') -%}
+  <div class="ui-card {{ class }}">
+    <h1 class="ui-card__header">{{ title }}</h1>
+    {% if subtitle is none %}
+      {{ caller() }}
+    {% else %}
+      <p class="ui-card__subheader">{{ subtitle }}</p>
+    {% endif %}
+  </div>
+{%- endmacro %}

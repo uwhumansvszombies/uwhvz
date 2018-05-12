@@ -1,0 +1,29 @@
+.ui-form-group {
+    margin-top: 8px;
+    text-transform: uppercase;
+
+    &:first-of-type {
+        margin-top: 0px;
+    }
+}
+
+.ui-input--label {
+    color: rgba(43, 45, 45, 0.85);
+    font-size: 8px;
+}
+
+.ui-input {
+    color: rgba(17, 19, 19, 0.56);
+    font-size: 12px;
+    background: color('grey', 'meme');
+    border-radius: 3px;
+    border: none;
+    min-height: 32px;
+    width: 100%;
+    padding: 8px;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
+}
