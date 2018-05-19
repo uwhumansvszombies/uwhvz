@@ -63,7 +63,7 @@ class Command(BaseCommand):
         if User.objects.filter(email='root').exists():
             return
 
-        User.objects.create_superuser('root', 'toor', first_name='Super', last_name='User')
+        root = User.objects.create_superuser('root', 'toor', first_name='Super', last_name='User')
 
         roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, PlayerRole.SPECTATOR]
 
@@ -75,11 +75,12 @@ class Command(BaseCommand):
         users = []
         for name in names:
             first, last = name.split(' ')
-            user = User.objects.create_user(f'{first.lower()}@email.com', 'password', first_name=first, last_name=last)
+            user = User.objects.create_user(f'{first.lower()}@email.com', first_name=first, last_name=last)
             users.append(user)
 
         spring_game = Game.objects.create_game('Spring 2018')
         fall_game = Game.objects.create_game('Fall 2018')
+        Player.objects.create_player(root, spring_game, PlayerRole.SPECTATOR)
 
         for i in range(0, 25):
             Player.objects.create_player(users[i], spring_game, random.choice(roles))

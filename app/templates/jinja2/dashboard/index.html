@@ -19,23 +19,23 @@
       {{ csrf_input }}
       <div class="ui-form-group">
         <label class="ui-input--label">Other Player's Code</label>
-        <input class="ui-input" type="text" name="playerCode" placeholder="e.g. A1B2C3">
+        <input class="ui-input" type="text" name="player_code" placeholder="e.g. A1B2C3">
       </div>
       <div class="ui-form-group">
         <label class="ui-input--label">Date of Tag</label>
-        <input class="ui-input" type="date">
+        <input class="ui-input" type="date" name="date">
       </div>
       <div class="ui-form-group">
         <label class="ui-input--label">Time</label>
-        <input class="ui-input" type="time">
+        <input class="ui-input" type="time" name="time">
       </div>
       <div class="ui-form-group">
         <label class="ui-input--label">Location (optional)</label>
-        <input class="ui-input" type="text" placeholder="e.g. RCH, DC Green">
+        <input class="ui-input" type="text" name="location" placeholder="e.g. RCH, DC Green">
       </div>
       <div class="ui-form-group">
         <label class="ui-input--label">Description (optional)</label>
-        <textarea class="ui-input" rows="3" placeholder="Tell us how you tagged the player..."></textarea>
+        <textarea class="ui-input" rows="3" name="description" placeholder="Tell us how you tagged the player..."></textarea>
       </div>
       <div style="margin-top: 16px; width: 100%; display: flex; justify-content: center">
         <input class="ui-button" type="submit" value="Submit">

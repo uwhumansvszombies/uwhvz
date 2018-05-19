@@ -1,23 +1,29 @@
 import uuid
+from datetime import datetime
 
-from django.db import models
+from django.db import models, transaction
 
-from .player import Player
+from .player import Player, PlayerRole
 
 
 class TagManager(models.Manager):
-    def create_tag(self, initiator, receiver, tagged_at, location, description):
+    def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str):
         if initiator.role == receiver.role:
             raise ValueError('A tag must be between opposite teams')
+        if initiator.game != receiver.game:
+            raise ValueError('A tag must be between two players in the same game')
 
-        tag = self.model(
-            initiator=initiator,
-            receiver=receiver,
-            tagged_at=tagged_at,
-            location=location,
-            description=description,
-        )
-        tag.save()
+        with transaction.atomic():
+            tag = self.model(
+                initiator=initiator,
+                receiver=receiver,
+                tagged_at=tagged_at,
+                location=location,
+                description=description,
+            )
+            tag.save()
+            if receiver.role == PlayerRole.HUMAN:
+                receiver.kill()
         return tag
 
 
@@ -46,4 +52,6 @@ class Tag(models.Model):
     objects = TagManager()
 
     def __str__(self):
-        return f'{self.initiator} ({self.initiator.role}) --> {self.receiver} ({self.receiver.role})'
+        initiator = self.initiator
+        receiver = self.receiver
+        return f'{initiator} ({initiator.role}) --> {receiver} ({receiver.role}) at {self.tagged_at}'

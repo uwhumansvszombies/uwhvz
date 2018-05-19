@@ -1,32 +1,50 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import render, redirect
+from django.utils import timezone
 
-from app.models import SignupToken, User
-from app.util import check_argument
+from app.models import SignupToken, User, Game, Player, PlayerRole
+from app.util import require_post_parameters
 
 
 def signup(request, signup_token):
     token = SignupToken.objects.get(pk=signup_token)
-    if token.used_at:
-        return "You're already signed up!"
     if User.objects.filter(email=token.email).exists():
-        redirect('game_signup')
+        return redirect('game_signup')
     else:
-        redirect('user_signup')
+        return redirect('user_signup', signup_token=signup_token)
 
 
-def signup_user(request, signup_token):
+def user_signup(request, signup_token):
+    token = SignupToken.objects.get(pk=signup_token)
+    if token.used_at:
+        messages.add_message(request, messages.INFO, f'You\'ve already created an account using {token.email}.')
+        return redirect('dashboard')
+
     if request.method == 'POST':
-        _game = request.POST.get('game')
-        _location = request.POST.get('signup_location')
-        email = request.POST.get('email')
-        check_argument(request, _game, 'Game cannot be blank.')
-        check_argument(request, _location, 'Signup location cannot be blank.')
-        check_argument(request, email, 'Email cannot be blank.')
-        # Handle user creation and stuff
-        redirect('game_signup')
+        first_name, last_name, password = require_post_parameters(request, 'first_name', 'last_name', 'password')
+        with transaction.atomic():
+            User.objects.create_user(token.email, password, first_name=first_name, last_name=last_name)
+            token.used_at = timezone.now()
+            token.save()
 
-    return render(request, '???/signup_user.html')
+        user = authenticate(username=token.email, password=password)
+        login(request, user)
+        return redirect('game_signup')
+
+    return render(request, 'dashboard/user_signup.html', {'signup_token': signup_token})
 
 
-def signup_for_game(request):
-    pass
+@login_required
+def game_signup(request):
+    if request.method == 'POST':
+        game_id, = require_post_parameters(request, 'game')
+        in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
+        game = Game.objects.get(pk=game_id)
+        Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
+        return redirect('dashboard')
+
+    games = Game.objects.all()
+    return render(request, 'dashboard/game_signup.html', {'games': games})
