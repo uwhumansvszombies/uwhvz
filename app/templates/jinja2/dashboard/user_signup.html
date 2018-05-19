@@ -1,0 +1,29 @@
+{% from "components/card.html" import card %}
+{% extends "base.html" %}
+
+{% block title %}User Signup{% endblock %}
+
+{% block content %}
+<div style="display: flex; height: 100vh; align-items: center; justify-content: center;">
+  {% call card('Signup') %}
+  <form action="{{ url('user_signup', kwargs={'signup_token': signup_token}) }}" method="post" class="card-body">
+      {{ csrf_input }}
+      <div class="ui-form-group">
+        <label class="ui-input--label">First Name</label>
+        <input class="ui-input" type="text" name="first_name">
+      </div>
+      <div class="ui-form-group">
+        <label class="ui-input--label">Last Name</label>
+        <input class="ui-input" type="text" name="last_name">
+      </div>
+      <div class="ui-form-group">
+        <label class="ui-input--label">Password</label>
+        <input class="ui-input" type="password" name="password">
+      </div>
+      <div style="margin-top: 16px; width: 100%; display: flex; justify-content: center">
+        <input class="ui-button" type="submit" value="Submit">
+      </div>
+    </form>
+  {% endcall %}
+</div>
+{% endblock %}

@@ -60,8 +60,8 @@ ROOT_URLCONF = 'uwhvz.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [os.path.join(BASE_DIR, 'app', 'templates')],
-        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'app', 'templates', 'jinja2')],
+        'APP_DIRS': False,
         'OPTIONS': {
             'environment': 'uwhvz.jinja2.environment',
             'extensions': ['sass_processor.jinja2.ext.SassSrc'],

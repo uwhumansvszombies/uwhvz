@@ -101,5 +101,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
+    @property
     def is_moderator(self):
         return self.groups.filter(name='Moderator').exists() or self.is_superuser
+
+    def player(self, game):
+        return self.player_set.get(game=game, active=True)

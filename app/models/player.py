@@ -3,7 +3,7 @@ import string
 import uuid
 from datetime import timedelta
 
-from django.db import models
+from django.db import transaction, models, DatabaseError
 from enumfields import Enum, EnumField
 
 from .game import Game
@@ -11,16 +11,18 @@ from .user import User
 
 
 class PlayerManager(models.Manager):
-    def create_player(self, user, game, role):
-        code = ''.join(random.choices(
-            string.ascii_uppercase + string.digits, k=6))
+    def create_player(self, user, game, role, **extra_fields):
+        if user.player_set.filter(game=game, active=True).exists():
+            raise ValueError(f'A player associated with {user} already exists for {game}')
+
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
         # For set of all supply codes, each code must be unique
         while self.filter(code=code):
             code = ''.join(random.choices(
                 string.ascii_uppercase + string.digits, k=6))
 
-        player = self.model(user=user, game=game, code=code, role=role)
+        player = self.model(user=user, game=game, code=code, role=role, **extra_fields)
         player.save()
         return player
 
@@ -37,8 +39,8 @@ class Player(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     code = models.CharField(max_length=6, unique=True)
     role = EnumField(enum=PlayerRole, max_length=1)
-
     in_oz_pool = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -65,6 +67,18 @@ class Player(models.Model):
         for tag in self.initiator_tags.all():
             total_score += tag.receiver.value(tag.tagged_at)
         return total_score
+
+    def kill(self):
+        if self.role == PlayerRole.ZOMBIE:
+            raise ValueError("This player is already a zombie.")
+
+        self.active = False
+        try:
+            with transaction.atomic():
+                self.save()
+                return Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE)
+        except DatabaseError:
+            self.active = True
 
     def __str__(self):
         return self.user.get_full_name()

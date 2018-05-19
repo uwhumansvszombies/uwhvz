@@ -2,13 +2,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
 from django.core.exceptions import SuspiciousOperation
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
 
 
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_moderator(user):
-        return user.is_authenticated and user.is_moderator()
+        return user.is_authenticated and user.is_moderator
 
     actual_decorator = user_passes_test(_is_moderator, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:
@@ -16,17 +14,13 @@ def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
     return actual_decorator
 
 
-def send_mail_template(request, plaintext_template, html_template, subject, recipient, context=None):
-    msg_plain = render_to_string(plaintext_template, context, request)
-    msg_html = render_to_string(html_template, context, request)
-    from_email = '???'
-    return send_mail(
-        subject=subject,
-        message=msg_plain,
-        html_message=msg_html,
-        from_email=from_email,
-        recipient_list=[recipient]
-    )
+def require_post_parameters(request, *parameters):
+    params = []
+    for p in parameters:
+        param = request.POST.get(p)
+        params.append(param)
+        check_argument(request, param, f'{p} cannot be blank.')
+    return params
 
 
 def check_argument(request, predicate, message="Something went wrong", level=messages.ERROR):
@@ -36,6 +30,20 @@ def check_argument(request, predicate, message="Something went wrong", level=mes
         # the current view with a message added. Perhaps a custom middleware to catch
         # some exception?
         raise SuspiciousOperation(message)
+
+
+def normalize_email(email):
+    """
+    Normalize the email address by lowercasing the domain part of it.
+    """
+    email = email or ''
+    try:
+        email_name, domain_part = email.strip().rsplit('@', 1)
+    except ValueError:
+        pass
+    else:
+        email = email_name + '@' + domain_part.lower()
+    return email
 
 
 def site_url(request):

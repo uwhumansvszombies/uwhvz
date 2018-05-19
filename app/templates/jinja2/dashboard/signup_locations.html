@@ -19,7 +19,7 @@
   {% for location in signup_locations %}
   <tr>
     <td>{{ location.location }}</td>
-    <td>{{ location.player_set.count }}</td>
+    <td>{{ location.signuptoken_set.count() }}</td>
   </tr>
   {% endfor %}
   </tbody>

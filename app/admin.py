@@ -45,6 +45,7 @@ class SignupTokenAdmin(admin.ModelAdmin):
 class CustomUserAdmin(UserAdmin):
     add_form_template = 'admin/add_user_form.html'
 
+    search_fields = ('first_name', 'last_name', 'email')
     list_display = ('email', 'first_name', 'last_name', 'is_staff')
     ordering = ('email',)
     fieldsets = (
