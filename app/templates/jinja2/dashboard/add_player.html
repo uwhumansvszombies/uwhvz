@@ -21,7 +21,7 @@
     <label>Location:</label>
     <select name="signup_location">
       {% for location in signup_locations %}
-        <option value="{{ location.id }}">{{ location.location }}</option>
+        <option value="{{ location.id }}">{{ location.name }}</option>
       {% endfor %}
     </select>
 

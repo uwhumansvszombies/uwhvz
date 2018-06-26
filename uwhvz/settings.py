@@ -27,7 +27,7 @@ SECRET_KEY = '6e4#bj2ea@i)f*xj4ht6rrthq@f3vw9(v8az+9==pf+3ys8pb!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 SITE_URL = 'http://127.0.0.1:8000'
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sass_processor',
     'svg',
+    'django_user_agents'
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'uwhvz.urls'
@@ -101,6 +103,15 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'tmp', 'db.sqlite3'),
     }
 }
+
+# Should be changed to something better?
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache'
+    }
+}
+
+USER_AGENTS_CACHE = 'default'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

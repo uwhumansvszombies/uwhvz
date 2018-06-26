@@ -11,6 +11,7 @@ libsass = "*"
 Django = "*"
 argon2-cffi = "*"
 jinja2 = "*"
+django-user-agents = "*"
 
 [dev-packages]
 

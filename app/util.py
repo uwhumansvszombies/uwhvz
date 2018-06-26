@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
 from django.core.exceptions import SuspiciousOperation
+from django.shortcuts import render
+from django.views import View
 
 
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
@@ -48,3 +50,17 @@ def normalize_email(email):
 
 def site_url(request):
     return {'SITE_URL': settings.SITE_URL}
+
+
+class MobileSupportedView(View):
+    desktop_template = 'You did not supply a desktop template'
+    mobile_template = 'You did not supply a mobile template'
+
+    def get(self, request):
+        return self.mobile_or_desktop(request)
+
+    def mobile_or_desktop(self, request, context=None):
+        if request.user_agent.is_mobile:
+            return render(request, self.mobile_template, context)
+        else:
+            return render(request, self.desktop_template, context)
