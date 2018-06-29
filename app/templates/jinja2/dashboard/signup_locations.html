@@ -12,7 +12,8 @@
   <thead>
   <tr>
     <th>Location</th>
-    <th>Number of Signups</th>
+    <th>Number of emails sent</th>
+    <th>Number of emails acted upon</th>
   </tr>
   </thead>
   <tbody>
@@ -20,6 +21,7 @@
   <tr>
     <td>{{ location.name }}</td>
     <td>{{ location.signuptoken_set.count() }}</td>
+    <td>{{ location.signuptoken_set.filter(used_at__isnull=True).count() }}</td>
   </tr>
   {% endfor %}
   </tbody>
