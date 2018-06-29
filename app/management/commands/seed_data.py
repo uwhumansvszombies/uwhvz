@@ -75,7 +75,7 @@ class Command(BaseCommand):
         users = []
         for name in names:
             first, last = name.split(' ')
-            user = User.objects.create_user(f'{first.lower()}@email.com', first_name=first, last_name=last)
+            user = User.objects.create_user(f'{first.lower()}@email.com', 'password', first_name=first, last_name=last)
             users.append(user)
 
         game = Game.objects.create_game('Spring 2018')
