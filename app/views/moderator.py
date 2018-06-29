@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 
 from app.mail import send_signup_email
-from app.models import Player, SignupLocation, User
+from app.models import Player, SignupLocation, User, SupplyCode
 from app.util import moderator_required, require_post_parameters, MobileSupportedView, active_game
 
 
@@ -47,3 +47,19 @@ class SignupLocationsView(MobileSupportedView):
     def get(self, request):
         locations = SignupLocation.objects.all()
         return self.mobile_or_desktop(request, {'signup_locations': locations})
+
+
+@method_decorator(moderator_required, name='dispatch')
+class GenerateSupplyCodeView(MobileSupportedView):
+    desktop_template = 'dashboard/generate_supply_codes.html'
+    mobile_template = 'dashboard/generate_supply_codes.html'
+
+    def get(self, request):
+        supply_codes = SupplyCode.objects.all()
+        return self.mobile_or_desktop(request, {'supply_codes': supply_codes})
+
+    def post(self, request):
+        game = active_game()
+        supply_code = SupplyCode.objects.create_supply_code(game)
+        messages.success(request, f'Generated new code: {supply_code}.')
+        return self.get(request)

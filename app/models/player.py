@@ -66,6 +66,8 @@ class Player(models.Model):
         total_score = 0
         for tag in self.initiator_tags.all():
             total_score += tag.receiver.value(tag.tagged_at)
+
+        total_score += sum([code.value for code in self.supplycode_set.all()])
         return total_score
 
     def kill(self):

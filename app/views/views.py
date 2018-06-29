@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.utils import dateparse
 from django.utils.decorators import method_decorator
 
-from app.models import Player, Tag
+from app.models import Player, Tag, SupplyCode, PlayerRole
 from app.util import require_post_parameters, MobileSupportedView, active_game
 
 
@@ -46,6 +46,30 @@ class ReportTagView(MobileSupportedView):
 
         Tag.objects.create_tag(initiating_player, receiving_player, datetime, location, description)
         messages.info(request, f'Reported a tag on {receiving_player.user.get_full_name()}')
+        return redirect('dashboard')
+
+    def get(self, request):
+        return redirect('dashboard')
+
+
+@method_decorator(login_required, name='dispatch')
+class ClaimSupplyCodeView(MobileSupportedView):
+    def post(self, request):
+        code, = require_post_parameters(request, 'supply_code')
+        try:
+            supply_code = SupplyCode.objects.get(code=code, claimed_by__isnull=True)
+        except ObjectDoesNotExist:
+            messages.warning(request, "That supply code does not exist or has already been claimed.")
+            return redirect('dashboard')
+
+        game = active_game()
+        player = request.user.player(game)
+        if player.role != PlayerRole.HUMAN:
+            messages.warning(request, "Only humans can claim supply codes...")
+            return redirect('dashboard')
+
+        supply_code.claim(player)
+        messages.success(request, 'Code has been claimed.')
         return redirect('dashboard')
 
     def get(self, request):

@@ -43,10 +43,10 @@
   {% endcall %}
 
   {% call card('Redeem Supply Code', class="ui-card--padded", id='card--supplycode') %}
-    <form action="#" method="post">
+    <form action="{{ url('claim_supply_code') }}" method="post">
       {{ csrf_input }}
       <div class="ui-form-group">
-        <input class="ui-input" type="text" placeholder="e.g. A1B2C3">
+        <input class="ui-input" type="text" name="supply_code" placeholder="e.g. A1B2C3">
       </div>
       <div class="ui-form-group text-center pt-2">
         <input class="btn btn-primary" type="submit" value="Redeem">

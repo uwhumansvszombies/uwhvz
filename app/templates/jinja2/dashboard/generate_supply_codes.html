@@ -1,0 +1,23 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Generate Supply Codes{% endblock %}
+{% block pagetitle %}Moderator Actions{% endblock %}
+{% block pagesubtitle %}Generate Supply Codes{% endblock %}
+
+{% block subcontent %}
+<div>
+  <form method="post">
+    {{ csrf_input }}
+    <input type="submit" value="Generate Supply Code" class="btn btn-primary">
+  </form>
+</div>
+
+<div>
+  Unclaimed codes:
+  {% for code in supply_codes %}
+    {% if code.claimed_by is none %}
+      {{ code.code }}
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
