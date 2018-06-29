@@ -2,7 +2,7 @@
 
 ## About
 
-New UW HvZ website, built on Django. Front-end uses custom styling via
+New UW HvZ website, built on Django. Front-end uses a mix of Bootstrap 4 and custom styling via
 Sass/SCSS in the `static/` folder.
 
 ## Development Setup
@@ -21,7 +21,7 @@ To make a migration after changing models, etc., use
 
 ## Useful things
 
-Generate a bunch of seed data: `python manage.py seed_data`
+Generate a bunch of fake data for testing purposes: `python manage.py seed_data`
 
 ## Contributing
 
@@ -29,14 +29,14 @@ Generate a bunch of seed data: `python manage.py seed_data`
 2. If you are willing to take an issue/task on, do step 1, assign yourself, and
    make a PR!
 3. Your PR needs to be approved by either [Tiffany Yeung][@tiffanynwyeung] if
-   it is related to any front-end, styling, and views overall, OR
+   it is related to the styling/views/frontend, OR
    [Tristan Ohlson][@tso] for anything regarding the backend.
 
 ## Notes
 
 UW HVZ Website Requirements
 
-## Dashboard
+### Dashboard
 
 Certain UI aspects for Humans and Zombies must be distinct, but the core must
 be the same for all players.
