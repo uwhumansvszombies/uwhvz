@@ -78,12 +78,8 @@ class Command(BaseCommand):
             user = User.objects.create_user(f'{first.lower()}@email.com', first_name=first, last_name=last)
             users.append(user)
 
-        spring_game = Game.objects.create_game('Spring 2018')
-        fall_game = Game.objects.create_game('Fall 2018')
-        Player.objects.create_player(root, spring_game, PlayerRole.SPECTATOR)
+        game = Game.objects.create_game('Spring 2018')
+        Player.objects.create_player(root, game, PlayerRole.SPECTATOR)
 
-        for i in range(0, 25):
-            Player.objects.create_player(users[i], spring_game, random.choice(roles))
-
-        for i in range(25, 50):
-            Player.objects.create_player(users[i], fall_game, random.choice(roles))
+        for i in range(0, 50):
+            Player.objects.create_player(users[i], game, random.choice(roles))

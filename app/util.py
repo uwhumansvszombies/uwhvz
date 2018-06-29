@@ -5,6 +5,8 @@ from django.core.exceptions import SuspiciousOperation
 from django.shortcuts import render
 from django.views import View
 
+from app.models import Game
+
 
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_moderator(user):
@@ -50,6 +52,14 @@ def normalize_email(email):
 
 def site_url(request):
     return {'SITE_URL': settings.SITE_URL}
+
+
+def active_game():
+    """
+    This is a hacky assumption that there's ever only 1 game object. The issue of course is that
+    there will be many game objects after the first term.
+    """
+    return Game.objects.get()
 
 
 class MobileSupportedView(View):

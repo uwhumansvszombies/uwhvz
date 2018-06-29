@@ -10,14 +10,9 @@
   <h3 class="card-header m-0">Game signup</h3>
   <form action="{{ url('game_signup') }}" method="post" class="card-body">
     {{ csrf_input }}
-    <label>Game:</label>
-    <select name="game">
-      {% for game in games %}
-        {% if not game.ended_on %}
-          <option value="{{ game.id }}">{{ game.name }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
+    <p>Signup for the {{ game.name }} game</p>
+
+    <p>Waver goes here</p>
 
     <label>Do you want to be part of the OZ pool?</label>
     <input type="checkbox" name="is_oz" />

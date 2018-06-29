@@ -4,6 +4,7 @@ from typing import Tuple
 from django.conf import settings
 from django.core import mail
 from django.test import Client
+from django.utils import timezone
 
 from app.models import User, SignupLocation, Game, Player
 
@@ -22,7 +23,7 @@ class UserTester:
         if not SignupLocation.objects.filter(name='In a Test').exists():
             SignupLocation.objects.create_signup_location('In a Test')
         if not Game.objects.filter(name='Test Game').exists():
-            Game.objects.create_game('Test Game')
+            Game.objects.create_game('Test Game', started_on=timezone.now())
 
     def create_user_and_player(
         self,

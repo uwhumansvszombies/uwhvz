@@ -6,8 +6,8 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
-from app.models import SignupToken, User, Game, Player, PlayerRole
-from app.util import require_post_parameters, MobileSupportedView
+from app.models import SignupToken, User, Player, PlayerRole
+from app.util import require_post_parameters, MobileSupportedView, active_game
 
 
 def signup(request, signup_token):
@@ -27,7 +27,7 @@ class UserSignupView(MobileSupportedView):
         signup_token = self.self.kwargs['signup_token']
         token = SignupToken.objects.get(pk=signup_token)
         if token.used_at:
-            messages.add_message(request, messages.INFO, f'You\'ve already created an account using {token.email}.')
+            messages.info(request, f'You\'ve already created an account using {token.email}.')
             return redirect('dashboard')
 
         return self.mobile_or_desktop(request, {'signup_token': signup_token})
@@ -35,7 +35,7 @@ class UserSignupView(MobileSupportedView):
     def post(self, request, signup_token):
         token = SignupToken.objects.get(pk=signup_token)
         if token.used_at:
-            messages.add_message(request, messages.INFO, f'You\'ve already created an account using {token.email}.')
+            messages.info(request, f'You\'ve already created an account using {token.email}.')
             return redirect('dashboard')
 
         first_name, last_name, password = require_post_parameters(request, 'first_name', 'last_name', 'password')
@@ -55,12 +55,11 @@ class GameSignupView(MobileSupportedView):
     mobile_template = 'dashboard/game_signup.html'
 
     def get(self, request):
-        games = Game.objects.all()
-        return self.mobile_or_desktop(request, {'games': games})
+        game = active_game()
+        return self.mobile_or_desktop(request, {'game': game})
 
     def post(self, request):
-        game_id, = require_post_parameters(request, 'game')
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
-        game = Game.objects.get(pk=game_id)
+        game = active_game()
         Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
         return redirect('dashboard')
