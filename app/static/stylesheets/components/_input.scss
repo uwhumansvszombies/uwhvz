@@ -1,29 +1,39 @@
 .ui-form-group {
-    margin-top: 8px;
-    text-transform: uppercase;
+  margin-top: 8px;
+  text-transform: uppercase;
 
-    &:first-of-type {
-        margin-top: 0px;
-    }
+  &:first-of-type {
+    margin-top: 0px;
+  }
 }
 
-.ui-input--label {
-    color: rgba(43, 45, 45, 0.85);
-    font-size: 8px;
+.ui-label {
+  color: color(sky, dark);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .ui-input {
-    color: rgba(17, 19, 19, 0.56);
-    font-size: 12px;
-    background: color('grey', 'meme');
-    border-radius: 3px;
-    border: none;
-    min-height: 32px;
-    width: 100%;
-    padding: 8px;
+  width: 100%;
+  min-height: 32px;
+  padding: spacing(tighter);
+  margin-bottom: spacing(tightest);
+  border-radius: radius();
+  font-size: 16px;
+  border: 0;
+}
 
-    &:focus {
-        border: none;
-        outline: none;
-    }
+
+.th--light {
+  .ui-input {
+    background: color(gray);
+    color: color(ink);
+  }
+}
+
+.th--dark {
+  .ui-input {
+    background: color(ink);
+    color: color(sky);
+  }
 }

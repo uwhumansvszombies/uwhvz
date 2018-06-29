@@ -1,25 +1,43 @@
-@import 'base/utilities';
-@import 'base/colors';
-@import 'base/breakpoints';
-@import 'base/typography/utilities';
+//// 
+/// Global styling.
+////
 
-@import 'base/normalize';
-@import 'base/foundation';
-@import 'base/theme';
-@import 'base/typography/typography';
+// Utilities
+@import 'base/utilities';
+@import 'base/border-radius';
+@import 'base/breakpoints';
+@import 'base/colors';
+@import 'base/shadows';
+@import 'base/spacing';
+@import 'base/z-index';
+
+@import 'base/layout';
+@import 'base/typography/utilities';
 
 // Fonts
 // @import 'fonts/iconic/iconic';
 
-// General Layout
-@import 'components/layout';
+// Foundation
+@import 'base/normalize';
+@import 'base/foundation';
+@import 'base/typography/typography';
+
+// Components - Layout
+@import 'components/layout/layout';
+@import 'components/layout/stack';
+@import 'components/layout/grid';
+@import 'components/layout/table';
+
+// Components - General
 @import 'components/card';
 @import 'components/input';
-@import 'components/button';
-
-// Navigation
-@import 'components/context-bar';
-@import 'components/sidebar';
 
 // Site-specific
 @import 'components/logo';
+
+// Page specific
+@import 'components/dashboard/titlebar';
+@import 'components/dashboard/sidebar';
+
+// pages
+@import 'pages/dashboard/index';

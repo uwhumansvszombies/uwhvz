@@ -1,3 +1,4 @@
+{% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
 {% block title %}Add Player{% endblock %}
@@ -5,21 +6,24 @@
 {% block pagesubtitle %}Add Player{% endblock %}
 
 {% block subcontent %}
-<div class="card">
-  <h3 class="card-header m-0">Add Player</h3>
-  <form action="{{ url('add_player') }}" method="post" class="card-body">
+{% call card('Add Player to ' + game.name) %}
+  <form action="{{ url('add_player') }}" method="post">
     {{ csrf_input }}
-    <p>Add player for the {{ game.name }} game</p>
-    <label>Location:</label>
-    <select name="signup_location">
-      {% for location in signup_locations %}
-        <option value="{{ location.id }}">{{ location.name }}</option>
-      {% endfor %}
-    </select>
-
-    <label>Email:</label>
-    <input type="email" name="email">
-    <input type="submit" value="Signup" class="btn btn-primary">
+    <div class="ui-form-group">
+      <label class="ui-label">Email:</label>
+      <input class="ui-input" type="email" name="email">
+    </div>
+    <div class="ui-form-group">
+      <label class="ui-label">Location:</label>
+      <select class="custom-select" name="signup_location">
+        {% for location in signup_locations %}
+          <option value="{{ location.id }}">{{ location.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="ui-form-group pt-2 text-center">
+      <input type="submit" value="Signup" class="btn btn-primary">
+    </div>
   </form>
-</div>
+{% endcall %}
 {% endblock %}

@@ -1,0 +1,18 @@
+////
+/// Standard site element z-index data live here.
+/// @group utilities
+////
+
+$z-index-data: (
+  'base': 1,
+  'high': 2,
+);
+
+///
+/// Returns a z-index value given the associated name.
+/// @param {String} $value [base] - the z-index name. Defaults to 'base'.
+/// @return {Number} - the desired z-index.
+
+@function z-index($value: 'base') {
+  @return retrieve-map-value($z-index-data, "z-index data", $value);
+}

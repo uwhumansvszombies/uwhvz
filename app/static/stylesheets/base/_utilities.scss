@@ -3,20 +3,73 @@
 /// @group utilities
 ////
 
-///
-/// Font declaration mixin for external fonts.
-/// @param $name - name of the font and its corresponding file.
-/// @param $file-weight [regular] - filename of the font weight. Defaults to 'regular'.
-/// @param $font-weight [normal] - font weight. Defaults to normal.
-/// @param $font-style [normal] - font style. Defaults to normal.
-@mixin font-face($name, $url) {
-    font-family: $name;
-    src: url('#{$url}.eot');
-    src: url('#{$url}.eot?#iefix') format('embedded-opentype'),
-         url('#{$url}.woff') format('woff'),
-         url('#{$url}.ttf') format('truetype');
-}
 
 ///
-/// transitions
-$default-transition: all 285ms ease-in-out;
+/// Returns the list of available names in a given map.
+/// @param {Map} $map - the map of data to list the names from.
+/// @param @untouchable {Number} $map - the level of depth to get names from. DO NOT TOUCH.
+/// @return {String} - the list of names in the map.
+
+@function available-names($map, $level: 1) {
+  @if type-of($map) != "map" {
+    @return null;
+  }
+  
+  $offset: "      ";
+  $newline: "\A ";
+  $output: "Available names include: #{$newline}";
+
+  @if $level == 1 {
+    @each $key, $value in $map {
+      $output: $output + "#{$offset}- #{$key}#{available-names($value, $level + 1)}#{$newline}";
+    }
+  } @else {
+    $output: ": ";
+    $counter: 1;
+
+    @each $key, $value in $map {
+      $separator: if($counter < length($map), ", ", "");
+      $output: $output + "#{$key}#{$separator}#{available-names($value, $level + 1)}";
+      $counter: $counter + 1;
+    }
+  }
+
+  @return $output;
+}
+
+
+///
+/// Returns a map value given a map and the key(s) associated with the value.
+/// @param {Map} $map - the desired map to retrieve the value from.
+/// @param {String} $map-name - the colloquial, "everyday" name of the map.
+/// @param {List} $values - the list of associated keys. 
+/// @return {Any} - the non-null value within the map.
+
+@function retrieve-map-value($map, $map-name, $values...) {
+  $value-names: '';
+  $name-count: 1;
+  
+  @each $name in $values {
+    $separator: if($name-count < length($values), "/", "");
+    $value-names: $value-names + "#{$name}#{$separator}";
+    $name-count: $name-count + 1;
+  }
+  
+  $value-count: 1;
+  $retrieved-value: nth($values, $value-count);
+  $temp-map: $map;
+  
+  @while $value-count <= length($values) {
+    $retrieved-value: map-get($temp-map, $retrieved-value);
+    
+    @if type-of($retrieved-value) == null {
+      @error "Unknown #{$value-names} in the #{$map-name}. #{available-names($map)}";
+    } @else if type-of($retrieved-value) != 'map' {
+      @return $retrieved-value;
+    } @else {
+      $temp-map: $retrieved-value;
+      $value-count: $value-count + 1;
+      $retrieved-value: nth($values, $value-count);
+    }
+  }
+}

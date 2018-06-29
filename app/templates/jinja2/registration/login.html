@@ -1,44 +1,42 @@
 {% from "components/card.html" import card %}
-{% extends "base.html" %}
+{% extends "registration/base.html" %}
 
 {% block title %}Login{% endblock %}
 
-{% block content %}
+{% block subcontent %}
 
-<div>
+<div class="col-4">
   {% if form.errors %}
   <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
 
   {% if next %}
-  {% if user.is_authenticated %}
-  <p>Your account doesn't have access to this page. To proceed,
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
     please login with an account that has access.</p>
-  {% else %}
-  <p>Please login to see this page.</p>
-  {% endif %}
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
   {% endif %}
 
-  <div style="display: flex; height: 100vh; align-items: center; justify-content: center;">
-    {% call card('Login') %}
-    <form action="{{ url('login') }}" method="post" class="card-body">
-        {{ csrf_input }}
-        <div class="ui-form-group">
-          <label class="ui-input--label">Email</label>
-          <input class="ui-input" type="text" name="username">
-        </div>
-        <div class="ui-form-group">
-          <label class="ui-input--label">Password</label>
-          <input class="ui-input" type="password" name="password">
-        </div>
-        <div style="margin-top: 16px; width: 100%; display: flex; justify-content: center">
-          <input class="ui-button" type="submit" value="Login">
-          <input type="hidden" name="next" value="{{ next }}"/>
-        </div>
-      </form>
-
-      <a href="{{ url('password_reset') }}">Lost password?</a>
-    {% endcall %}
-  </div>
+  {% call card('Login') %}
+  <form action="{{ url('login') }}" method="post" class="card-body">
+    {{ csrf_input }}
+    <div class="ui-form-group">
+      <label class="ui-label">Email</label>
+      <input class="ui-input" type="text" name="username">
+    </div>
+    <div class="ui-form-group">
+      <label class="ui-label">Password</label>
+      <input class="ui-input" type="password" name="password">
+    </div>
+    <div class="ui-form-group pt-2 text-center">
+      <input class="btn btn-primary" type="submit" value="Login">
+      <input type="hidden" name="next" value="{{ next }}"/>
+    </div>
+  </form>
+  <a class="" href="{{ url('password_reset') }}">Lost password?</a>
+  {% endcall %}
 </div>
+
 {% endblock %}

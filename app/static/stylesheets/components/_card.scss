@@ -4,21 +4,65 @@
 ////
 
 .ui-card {
-  padding: 20px 32px;
-  border-radius: 3px;
-  background: color('white');
-  box-shadow: 0 0 2px 1px rgba(147, 147, 147, 0.31);
-  box-shadow: 0 0 2px 1px color('grey', 'light');
+  padding: spacing(looser);
+  border-radius: radius();
 }
 
 .ui-card__header {
-  padding-bottom: 12px;
-  font-size: 16px;
-  font-weight: bold;
+  margin-bottom: spacing();
 }
 
-.ui-card__subheader {
-    font-size: 32px;
-    margin: 0;
-    padding: 0
+.ui-card__title {
+  @include type-heading;
+
+  font-family: ff('heading');
+}
+
+.ui-card__content {
+  @include type-body;
+}
+
+.ui-card--display {
+  .ui-card__header {
+    margin-bottom: spacing(tighter);
+
+    &::after {
+      content: '';
+      width: 1.5rem;
+      height: 2px;
+      margin: spacing(tightest) 0 spacing(tight) 0;
+      display: block;
+      background: color(sky);
+    }
+  }
+
+  .ui-card__title {
+    @include type-smallcaps;
+
+    font-family: ff('body');
+    text-align: left;
+  }
+
+  .ui-card__content {
+    @include type-display;
+
+    font-weight: 400;
+    text-align: left;
+  }
+}
+
+.th--light {
+  .ui-card {
+    background-color: color(white);
+    color: color(ink);
+    box-shadow: shadow();
+  }
+}
+
+.th--dark {
+  .ui-card {
+    background-color: color(ink, light);
+    color: color(sky, light);
+    box-shadow: shadow(dark);
+  }
 }

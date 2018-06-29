@@ -1,12 +1,12 @@
 ////
-/// Sitewide "topbar" styles live here.
+/// Sitewide "titlebar" styles live here.
 /// @group components, @layout default
 ////
 
 
-.ui-context-bar {
+.ui-titlebar {
   width: 100%;
-  height: 5rem;
+  height: layout-element-size(height, titlebar);
   padding: 0;
   margin: 0;
   position: fixed;
@@ -15,15 +15,15 @@
   flex-flow: row nowrap;
   align-content: center;
   justify-content: space-between;
-  background: color('ink');
+  background: color(ink);
   z-index: 99;
-  box-shadow: 0 1px 4px 2px color('grey', 'dark');
+  box-shadow: shadow(dark, titlebar);
 }
 
-.ui-context-bar__panel {
+.ui-titlebar__section {
   width: auto;
   height: 100%;
-  padding: 0 2em;
+  padding: 0 spacing(loosest);
   display: flex;
   justify-content: center;
   align-content: center;
@@ -34,11 +34,9 @@
   }
 }
 
-#contextbar-title {
-  width: 100%;
-  border-left: 1px solid;
-  border-right: 1px solid;
+#titlebar-title {
   justify-content: flex-start;
+  flex: 1 1 auto;
 
   h1 {
     font-size: 1rem;
@@ -49,11 +47,12 @@
   h2 {
     font-size: 1.5rem;
     line-height: 1;
+    font-family: ff('heading');
   }
 }
 
-.ui-context-bar__link {
-  color: color('sky');
+.ui-titlebar__link {
+  color: color(sky);
   border: 0;
   text-decoration: none;
 
@@ -64,18 +63,22 @@
   }
 }
 
-.ui-context-bar__logo {
-  width: 120px;
+#titlebar-logo {
+  width: layout-element-size(width, sidebar);
+  border-right: 1px solid;
 }
 
-.th--light {
-  .ui-context-bar {
+.th--light,
+.th--dark {
+  .ui-titlebar {
     h1, h2 {
-      color: color('white');
+      color: color(white);
     }
   }
 
-  #contextbar-title { 
-    border-color: rgba(255, 255, 255, 0.3);
+  .ui-titlebar__section,
+  #titlebar-title,
+  #titlebar-logo {
+    border-color: rgba(color(white), 0.15);
   }
 }
