@@ -1,0 +1,18 @@
+////
+/// Standard site border radii data live here.
+/// @group utilities
+////
+
+$border-radius-data: (
+  'base': 3px,
+  'large': 6px,
+);
+
+///
+/// Returns a border-radius size given the associated name.
+/// @param {String} $value [base] - the breakpoint name. Defaults to 'base'.
+/// @return {Number} - the desired border-radius value.
+
+@function radius($value: 'base') {
+  @return retrieve-map-value($border-radius-data, "border-radius data", $value);
+}

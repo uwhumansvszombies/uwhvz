@@ -1,0 +1,16 @@
+
+#dashboard-index {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 2fr 2fr;
+  grid-gap: spacing();
+}
+
+#dashboard-info {
+  display: grid;
+  grid-gap: spacing();
+}
+
+#card--supplycode {
+  align-self: start;
+}

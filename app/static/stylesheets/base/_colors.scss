@@ -4,32 +4,36 @@
 ////
 
 $color-palette-data: (
-  'grey': (
+  gray: (
     'lighter': #fafbfb,
     'light': #dbdbdb,
-    'meme': #ebeff1,
+    'base': #ebeff1,
     'dark': #c1c1c1
   ),
 
-  'gold': (
-    'light': #ffe3c1,
-    'base': #ca9a63,
-  ),
-
-  'red': (
+  red: (
     'light': #f6f0f1,
     'base': #ce2849,
     'dark': #773743
   ),
 
-  'blue': (
+  yellow: (
+    'light': #ffe3c1,
+    'base': #ca9a63,
+  ),
+
+  green: (
+    'base': #40ac79
+  ),
+
+  blue: (
      'light': #0f93ee,
      'base': #21293f,
      'dark': #161925,
      'darker': #13151f
   ),
 
-  'sky': (
+  sky: (
     'lightest': #fdfdfd,
     'lighter': #f8f8f8,
     'light': #dbdbdb,
@@ -37,36 +41,29 @@ $color-palette-data: (
     'dark': #737373
   ),
 
-  'ink': (
+  ink: (
     'lightest': #8b9198,
     'lighter': #515867,
     'light': #273240,
     'base': #14181f
   ),
 
-  'black': (
+  black: (
     'base': #000
   ),
 
-  'white': (
+  white: (
     'base': #fff
   )
 );
 
+
 ///
 /// Returns a color given the associated name.
 /// @param {String} $hue - the basic color family.
-/// @param {String} $variant [base] - the brightness of the hue. Defaults to 'base'.
+/// @param {String} $gradient [base] - the brightness of the hue. Defaults to base.
 /// @return {Color} - the desired color.
 
-@function color($hue, $variant: 'base') {
-  $color-spectrum: if(map-has-key($color-palette-data, $hue), map-get($color-palette-data, $hue), null);
-
-  @if $color-spectrum {
-    @if map-has-key($color-spectrum, $variant) {
-      @return map-get($color-spectrum, $variant);
-    }
-  }
-
-  @error "Unknown `#{$hue}/#{$variant}` in the color palette.";
+@function color($hue, $gradient: 'base') {
+  @return retrieve-map-value($color-palette-data, "color palette", $hue, $gradient);
 }

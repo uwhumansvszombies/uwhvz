@@ -1,0 +1,50 @@
+////
+/// Dashboard sidebar styles live here.
+/// @group components, @group navigation, @layout dashboard
+////
+
+.ui-sidebar {
+  width: calc(#{layout-element-size(width, sidebar)});
+  height: 100%;
+  position: fixed;
+  top: layout-element-size(height, titlebar);
+  border-right: 1px solid;
+}
+
+.ui-sidebar-nav {
+  padding: spacing(tight) 0 0 spacing(tight);
+  list-style: none;
+
+  li {
+    display: block;
+    list-style: none;
+  }
+
+  a {
+    padding: 0 spacing(tight);
+    margin-bottom: spacing(tighter);
+    display: block;
+    line-height: 1.25;
+    text-decoration: none;
+  }
+}
+
+.ui-sidebar-nav__title {
+  margin-bottom: spacing(tighter);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+
+.th--light {
+  .ui-sidebar {
+    border-right-color: color(gray);
+  }
+}
+
+.th--dark {
+  .ui-sidebar {
+    border-right-color: color(ink, light);
+  }
+}

@@ -21,7 +21,7 @@
   <tr>
     <td>{{ location.name }}</td>
     <td>{{ location.signuptoken_set.count() }}</td>
-    <td>{{ location.signuptoken_set.filter(used_at__isnull=True).count() }}</td>
+    <td>{{ location.signuptoken_set.filter(used_at__isnull=False).count() }}</td>
   </tr>
   {% endfor %}
   </tbody>

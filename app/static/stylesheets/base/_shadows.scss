@@ -1,0 +1,25 @@
+////
+/// Standard site element box-shadow data live here.
+/// @group utilities
+////
+
+$shadows-data: (
+  light: (
+    'base': #{ 0 0 2px 1px rgba(color(gray, light), 0.5) },
+    'titlebar': #{ 0 1px 8px 1px rgba(color(gray, dark), 0.5) }
+  ),
+  dark: (
+    'base': #{ 0 0 2px 1px rgba(color(black), 0.5) },
+    'titlebar': #{ 0 1px 8px 1px rgba(color(black), 0.5) }
+  )
+);
+
+///
+/// Returns a box-shadow value given the associated name.
+/// @param {String} $theme [light] - the site's current color theme. Defaults to light.
+/// @param {String} $value [base] - the shadow name. Defaults to base.
+/// @return {String} - the desired box-shadow.
+
+@function shadow($theme: 'light', $value: 'base') {
+  @return retrieve-map-value($shadows-data, "box-shadow data", $theme, $value);
+}

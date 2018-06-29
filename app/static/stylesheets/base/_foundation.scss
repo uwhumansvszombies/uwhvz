@@ -8,7 +8,9 @@ html {
   box-sizing: border-box;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
 
@@ -19,6 +21,8 @@ body {
   padding: 0;
   margin: 0;
   border: 0;
+  background-color: #fafbfb;
+  color: color(ink);
   font: $fw-light 100%/#{lh('loose')} ff('body');
   word-wrap: break-word;
   vertical-align: baseline;
@@ -29,5 +33,5 @@ ul {
 }
 
 textarea {
-    resize: none;
+  resize: none;
 }

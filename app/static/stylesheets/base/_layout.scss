@@ -1,0 +1,27 @@
+////
+/// 
+/// 
+////
+
+$layout-element-size-data: (
+  'width': (
+    'sidebar': 12.5rem // 200px
+  ),
+  'height': (
+    'titlebar': 5rem // 80px
+  )
+);
+
+///
+/// Returns a specific layout element size given the associated name.
+/// @param {String} $axis [width] - the axis in which the element affects. Defaults to width/x-axis.
+/// @param {String} $element - the specific element that has the offset.
+/// @return {Number} - the desired layout element's size.
+
+@function layout-element-size($axis: 'width', $element: 'sidebar') {
+  @return retrieve-map-value($layout-element-size-data, "layout data", $axis, $element);
+}
+
+@function dashboard-width-offset() {
+  @return calc(100% - #{layout-element-size()});
+}

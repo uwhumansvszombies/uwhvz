@@ -20,9 +20,5 @@ $breakpoints-data: (
 /// @return {Number} - the desired breakpoint.
 
 @function breakpoint($value: 'md') {
-  @if map-has-key($breakpoints-data, $value) {
-    @return map-get($breakpoints-data, $value);
-  }
-
-  @error "Unknown `#{$value}` in the breakpoints data.";
+  @return retrieve-map-value($breakpoints-data, "breakpoints data", $value);
 }

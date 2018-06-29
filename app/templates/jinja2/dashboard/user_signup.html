@@ -9,20 +9,18 @@
   <form action="{{ url('user_signup', kwargs={'signup_token': signup_token}) }}" method="post" class="card-body">
       {{ csrf_input }}
       <div class="ui-form-group">
-        <label class="ui-input--label">First Name</label>
+        <label class="ui-label">First Name</label>
         <input class="ui-input" type="text" name="first_name">
       </div>
       <div class="ui-form-group">
-        <label class="ui-input--label">Last Name</label>
+        <label class="ui-label">Last Name</label>
         <input class="ui-input" type="text" name="last_name">
       </div>
       <div class="ui-form-group">
-        <label class="ui-input--label">Password</label>
+        <label class="ui-label">Password</label>
         <input class="ui-input" type="password" name="password">
       </div>
-      <div style="margin-top: 16px; width: 100%; display: flex; justify-content: center">
-        <input class="ui-button" type="submit" value="Submit">
-      </div>
+      <input class="btn btn-primary" type="submit" value="Submit">
     </form>
   {% endcall %}
 </div>

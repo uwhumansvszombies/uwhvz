@@ -1,0 +1,37 @@
+////
+///
+////
+
+.ui-alert {
+  width: 100%;
+  height: auto;
+  padding: spacing(loose);
+  border-radius: radius();
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-content: flex-start;
+}
+
+.ui-alert__content {
+  
+}
+
+.ui-alert--dismissible {
+
+}
+
+.ui-alert--warning {
+  background-color: color(yellow);
+}
+
+.ui-alert--danger {
+  background-color: color(red, light);
+}
+
+.ui-alert--info {
+  background-color: color(gray, lighter);
+}
+
+.ui-alert--success {
+  background-color: color(green);
+}
