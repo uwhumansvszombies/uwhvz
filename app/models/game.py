@@ -6,8 +6,8 @@ from .user import User
 
 
 class GameManager(models.Manager):
-    def create_game(self, name):
-        game = self.model(name=name)
+    def create_game(self, name, **kwargs):
+        game = self.model(name=name, **kwargs)
         game.save()
         return game
 
