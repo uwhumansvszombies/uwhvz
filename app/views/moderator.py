@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 
 from app.mail import send_signup_email
-from app.models import Player, SignupLocation, Game
+from app.models import Player, SignupLocation, Game, User
 from app.util import moderator_required, require_post_parameters, MobileSupportedView
 
 
@@ -28,17 +28,21 @@ class AddPlayerView(MobileSupportedView):
 
     def post(self, request):
         game_id, location_id, email = require_post_parameters(request, 'game', 'signup_location', 'email')
+        if User.objects.filter(email=email).exists():
+            messages.add_message(request, messages.WARNING, f'There is already an account associated with: {email}.')
+            return self.get(request)
+
         location = SignupLocation.objects.get(pk=location_id)
         game = Game.objects.get(pk=game_id)
         send_signup_email(request, game, location, email)
-        messages.add_message(request, messages.SUCCESS, f'Sent an email to: {email}')
+        messages.add_message(request, messages.SUCCESS, f'Sent an email to: {email}.')
         return self.get(request)
 
 
 @method_decorator(moderator_required, name='dispatch')
 class SignupLocationsView(MobileSupportedView):
-    desktop_template = 'dashboard/add_player.html'
-    mobile_template = 'dashboard/add_player.html'
+    desktop_template = 'dashboard/signup_locations.html'
+    mobile_template = 'dashboard/signup_locations.html'
 
     def get(self, request):
         locations = SignupLocation.objects.all()
