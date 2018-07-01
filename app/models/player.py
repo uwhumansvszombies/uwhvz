@@ -79,20 +79,17 @@ class Player(models.Model):
         except DatabaseError:
             self.active = True
 
-    def __str__(self):
-        return self.user.get_full_name()
-
-
     @property
     def is_spectator(self):
         return self.role == PlayerRole.SPECTATOR
-
 
     @property
     def is_zombie(self):
         return self.role == PlayerRole.ZOMBIE
 
-
     @property
     def is_human(self):
         return self.role == PlayerRole.HUMAN
+
+    def __str__(self):
+        return self.user.get_full_name()

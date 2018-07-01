@@ -18,13 +18,12 @@ def signup(request, signup_token):
         return redirect('user_signup', signup_token=signup_token)
 
 
-@method_decorator(login_required, name='dispatch')
 class UserSignupView(MobileSupportedView):
-    desktop_template = 'dashboard/user_signup.html'
-    mobile_template = 'dashboard/user_signup.html'
+    desktop_template = 'user_signup.html'
+    mobile_template = 'user_signup.html'
 
-    def get(self, request):
-        signup_token = self.self.kwargs['signup_token']
+    def get(self, request, **kwargs):
+        signup_token = kwargs['signup_token']
         token = SignupToken.objects.get(pk=signup_token)
         if token.used_at:
             messages.info(request, f'You\'ve already created an account using {token.email}.')
@@ -51,8 +50,8 @@ class UserSignupView(MobileSupportedView):
 
 @method_decorator(login_required, name='dispatch')
 class GameSignupView(MobileSupportedView):
-    desktop_template = 'dashboard/game_signup.html'
-    mobile_template = 'dashboard/game_signup.html'
+    desktop_template = 'game_signup.html'
+    mobile_template = 'game_signup.html'
 
     def get(self, request):
         game = active_game()

@@ -26,7 +26,7 @@
   <ul class="ui-sidebar-nav">
     <h1 class="ui-sidebar-nav__title">Player Actions</h1>
     <li><a href="{{ url('dashboard') }}">My Dashboard</a></li>
-    <li><a href="#">Game Information</a></li>
+    <li><a href="/game_info">Game Information</a></li>
     <li><a href="#">View Players</a></li>
     {% if not player.is_human %}
     <li><a href="#">View Zombie Tree</a></li>
@@ -51,6 +51,9 @@
       <a href="{{ url('generate_supply_codes') }}">Generate Supply Codes</a>
     </li>
     {% if user.is_staff %}
+    <li>
+      <a href="/cms">Wagtail</a>
+    </li>
     <li>
       <a href="{{ url('admin:index') }}">Django Admin</a>
     </li>
