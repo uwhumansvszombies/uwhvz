@@ -1,0 +1,39 @@
+{% extends "dashboard/base.html" %}
+
+{% block pagetitle %}Game Info{% endblock %}
+{% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %}
+
+{% block subcontent %}
+<h1>{{ page.title }}</h1>
+
+<div class="intro">{{ page.intro|richtext }}</div>
+
+<div>
+  <h2>Missions</h2>
+
+  {% for mission in missions %}
+    {% if player.is_human and mission.specific.viewable_by_humans %}
+      <h4><a href="{{ pageurl(mission) }}">{{ mission.title }}</a></h4>
+    {% elif player.is_zombie and mission.specific.viewable_by_zombies %}
+      <h4><a href="{{ pageurl(mission) }}">{{ mission.title }}</a></h4>
+    {% elif player.is_spectator %}
+      <h4><a href="{{ pageurl(mission) }}">(For {{ mission.specific.viewable_by }}) {{ mission.title }}</a></h4>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<div>
+  <h2>Announcements</h2>
+
+  {% for announcement in announcements %}
+    {% if player.is_human and announcement.specific.viewable_by_humans %}
+      <h4><a href="{{ pageurl(announcement) }}">{{ announcement.title }}</a></h4>
+    {% elif player.is_zombie and announcement.specific.viewable_by_zombies %}
+      <h4><a href="{{ pageurl(announcement) }}">{{ announcement.title }}</a></h4>
+    {% elif player.is_spectator %}
+      <h4><a href="{{ pageurl(announcement) }}">(For {{ announcement.specific.viewable_by }}) {{ announcement.title }}</a></h4>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% endblock %}

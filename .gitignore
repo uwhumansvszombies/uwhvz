@@ -115,9 +115,11 @@ node_modules
 /build
 
 # misc
-tmp
 .DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+db.sqlite3
+static
