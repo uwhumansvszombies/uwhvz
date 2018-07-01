@@ -25,9 +25,12 @@
 <nav class="ui-sidebar">
   <ul class="ui-sidebar-nav">
     <h1 class="ui-sidebar-nav__title">Player Actions</h1>
-    <li>
-      <a href="{{ url('dashboard') }}">View Dashboard</a>
-    </li>
+    <li><a href="{{ url('dashboard') }}">My Dashboard</a></li>
+    <li><a href="#">Game Information</a></li>
+    <li><a href="#">View Players</a></li>
+    {% if not player.is_human %}
+    <li><a href="#">View Zombie Tree</a></li>
+    {% endif %}
   </ul>
   {% if user.is_moderator %}
   <ul class="ui-sidebar-nav">

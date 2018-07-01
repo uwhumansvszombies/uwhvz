@@ -8,23 +8,31 @@ from app.util import moderator_required, require_post_parameters, MobileSupporte
 
 @method_decorator(moderator_required, name='dispatch')
 class PlayerListView(MobileSupportedView):
-    desktop_template = 'dashboard/player_list.html'
-    mobile_template = 'dashboard/player_list.html'
+    desktop_template = 'dashboard/moderator/player_list.html'
+    mobile_template = 'dashboard/moderator/player_list.html'
 
     def get(self, request):
         players = Player.objects.all()
-        return self.mobile_or_desktop(request, {'players': players})
+        game = active_game()
+        return self.mobile_or_desktop(request, {
+            'player': request.user.player(game),
+            'players': players
+        })
 
 
 @method_decorator(moderator_required, name='dispatch')
 class AddPlayerView(MobileSupportedView):
-    desktop_template = 'dashboard/add_player.html'
-    mobile_template = 'dashboard/add_player.html'
+    desktop_template = 'dashboard/moderator/add_player.html'
+    mobile_template = 'dashboard/moderator/add_player.html'
 
     def get(self, request):
         locations = SignupLocation.objects.all()
         game = active_game()
-        return self.mobile_or_desktop(request, {'signup_locations': locations, 'game': game})
+        return self.mobile_or_desktop(request, {
+            'player': request.user.player(game),
+            'signup_locations': locations,
+            'game': game
+        })
 
     def post(self, request):
         location_id, email = require_post_parameters(request, 'signup_location', 'email')
@@ -41,22 +49,30 @@ class AddPlayerView(MobileSupportedView):
 
 @method_decorator(moderator_required, name='dispatch')
 class SignupLocationsView(MobileSupportedView):
-    desktop_template = 'dashboard/signup_locations.html'
-    mobile_template = 'dashboard/signup_locations.html'
+    desktop_template = 'dashboard/moderator/signup_locations.html'
+    mobile_template = 'dashboard/moderator/signup_locations.html'
 
     def get(self, request):
         locations = SignupLocation.objects.all()
-        return self.mobile_or_desktop(request, {'signup_locations': locations})
+        game = active_game()
+        return self.mobile_or_desktop(request, {
+            'player': request.user.player(game),
+            'signup_locations': locations
+        })
 
 
 @method_decorator(moderator_required, name='dispatch')
 class GenerateSupplyCodeView(MobileSupportedView):
-    desktop_template = 'dashboard/generate_supply_codes.html'
-    mobile_template = 'dashboard/generate_supply_codes.html'
+    desktop_template = 'dashboard/moderator/generate_supply_codes.html'
+    mobile_template = 'dashboard/moderator/generate_supply_codes.html'
 
     def get(self, request):
         supply_codes = SupplyCode.objects.all()
-        return self.mobile_or_desktop(request, {'supply_codes': supply_codes})
+        game = active_game()
+        return self.mobile_or_desktop(request, {
+            'player': request.user.player(game),
+            'supply_codes': supply_codes
+        })
 
     def post(self, request):
         game = active_game()

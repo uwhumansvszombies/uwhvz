@@ -8,9 +8,9 @@
 
 {% block subcontent %}
 {% call card('Player List') %}
-  <table class="table">
+  <table class="table table-striped">
     <thead>
-      <tr class="row">
+      <tr>
         <th scope="col">Email</th>
         <th scope="col">Name</th>
         <th scope="col">Role</th>
@@ -18,10 +18,10 @@
     </thead>
     <tbody>
       {% for player in players %}
-      <tr class="row">
-        <td>{{ player.user.email }}</td>
-        <td>{{ player.user.get_full_name() }}</td>
-        <td>{{ player.role }}</td>
+      <tr>
+        <td scope="col">{{ player.user.email }}</td>
+        <td scope="col">{{ player.user.get_full_name() }}</td>
+        <td scope="col">{{ player.role }}</td>
       </tr>
       {% endfor %}
     </tbody>

@@ -1,5 +1,5 @@
 {% macro card(title, simple_content=None, class='', id='') -%}
-  <div class="ui-card {{ class }}" id="{{ id }}">
+  <div class="ui-card{% if class is not none %} {{ class }}{% endif %}"{% if id is not none %} id="{{ id }}{% endif %}">
     <div class="ui-card__header">
       <h1 class="ui-card__title">{{ title }}</h1>
     </div>

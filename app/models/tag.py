@@ -9,9 +9,9 @@ from .player import Player, PlayerRole
 class TagManager(models.Manager):
     def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str):
         if initiator.role == receiver.role:
-            raise ValueError('A tag must be between opposite teams')
+            raise ValueError('A tag must be between a human and a zombie.')
         if initiator.game != receiver.game:
-            raise ValueError('A tag must be between two players in the same game')
+            raise ValueError('A tag must be between two players in the same game.')
 
         with transaction.atomic():
             tag = self.model(

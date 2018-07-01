@@ -1,23 +1,19 @@
-import random
-import string
 import uuid
 
 from django.db import models, transaction, DatabaseError
 from django.utils import timezone
 
+from app.models.util import generate_code
 from .game import Game
 from .player import Player
 
 
 class SupplyCodeManager(models.Manager):
     def create_supply_code(self, game, value=5):
-        code = ''.join(random.choices(
-            string.ascii_uppercase + string.digits, k=6))
-
+        code = generate_code(6)
         # For set of all supply codes, each code must be unique
         while self.filter(code=code):
-            code = ''.join(random.choices(
-                string.ascii_uppercase + string.digits, k=6))
+            code = generate_code(6)
 
         supply_code = self.model(code=code, game=game, value=value)
         supply_code.save()
