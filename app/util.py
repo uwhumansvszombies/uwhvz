@@ -5,7 +5,7 @@ from django.core.exceptions import SuspiciousOperation
 from django.shortcuts import render
 from django.views import View
 
-from app.models import Game
+from app.models import Game, PlayerRole
 
 
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
@@ -13,6 +13,18 @@ def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
         return user.is_authenticated and user.is_moderator
 
     actual_decorator = user_passes_test(_is_moderator, login_url=login_url, redirect_field_name=redirect_field_name)
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+def active_game_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    # TODO: Make this feel better
+    def _is_active_game(user):
+        game = active_game()
+        return game.started_on and not game.ended_on
+
+    actual_decorator = user_passes_test(_is_active_game, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:
         return actual_decorator(function)
     return actual_decorator

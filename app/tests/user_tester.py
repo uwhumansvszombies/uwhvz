@@ -6,7 +6,7 @@ from django.core import mail
 from django.test import Client
 from django.utils import timezone
 
-from app.models import User, SignupLocation, Game, Player
+from app.models import User, SignupLocation, Game, Player, PlayerRole
 
 
 class UserTester:
@@ -19,11 +19,13 @@ class UserTester:
     def __init__(self):
         self.client = Client()
         if not User.objects.filter(email='root@email.com').exists():
-            User.objects.create_superuser('root@email.com', 'toor')
+            user = User.objects.create_superuser('root@email.com', 'toor')
         if not SignupLocation.objects.filter(name='In a Test').exists():
             SignupLocation.objects.create_signup_location('In a Test')
         if not Game.objects.filter(name='Test Game').exists():
-            Game.objects.create_game('Test Game', started_on=timezone.now())
+            game = Game.objects.create_game('Test Game', started_on=timezone.now())
+        if not Player.objects.filter(user=user, game=game).exists():
+            Player.objects.create_player(user, game, PlayerRole.SPECTATOR)
 
     def create_user_and_player(
         self,
@@ -52,7 +54,7 @@ class UserTester:
         game = Game.objects.get(name=game_name)
         signup_location = SignupLocation.objects.get(name=signup_location_name)
 
-        self.client.post('/dashboard/add_player', {
+        self.client.post('/dashboard/moderator/add_player', {
             'game': game.id,
             'email': email,
             'signup_location': signup_location.id

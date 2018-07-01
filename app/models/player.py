@@ -1,11 +1,10 @@
-import random
-import string
 import uuid
 from datetime import timedelta
 
 from django.db import transaction, models, DatabaseError
 from enumfields import Enum, EnumField
 
+from app.models.util import generate_code
 from .game import Game
 from .user import User
 
@@ -13,14 +12,12 @@ from .user import User
 class PlayerManager(models.Manager):
     def create_player(self, user, game, role, **extra_fields):
         if user.player_set.filter(game=game, active=True).exists():
-            raise ValueError(f'A player associated with {user} already exists for {game}')
+            raise ValueError(f'The user {user} already exists in the game {game}.')
 
-        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-
+        code = generate_code(6)
         # For set of all supply codes, each code must be unique
         while self.filter(code=code):
-            code = ''.join(random.choices(
-                string.ascii_uppercase + string.digits, k=6))
+            code = generate_code(6)
 
         player = self.model(user=user, game=game, code=code, role=role, **extra_fields)
         player.save()
@@ -84,3 +81,18 @@ class Player(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
+
+
+    @property
+    def is_spectator(self):
+        return self.role == PlayerRole.SPECTATOR
+
+
+    @property
+    def is_zombie(self):
+        return self.role == PlayerRole.ZOMBIE
+
+
+    @property
+    def is_human(self):
+        return self.role == PlayerRole.HUMAN

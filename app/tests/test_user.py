@@ -11,5 +11,5 @@ class UserTest(TestCase):
         self.user, self.player = self.user_tester.create_user_and_player('tiff@email.com', 'first', 'last')
 
     def test_one_user_per_email(self):
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             self.user, self.player = self.user_tester.create_user_and_player('tiff@email.com', 'first', 'last')

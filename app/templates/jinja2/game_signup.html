@@ -1,0 +1,24 @@
+{% from "components/card.html" import card %}
+{% extends "base.html" %}
+
+{% block title %}Game Signup{% endblock %}
+
+{% block content %}
+  {% call card('Game Signup') %}
+  <form action="{{ url('game_signup') }}" method="post" class="card-body">
+    {{ csrf_input }}
+    <p>Signup for the {{ game.name }} game</p>
+
+    <p>Waiver goes here</p>
+
+    <div class="ui-form-group">
+      <label class="ui-label">Do you want a chance to start off as a zombie?</label>
+      <input class="checkbox" type="checkbox" name="is_oz" />
+    </div>
+    <div class="ui-form-group pt-2 text-center">
+      <input type="submit" value="Signup" class="btn btn-primary">
+    </div>
+  </form>
+  {% endcall %}
+</div>
+{% endblock %}

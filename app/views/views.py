@@ -1,12 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.utils import dateparse
 from django.utils.decorators import method_decorator
 
 from app.models import Player, Tag, SupplyCode, PlayerRole
-from app.util import require_post_parameters, MobileSupportedView, active_game
+from app.util import require_post_parameters, MobileSupportedView, active_game, active_game_required
 
 
 class IndexView(MobileSupportedView):
@@ -20,21 +20,21 @@ class DashboardView(MobileSupportedView):
     mobile_template = 'dashboard/index.html'
 
     def get(self, request):
-        game = active_game()
-        if not game.started_on:
-            return render(request, 'dashboard/game_not_started.html')
-
         try:
             player = request.user.player_set.get()
         except ObjectDoesNotExist:
             messages.info(request, "You haven't signed up for any games yet.")
             return redirect('game_signup')
-        team_score = sum([p.score() for p in Player.objects.all()])
+        team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
         return self.mobile_or_desktop(request, {'player': player, 'team_score': team_score})
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(active_game_required, name='dispatch')
 class ReportTagView(MobileSupportedView):
+    def get(self, request):
+        return redirect('dashboard')
+
     def post(self, request):
         player_code, date, time, location, description = \
             require_post_parameters(request, 'player_code', 'date', 'time', 'location', 'description')
@@ -45,32 +45,30 @@ class ReportTagView(MobileSupportedView):
         datetime = dateparse.parse_datetime(f'{date} {time}')
 
         Tag.objects.create_tag(initiating_player, receiving_player, datetime, location, description)
-        messages.info(request, f'Reported a tag on {receiving_player.user.get_full_name()}')
-        return redirect('dashboard')
-
-    def get(self, request):
+        messages.info(request, f'You\'ve reported a tag on {receiving_player.user.get_full_name()}.')
         return redirect('dashboard')
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(active_game_required, name='dispatch')
 class ClaimSupplyCodeView(MobileSupportedView):
+    def get(self, request):
+        return redirect('dashboard')
+
     def post(self, request):
         code, = require_post_parameters(request, 'supply_code')
         try:
             supply_code = SupplyCode.objects.get(code=code, claimed_by__isnull=True)
         except ObjectDoesNotExist:
-            messages.warning(request, "That supply code does not exist or has already been claimed.")
+            messages.error(request, "That supply code does not exist or has already been redeemed.")
             return redirect('dashboard')
 
         game = active_game()
         player = request.user.player(game)
         if player.role != PlayerRole.HUMAN:
-            messages.warning(request, "Only humans can claim supply codes...")
+            messages.error(request, "Only humans can claim supply codes.")
             return redirect('dashboard')
 
         supply_code.claim(player)
-        messages.success(request, 'Code has been claimed.')
-        return redirect('dashboard')
-
-    def get(self, request):
+        messages.success(request, 'The code has been redeemed successfully.')
         return redirect('dashboard')

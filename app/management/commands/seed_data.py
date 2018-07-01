@@ -83,3 +83,11 @@ class Command(BaseCommand):
 
         for i in range(0, 50):
             Player.objects.create_player(users[i], game, random.choice(roles))
+
+        zombie = User.objects.create_user('zombie@email.com', 'password', first_name='Zombie', last_name='Player')
+        human = User.objects.create_user('human@email.com', 'password', first_name='Human', last_name='Player')
+        spectator = User.objects.create_user('spectator@email.com', 'password', first_name='Spectator', last_name='Player')
+
+        Player.objects.create_player(zombie, game, PlayerRole.ZOMBIE)
+        Player.objects.create_player(human, game, PlayerRole.HUMAN)
+        Player.objects.create_player(spectator, game, PlayerRole.SPECTATOR)

@@ -1,5 +1,6 @@
 
 
 .ui-grid {
-
+  display: grid;
+  grid-gap: spacing();
 }

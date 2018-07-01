@@ -4,9 +4,9 @@
 {% block title %}User Signup{% endblock %}
 
 {% block content %}
-<div style="display: flex; height: 100vh; align-items: center; justify-content: center;">
+
   {% call card('Signup') %}
-  <form action="{{ url('user_signup', kwargs={'signup_token': signup_token}) }}" method="post" class="card-body">
+  <form action="{{ url('user_signup', kwargs={'signup_token': signup_token}) }}" method="post">
       {{ csrf_input }}
       <div class="ui-form-group">
         <label class="ui-label">First Name</label>
@@ -20,8 +20,10 @@
         <label class="ui-label">Password</label>
         <input class="ui-input" type="password" name="password">
       </div>
-      <input class="btn btn-primary" type="submit" value="Submit">
+      <div class="ui-form-group">
+        <input class="btn btn-primary" type="submit" value="Submit">
+      </div>
     </form>
   {% endcall %}
-</div>
+
 {% endblock %}

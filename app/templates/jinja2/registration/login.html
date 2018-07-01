@@ -20,7 +20,7 @@
   {% endif %}
 
   {% call card('Login') %}
-  <form action="{{ url('login') }}" method="post" class="card-body">
+  <form action="{{ url('login') }}" method="post">
     {{ csrf_input }}
     <div class="ui-form-group">
       <label class="ui-label">Email</label>
@@ -35,7 +35,7 @@
       <input type="hidden" name="next" value="{{ next }}"/>
     </div>
   </form>
-  <a class="" href="{{ url('password_reset') }}">Lost password?</a>
+  <a class="d-block text-center" href="{{ url('password_reset') }}">Lost password?</a>
   {% endcall %}
 </div>
 

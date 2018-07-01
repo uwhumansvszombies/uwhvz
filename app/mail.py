@@ -19,7 +19,7 @@ def send_signup_email(request, game, location, email):
 def _send_mail_template(request, plaintext_template, html_template, subject, recipient, context=None):
     msg_plain = render_to_string(plaintext_template, context, request)
     msg_html = render_to_string(html_template, context, request)
-    from_email = '???'
+    from_email = 'uwhumansvszombies@gmail.com'
     return send_mail(
         subject=subject,
         message=msg_plain,

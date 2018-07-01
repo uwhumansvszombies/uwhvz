@@ -1,0 +1,33 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Generate Supply Codes{% endblock %}
+{% block pagetitle %}Moderator Actions{% endblock %}
+{% block pagesubtitle %}Generate Supply Codes{% endblock %}
+
+{% block subcontent %}
+
+{% call card('Generate Supply Codes') %}
+  <form method="post">
+    {{ csrf_input }}
+    <div class="ui-form-group pt-2 text-center">
+      <input type="submit" value="Generate Supply Code" class="btn btn-primary">
+    </div>
+  </form>
+{% endcall %}
+
+<div>
+  {% call card('Unclaimed Codes') %}
+  <table class="table table-striped">
+    {% for code in supply_codes %}
+      {% if code.claimed_by is none %}
+        <tr>
+          <td>{{ code.code }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </table>
+  {% endcall %}
+</div>
+
+{% endblock %}
