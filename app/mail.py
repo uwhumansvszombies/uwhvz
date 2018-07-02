@@ -2,18 +2,18 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from app.models import SignupToken
+from app.models import SignupInvite
 
 
 def send_signup_email(request, game, location, email):
-    signup_token = SignupToken.objects.create_signup_token(game, location, email)
+    signup_invite = SignupInvite.objects.create_signup_invite(game, location, email)
     _send_mail_template(
         request,
         'email/signup.txt',
         'email/signup.html',
         'Welcome to HvZ',
         email,
-        {'signup_token': signup_token}
+        {'signup_invite': signup_invite}
     )
 
 

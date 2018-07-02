@@ -1,11 +1,11 @@
 {% from "components/card.html" import card %}
-{% extends "base.html" %}
+{% extends "registration/base.html" %}
 
 {% block title %}Game Signup{% endblock %}
 
-{% block content %}
+{% block subcontent %}
   {% call card('Game Signup') %}
-  <form action="{{ url('game_signup') }}" method="post" class="card-body">
+  <form action="{{ url('game_signup') }}" method="post">
     {{ csrf_input }}
     <p>Signup for the {{ game.name }} game</p>
 
@@ -20,5 +20,4 @@
     </div>
   </form>
   {% endcall %}
-</div>
 {% endblock %}

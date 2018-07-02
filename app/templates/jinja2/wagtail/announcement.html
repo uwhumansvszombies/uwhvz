@@ -1,0 +1,11 @@
+{% extends "dashboard/base.html" %}
+
+{% block pagetitle %}{{ game.name }} - Announcement Post{% endblock %}
+{% block pagesubtitle %}{{ page.title }}{% endblock %}
+
+{% block subcontent %}
+  {% call card(page.title, class='text-left') %}
+    {{ page.body|richtext }}
+    <p><a class="btn btn-primary" href="{{ page.get_parent().url }}">Return to Game Info</a></p>
+  {% endcall %}
+{% endblock %}

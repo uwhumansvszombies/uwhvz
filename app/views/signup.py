@@ -6,33 +6,33 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
-from app.models import SignupToken, User, Player, PlayerRole
+from app.models import SignupInvite, User, Player, PlayerRole
 from app.util import require_post_parameters, MobileSupportedView, active_game
 
 
-def signup(request, signup_token):
-    token = SignupToken.objects.get(pk=signup_token)
+def signup(request, signup_invite):
+    token = SignupInvite.objects.get(pk=signup_invite)
     if User.objects.filter(email=token.email).exists():
         return redirect('game_signup')
     else:
-        return redirect('user_signup', signup_token=signup_token)
+        return redirect('user_signup', signup_invite=signup_invite)
 
 
 class UserSignupView(MobileSupportedView):
-    desktop_template = 'user_signup.html'
-    mobile_template = 'user_signup.html'
+    desktop_template = 'registration/user_signup.html'
+    mobile_template = 'registration/user_signup.html'
 
     def get(self, request, **kwargs):
-        signup_token = kwargs['signup_token']
-        token = SignupToken.objects.get(pk=signup_token)
+        signup_invite = kwargs['signup_invite']
+        token = SignupInvite.objects.get(pk=signup_invite)
         if token.used_at:
             messages.info(request, f'You\'ve already created an account using {token.email}.')
             return redirect('dashboard')
 
-        return self.mobile_or_desktop(request, {'signup_token': signup_token})
+        return self.mobile_or_desktop(request, {'signup_invite': signup_invite})
 
-    def post(self, request, signup_token):
-        token = SignupToken.objects.get(pk=signup_token)
+    def post(self, request, signup_invite):
+        token = SignupInvite.objects.get(pk=signup_invite)
         if token.used_at:
             messages.info(request, f'You\'ve already created an account using {token.email}.')
             return redirect('dashboard')
@@ -50,8 +50,8 @@ class UserSignupView(MobileSupportedView):
 
 @method_decorator(login_required, name='dispatch')
 class GameSignupView(MobileSupportedView):
-    desktop_template = 'game_signup.html'
-    mobile_template = 'game_signup.html'
+    desktop_template = 'registration/game_signup.html'
+    mobile_template = 'registration/game_signup.html'
 
     def get(self, request):
         game = active_game()

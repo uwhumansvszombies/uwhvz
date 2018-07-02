@@ -7,15 +7,15 @@ from .game import Game
 from .signup_location import SignupLocation
 
 
-class SignupTokenManager(models.Manager):
-    def create_signup_token(self, game, signup_location, email):
+class SignupInviteManager(models.Manager):
+    def create_signup_invite(self, game, signup_location, email):
         email = normalize_email(email)
         signup_location = self.model(game=game, signup_location=signup_location, email=email)
         signup_location.save()
         return signup_location
 
 
-class SignupToken(models.Model):
+class SignupInvite(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
@@ -26,7 +26,7 @@ class SignupToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    objects = SignupTokenManager()
+    objects = SignupInviteManager()
 
     def __str__(self):
         return f'{self.game}: {self.email} at {self.signup_location}'
