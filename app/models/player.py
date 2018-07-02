@@ -49,11 +49,11 @@ class Player(models.Model):
         Point value of a Human/Zombie player.
         Humans are worth 5 points as a kill, Zombies have their own scoring.
         """
-        if self.role == PlayerRole.HUMAN:
+        if self.is_human:
             return 5
         eight_hours_ago = at - timedelta(hours=8)
         return max(0, 5 - self.receiver_tags
-                   .filter(tagged_at__gte=eight_hours_ago, tagged_at__lt=at)
+                   .filter(tagged_at__gte=eight_hours_ago, tagged_at__lt=at, active=True)
                    .count())
 
     def score(self):
@@ -61,14 +61,14 @@ class Player(models.Model):
         Individual score of a player.
         """
         total_score = 0
-        for tag in self.initiator_tags.all():
+        for tag in self.initiator_tags.filter(active=True).all():
             total_score += tag.receiver.value(tag.tagged_at)
 
         total_score += sum([code.value for code in self.supplycode_set.all()])
         return total_score
 
     def kill(self):
-        if self.role == PlayerRole.ZOMBIE:
+        if self.is_zombie:
             raise ValueError("This player is already a zombie.")
 
         self.active = False

@@ -5,6 +5,8 @@
 {% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %}
 
 {% block subcontent %}
+
+{% if game.started_on != Null %}
   {% if not player.is_spectator %}
     <div class="ui-grid s-dashboard__index">
       <div class="ui-grid">
@@ -83,7 +85,12 @@
         {% endcall %}
         </div>
       {% endif %}
+    </div>
   {% else %}
+    <p>As a spectator, you cannot access any actions that affect the game (reporting stuns/tags, redeeming supply codes, etc.). However, please feel free to checkout some of the other pages on the sidebar.</p>
   {% endif %}
+{% else %}
+  <p>There is no game that is currently running. Please check back later.</p>
+{% endif %}
 
 {% endblock %}

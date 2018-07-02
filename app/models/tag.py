@@ -46,6 +46,9 @@ class Tag(models.Model):
     location = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True)
 
+    # If active is False this tag is ignored.
+    active = models.BooleanField(default=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 

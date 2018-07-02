@@ -25,7 +25,6 @@ class DashboardView(MobileSupportedView):
         try:
             player = request.user.player_set.get()
         except ObjectDoesNotExist:
-            messages.info(request, "You haven't signed up for any games yet.")
             return redirect('game_signup')
         team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
         return self.mobile_or_desktop(request, {'game': game, 'player': player, 'team_score': team_score})

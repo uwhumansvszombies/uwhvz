@@ -1,0 +1,15 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Manage OZ Pool{% endblock %}
+
+{% block pagetitle %}{{ game.name }} - Moderator Actions{% endblock %}
+{% block pagesubtitle %}Manage OZ Pool{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid">
+  {% call card('List OZs') %}
+
+  {% endcall %}
+</div>
+{% endblock %}
