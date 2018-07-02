@@ -6,8 +6,8 @@
 <header id="landing-nav">
   <nav>
     <div class="sitelogo">{{ svg('site-logo-dark') }}</div>
-    {% if user.is_authenticated %}
     <div class="actions">
+    {% if user.is_authenticated %}
       <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
       <a class="btn btn-primary" href="{{ url('dashboard') }}">Go to dashboard</a>
     {% else %}
@@ -47,5 +47,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/scripts/countdown.js"></script>
+<script src="{{ static('scripts/countdown.js') }}"></script>
 {% endblock %}
