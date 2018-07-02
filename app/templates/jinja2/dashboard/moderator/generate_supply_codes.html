@@ -2,21 +2,21 @@
 {% extends "dashboard/base.html" %}
 
 {% block title %}Generate Supply Codes{% endblock %}
-{% block pagetitle %}Moderator Actions{% endblock %}
+{% block pagetitle %}{{ game.name }} - Moderator Actions{% endblock %}
 {% block pagesubtitle %}Generate Supply Codes{% endblock %}
 
 {% block subcontent %}
 
-{% call card('Generate Supply Codes') %}
-  <form method="post">
-    {{ csrf_input }}
-    <div class="ui-form-group pt-2 text-center">
-      <input type="submit" value="Generate Supply Code" class="btn btn-primary">
-    </div>
-  </form>
-{% endcall %}
-
-<div>
+<div class="ui-grid s-dashboard__generate-supply">
+  {% call card('Generate Supply Codes', id="card--generate-supply") %}
+    <form method="post">
+      {{ csrf_input }}
+      <div class="ui-form-group pt-2 text-center">
+        <input type="submit" value="Generate Supply Code" class="btn btn-primary">
+      </div>
+    </form>
+  {% endcall %}
+  
   {% call card('Unclaimed Codes') %}
   <table class="table table-striped">
     {% for code in supply_codes %}

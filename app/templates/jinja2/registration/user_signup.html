@@ -1,0 +1,29 @@
+{% from "components/card.html" import card %}
+{% extends "registration/base.html" %}
+
+{% block title %}User Signup{% endblock %}
+
+{% block subcontent %}
+
+{% call card('Signup') %}
+  <form action="{{ url('user_signup', kwargs={'signup_invite': signup_invite}) }}" method="post">
+    {{ csrf_input }}
+    <div class="ui-form-group">
+      <label class="ui-label">First Name</label>
+      <input class="ui-input" type="text" name="first_name">
+    </div>
+    <div class="ui-form-group">
+      <label class="ui-label">Last Name</label>
+      <input class="ui-input" type="text" name="last_name">
+    </div>
+    <div class="ui-form-group">
+      <label class="ui-label">Password</label>
+      <input class="ui-input" type="password" name="password">
+    </div>
+    <div class="ui-form-group pt-2 text-center">
+      <input class="btn btn-primary" type="submit" value="Submit">
+    </div>
+  </form>
+{% endcall %}
+
+{% endblock %}

@@ -122,4 +122,4 @@ node_modules
 .env.production.local
 
 db.sqlite3
-static
+/static/

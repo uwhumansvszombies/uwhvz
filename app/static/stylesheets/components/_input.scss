@@ -1,25 +1,20 @@
+////
+/// Default styling for form text inputs live here.
+/// @group components
+////
+
+
 .ui-form-group {
-  margin-top: 8px;
-  text-transform: uppercase;
-
-  &:first-of-type {
-    margin-top: 0px;
-  }
-}
-
-.ui-label {
-  color: color(sky, dark);
-  font-size: 14px;
-  font-weight: 500;
+  margin-bottom: spacing(tighter);
 }
 
 .ui-input {
   width: 100%;
-  min-height: 32px;
+  min-height: 2rem;
   padding: spacing(tighter);
   margin-bottom: spacing(tightest);
   border-radius: radius();
-  font-size: 16px;
+  font-size: 1rem;
   border: 0;
 }
 

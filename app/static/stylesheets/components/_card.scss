@@ -16,6 +16,10 @@
   @include type-heading;
 
   font-family: ff('heading');
+
+  .text-left & {
+    text-align: left;
+  }
 }
 
 .ui-card__content {

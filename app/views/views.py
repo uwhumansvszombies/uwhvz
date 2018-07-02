@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils import dateparse
 from django.utils.decorators import method_decorator
+from django.views import View
 
 from app.models import Player, Tag, SupplyCode, PlayerRole
 from app.util import require_post_parameters, MobileSupportedView, active_game, active_game_required
@@ -20,13 +21,14 @@ class DashboardView(MobileSupportedView):
     mobile_template = 'dashboard/index.html'
 
     def get(self, request):
+        game = active_game()
         try:
             player = request.user.player_set.get()
         except ObjectDoesNotExist:
             messages.info(request, "You haven't signed up for any games yet.")
             return redirect('game_signup')
         team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
-        return self.mobile_or_desktop(request, {'player': player, 'team_score': team_score})
+        return self.mobile_or_desktop(request, {'game': game, 'player': player, 'team_score': team_score})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -72,3 +74,17 @@ class ClaimSupplyCodeView(MobileSupportedView):
         supply_code.claim(player)
         messages.success(request, 'The code has been redeemed successfully.')
         return redirect('dashboard')
+
+
+@method_decorator(login_required, name='dispatch')
+class PlayerListView(View):
+    template_name = 'dashboard/player_list.html'
+    
+    def get(self, request):
+        players = Player.objects.all()
+        game = active_game()
+        return render(request, self.template_name, {
+            'game': game,
+            'player': request.user.player(game),
+            'players': players
+    }) 

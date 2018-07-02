@@ -1,30 +1,28 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
-{% block title %}Player List{% endblock %}
-
-{% block pagetitle %}Moderator Actions{% endblock %}
-{% block pagesubtitle %}View Player List{% endblock %}
+{% block pagetitle %}{{ game.name }} - Game Information{% endblock %}
+{% block pagesubtitle %}Player List{% endblock %}
 
 {% block subcontent %}
-{% call card('Player List') %}
+  {% call card('Player List') %}
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Email</th>
         <th scope="col">Name</th>
+        <th scope="col">Email</th>
         <th scope="col">Role</th>
       </tr>
     </thead>
     <tbody>
       {% for player in players %}
       <tr>
-        <td scope="col">{{ player.user.email }}</td>
         <td scope="col">{{ player.user.get_full_name() }}</td>
-        <td scope="col">{{ player.role }}</td>
+        <td scope="col">{{ player.user.email }}</td>
+        <td scope="col">{% if player.is_spectator %}{{ player.role }}{% else %}Player{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-{% endcall %}
+  {% endcall %}
 {% endblock %}
