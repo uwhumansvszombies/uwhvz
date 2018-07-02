@@ -54,7 +54,7 @@ class UserTester:
         game = Game.objects.get(name=game_name)
         signup_location = SignupLocation.objects.get(name=signup_location_name)
 
-        self.client.post('/dashboard/moderator/add_player', {
+        self.client.post('/dashboard/moderator/manage_players', {
             'game': game.id,
             'email': email,
             'signup_location': signup_location.id

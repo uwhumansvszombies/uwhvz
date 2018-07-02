@@ -1,0 +1,29 @@
+////
+/// Site-specific classes for the dashboard/index page live here.
+/// @group site, @page dashboard/index
+////
+
+
+.s-dashboard__index {
+  grid-template-columns: minmax(auto, 12.5rem) 2fr 2fr;
+}
+
+.s-dashboard__game-info {
+  grid-template-columns: 2fr 2fr;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+}
+
+.s-dashboard__generate-supply,
+.s-dashboard__player-list {
+  grid-template-columns: 1fr 2fr;
+}
+
+#card--generate-supply,
+#card--add-player {
+  align-self: flex-start;
+}

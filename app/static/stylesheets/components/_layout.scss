@@ -1,24 +1,29 @@
 .ui-layout {
-  height: auto;
+  height: 100%;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
   align-content: center;
   align-items: center;
-  position: relative;
-  top: layout-element-size('height', 'titlebar');
-  overflow-y: auto;
 }
 
 .ui-layout__item {
-  width: calc(100% - #{spacing('loosest') * 2});
   height: auto;
-  padding: 2em 0;
   margin: 0 auto;
   position: relative;
 }
 
+
 .ui-layout--dashboard {
+  height: auto;
+  position: relative;
+  top: layout-element-size('height', 'titlebar');
   width: dashboard-width-offset();
   left: layout-element-size('width', 'sidebar');
+  overflow-y: auto;
+
+  > .ui-layout__item {
+    width: calc(100% - #{spacing('loosest') * 2});
+    padding: 2em 0;
+  }
 }

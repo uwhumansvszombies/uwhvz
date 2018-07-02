@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, SignupToken
+from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, SignupInvite
 
 
 @admin.register(Player)
@@ -37,8 +37,8 @@ class SignupLocationAdmin(admin.ModelAdmin):
         return False
 
 
-@admin.register(SignupToken)
-class SignupTokenAdmin(admin.ModelAdmin):
+@admin.register(SignupInvite)
+class SignupInviteAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 

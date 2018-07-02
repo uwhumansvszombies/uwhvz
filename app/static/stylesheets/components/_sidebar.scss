@@ -8,11 +8,11 @@
   height: 100%;
   position: fixed;
   top: layout-element-size(height, titlebar);
-  border-right: 1px solid color(gray);
+  border-right: 1px solid;
 }
 
 .ui-sidebar-nav {
-  padding: spacing(tightest) 0 0 spacing(tight);
+  padding: spacing(tight) 0 0 spacing(tight);
   list-style: none;
 
   li {
@@ -34,4 +34,17 @@
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
+}
+
+
+.th--light {
+  .ui-sidebar {
+    border-right-color: color(gray);
+  }
+}
+
+.th--dark {
+  .ui-sidebar {
+    border-right-color: color(ink, light);
+  }
 }

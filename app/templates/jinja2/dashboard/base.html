@@ -27,7 +27,7 @@
     <h1 class="ui-sidebar-nav__title">Player Actions</h1>
     <li><a href="{{ url('dashboard') }}">My Dashboard</a></li>
     <li><a href="/game_info">Game Information</a></li>
-    <li><a href="#">View Players</a></li>
+    <li><a href="{{ url('player_list') }}">View Players</a></li>
     {% if not player.is_human %}
     <li><a href="#">View Zombie Tree</a></li>
     {% endif %}
@@ -35,29 +35,16 @@
   {% if user.is_moderator %}
   <ul class="ui-sidebar-nav">
     <h1 class="ui-sidebar-nav__title">Moderator Actions</h1>
-    <li>
-      <a href="{{ url('player_list') }}">Player List</a>
-    </li>
-    <li>
-      <a href="{{ url('add_player') }}">Add Player</a>
-    </li>
-    <li>
-      <a href="{{ url('signup_locations') }}">Signup Locations</a>
-    </li>
-    <li>
-      <a href="#">Manage OZ Pool</a>
-    </li>
-    <li>
-      <a href="{{ url('generate_supply_codes') }}">Generate Supply Codes</a>
-    </li>
-    {% if user.is_staff %}
-    <li>
-      <a href="/cms">Wagtail</a>
-    </li>
-    <li>
-      <a href="{{ url('admin:index') }}">Django Admin</a>
-    </li>
-    {% endif %}
+    <li><a href="{{ url('manage_players') }}">Manage Players</a></li>
+    <li><a href="#">Manage OZ Pool</a></li>
+    <li><a href="{{ url('generate_supply_codes') }}">Generate Supply Codes</a></li>
+    <li><a href="/cms">Post Announcements & Missions (Wagtail)</a></li>
+  </ul>
+  {% endif %}
+  {% if user.is_staff %}
+  <ul class="ui-sidebar-nav">
+    <h1 class="ui-sidebar-nav__title">Webmaster Actions</h1>
+    <li><a href="{{ url('admin:index') }}">Site Management (Django Admin)</a></li>
   </ul>
   {% endif %}
 </nav>

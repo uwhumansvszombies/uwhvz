@@ -13,6 +13,7 @@ class ViewableBy(Enum):
 
 
 class GameInfoPage(Page):
+    template = 'wagtail/game_info.html'
     intro = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
@@ -26,12 +27,16 @@ class GameInfoPage(Page):
         game = active_game()
         player = request.user.player(game)
         context['player'] = player
-        context['announcements'] = self.get_children().type(AnnouncementPage).live().public()
-        context['missions'] = self.get_children().type(MissionPage).live().public()
+        context['game'] = game
+        context['announcements'] = \
+            self.get_children().type(AnnouncementPage).live().public().order_by('-first_published_at')
+        context['missions'] = \
+            self.get_children().type(MissionPage).live().public().order_by('-first_published_at')
         return context
 
 
 class AnnouncementPage(Page):
+    template = 'wagtail/announcement.html'
     body = RichTextField(blank=True)
 
     viewable_by = EnumField(enum=ViewableBy, max_length=1)
@@ -52,6 +57,7 @@ class AnnouncementPage(Page):
         game = active_game()
         player = request.user.player(game)
         context['player'] = player
+        context['game'] = game
         return context
 
     @property
@@ -64,6 +70,7 @@ class AnnouncementPage(Page):
 
 
 class MissionPage(Page):
+    template = 'wagtail/mission.html'
     body = RichTextField(blank=True)
 
     viewable_by = EnumField(enum=ViewableBy, max_length=1)
@@ -84,6 +91,7 @@ class MissionPage(Page):
         game = active_game()
         player = request.user.player(game)
         context['player'] = player
+        context['game'] = game
         return context
 
     @property
