@@ -72,27 +72,6 @@
       </tbody>
     </table>
   {% endcall %}
-
-    {% call card('Signup Locations') %}
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>Location</th>
-      <th>Number of emails sent</th>
-      <th>Number of emails acted upon</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for location in signup_locations %}
-    <tr>
-      <td>{{ location.name }}</td>
-      <td>{{ location.signupinvite_set.count() }}</td>
-      <td>{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  {% endcall %}
 </div>
 
 {% endblock %}
