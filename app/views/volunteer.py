@@ -5,10 +5,11 @@ from django.views import View
 
 from app.mail import send_signup_email
 from app.models import SignupLocation, User
-from app.util import volunteer_required, most_recent_game, require_post_parameters
+from app.util import volunteer_required, most_recent_game, require_post_parameters, active_game_required
 
 
 @method_decorator(volunteer_required, name='dispatch')
+@method_decorator(active_game_required, name='dispatch')
 class SignUpPlayersView(View):
     template_name = 'dashboard/volunteer/signup_players.html'
 
@@ -17,7 +18,6 @@ class SignUpPlayersView(View):
         game = most_recent_game()
         return render(request, self.template_name, {
             'game': game,
-            'player': request.user.player(game),
             'signup_locations': locations,
         })
 

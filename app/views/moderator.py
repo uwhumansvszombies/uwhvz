@@ -18,7 +18,6 @@ class ManagePlayersView(View):
         game = most_recent_game()
         return render(request, self.template_name, {
             'game': game,
-            'player': request.user.player(game),
             'players': players,
             'signup_locations': locations,
         })
@@ -44,7 +43,6 @@ class GenerateSupplyCodeView(View):
         supply_codes = SupplyCode.objects.all()
         game = most_recent_game()
         return render(request, self.template_name, {
-            'player': request.user.player(game),
             'game': game,
             'supply_codes': supply_codes
         })
