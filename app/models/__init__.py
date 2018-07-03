@@ -1,4 +1,4 @@
-from .game import Game
+from .game import Game, GameState
 from .player import Player, PlayerRole
 from .signup_location import SignupLocation
 from .signup_invite import SignupInvite

@@ -1,5 +1,6 @@
 import uuid
 
+from enum import Enum, auto
 from django.db import models
 
 from .user import User
@@ -10,6 +11,12 @@ class GameManager(models.Manager):
         game = self.model(name=name, **kwargs)
         game.save()
         return game
+
+
+class GameState(Enum):
+    ACTIVE = auto()
+    RUNNING = auto()
+    FINISHED = auto()
 
 
 class Game(models.Model):
@@ -26,6 +33,25 @@ class Game(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     objects = GameManager()
+
+    def state(self):
+        if self.started_on:
+            print(GameState.FINISHED if self.ended_on else GameState.RUNNING)
+            return GameState.FINISHED if self.ended_on else GameState.RUNNING
+        else:
+            return GameState.ACTIVE
+    
+    @property
+    def is_active(self):
+        return self.state() == GameState.ACTIVE
+
+    @property
+    def is_running(self):
+        return self.state() == GameState.RUNNING
+
+    @property
+    def is_finished(self):
+          return self.state() == GameState.FINISHED
 
     def __str__(self):
         return self.name

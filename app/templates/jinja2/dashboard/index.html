@@ -1,96 +1,21 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
-{% block pagetitle %}{{ game.name }}{% endblock %}
+{% block title %}Dashboard{% endblock %}
+
+{% block pagetitle %}My Dashboard{% endblock %}
 {% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %}
 
 {% block subcontent %}
 
-{% if game.started_on != Null %}
-  {% if not player.is_spectator %}
-    <div class="ui-grid s-dashboard__index">
-      <div class="ui-grid">
-        {{ card('My Code', player.code, 'ui-card--display') }}
-        {{ card('My Score', player.score(), 'ui-card--display') }}
-        {{ card('Team', player.role, 'ui-card--display') }}
-        {{ card('Team Score', team_score, 'ui-card--display') }}
-      </div>
-
-      {% call card('Report Tag') %}
-        <form action="{{ url('report_tag') }}" method="post">
-          {{ csrf_input }}
-          <div class="ui-form-group">
-            <label class="ui-label">Other Player's Code</label>
-            <input class="ui-input" type="text" name="player_code" placeholder="e.g. A1B2C3">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Date of Tag</label>
-            <input class="ui-input" type="date" name="date">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Time</label>
-            <input class="ui-input" type="time" name="time">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Location (optional)</label>
-            <input class="ui-input" type="text" name="location" placeholder="e.g. RCH, DC Green">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Description (optional)</label>
-            <textarea class="ui-input" rows="5" name="description" placeholder="Tell us how you tagged the player!"></textarea>
-          </div>
-          <div class="ui-form-group pt-2 text-center">
-            <input class="btn btn-primary" type="submit" value="Submit">
-          </div>
-        </form>
-      {% endcall %}
-
-      {% if player.is_human %}
-        <div class="ui-grid">
-          {% call card('Redeem Supply Code') %}
-          <form action="{{ url('claim_supply_code') }}" method="post">
-            {{ csrf_input }}
-            <div class="ui-form-group">
-              <input class="ui-input" type="text" name="supply_code" placeholder="e.g. A1B2C3">
-            </div>
-            <div class="ui-form-group pt-2 text-center">
-              <input class="btn btn-primary" type="submit" value="Redeem">
-            </div>
-          </form>
-        {% endcall %}
-
-        {% call card('Available Rewards') %}
-        <table class="table table-striped">
-          <tr>
-            <th>Item</th>
-            <th>Cost</th>
-          </tr>
-          <tr>
-            <td>Rail Pass</td>
-            <td>25 points</td>
-          </tr>
-          <tr>
-            <td>Minor Building Pass</td>
-            <td>50 points</td>
-          </tr>
-          <tr>
-            <td>Major Building Pass</td>
-            <td>100 points</td>
-          </tr>
-          <tr>
-            <td>Officer's Badge</td>
-            <td>200 points</td>
-          </tr>
-        </table>
-        {% endcall %}
-        </div>
-      {% endif %}
-    </div>
-  {% else %}
-    <p>As a spectator, you cannot access any actions that affect the game (reporting stuns/tags, redeeming supply codes, etc.). However, please feel free to checkout some of the other pages on the sidebar.</p>
-  {% endif %}
-{% else %}
-  <p>There is no game that is currently running. Please check back later.</p>
-{% endif %}
+<div class="ui-grid">
+  <div class="ui-text-container">
+    {% call card('Welcome to the website!', class='text-left') %}
+      <p>Since this is a newly built website, we hope you'll be patient with us as we work to polish it and make it awesome when the game starts.</p>
+      <p>For now, if you don't see anything else, just sit tight and wait for the game to start, as all the fun stuff will be out and ready for you to play with when it starts!</p>
+      <p>Thank you! :)</p>
+    {% endcall %}
+  </div>
+</div>
 
 {% endblock %}

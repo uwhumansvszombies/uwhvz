@@ -1,7 +1,7 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
-{% block title %}Manage Players{% endblock %}
+{% block title %}Mod Dashboard - Manage Players{% endblock %}
 
 {% block pagetitle %}{{ game.name }} - Moderator Actions{% endblock %}
 {% block pagesubtitle %}Manage Players{% endblock %}
@@ -9,7 +9,7 @@
 {% block subcontent %}
 
 <div class="ui-grid s-dashboard__player-list">
-  <div class="ui-grid">
+  <div class="ui-grid align-content-start">
     {% call card('Add Player to ' + game.name, id='card--add-player') %}
       <form method="post">
         {{ csrf_input }}
@@ -52,7 +52,7 @@
     {% endcall %}
   </div>
 
-  {% call card('Player List') %}
+  {% call card('Player List', class='align-self-start') %}
     <table class="table table-striped">
       <thead>
         <tr>
@@ -66,7 +66,7 @@
         <tr>
           <td scope="col">{{ player.user.get_full_name() }}</td>
           <td scope="col">{{ player.user.email }}</td>
-          <td scope="col">{{ player.role }}</td>
+          <td scope="col">{{ player.role if game.started_on or player.is_spectator else 'Player' }}</td>
         </tr>
         {% endfor %}
       </tbody>

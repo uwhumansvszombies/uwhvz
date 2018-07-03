@@ -5,7 +5,7 @@ from django.views import View
 
 from app.mail import send_signup_email
 from app.models import Player, SignupLocation, User, SupplyCode
-from app.util import moderator_required, require_post_parameters, MobileSupportedView, active_game
+from app.util import moderator_required, require_post_parameters, MobileSupportedView, most_recent_game
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -15,7 +15,7 @@ class ManagePlayersView(View):
     def get(self, request):
         players = Player.objects.all()
         locations = SignupLocation.objects.all()
-        game = active_game()
+        game = most_recent_game()
         return render(request, self.template_name, {
             'game': game,
             'player': request.user.player(game),
@@ -30,7 +30,7 @@ class ManagePlayersView(View):
             return self.get(request)
 
         location = SignupLocation.objects.get(pk=location_id)
-        game = active_game()
+        game = most_recent_game()
         send_signup_email(request, game, location, email)
         messages.success(request, f'Sent an email to: {email}.')
         return self.get(request)
@@ -42,7 +42,7 @@ class GenerateSupplyCodeView(View):
     
     def get(self, request):
         supply_codes = SupplyCode.objects.all()
-        game = active_game()
+        game = most_recent_game()
         return render(request, self.template_name, {
             'player': request.user.player(game),
             'game': game,
@@ -50,7 +50,7 @@ class GenerateSupplyCodeView(View):
         })
 
     def post(self, request):
-        game = active_game()
+        game = most_recent_game()
         supply_code = SupplyCode.objects.create_supply_code(game)
         messages.success(request, f'Generated new code: {supply_code}.')
         return self.get(request)

@@ -1,8 +1,12 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
-{% block pagetitle %}{{ game.name }} - Game Information{% endblock %}
-{% block pagesubtitle %}Player List{% endblock %}
+{% block title %}Dashboard - Player List{% endblock %}
+
+{% block pagetitle %}
+  {% if game.is_running %}{{ game.name }} - {% endif %}Player List
+{% endblock %}
+{% block pagesubtitle %}View Players{% endblock %}
 
 {% block subcontent %}
   {% call card('Player List') %}
@@ -19,7 +23,7 @@
       <tr>
         <td scope="col">{{ player.user.get_full_name() }}</td>
         <td scope="col">{{ player.user.email }}</td>
-        <td scope="col">{% if player.is_spectator %}{{ player.role }}{% else %}Player{% endif %}</td>
+        <td scope="col">{{ player.role if player.is_spectator else 'Player' }}</td>
       </tr>
       {% endfor %}
     </tbody>
