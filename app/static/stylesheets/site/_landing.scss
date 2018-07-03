@@ -77,8 +77,8 @@
   width: 50vw;
   max-width: 50vw;
   display: inline-grid;
-  grid-template-columns: repeat(4, 1fr);
-  justify-content: space-around;
+  grid-template-columns: repeat(4, auto);
+  grid-gap: 2rem;
 }
 
 #intro {
