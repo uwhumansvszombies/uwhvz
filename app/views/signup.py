@@ -56,14 +56,18 @@ class UserSignupView(View):
 class GameSignupView(View):
     def get(self, request):
         game = most_recent_game()
-        if request.user.player(game).exists():
+        if request.user.player_set.filter(game=game).exists():
             return redirect('dashboard')
         return render(request, 'registration/game_signup.html', {'game': game})
 
     def post(self, request):
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
+        has_signed_waiver = request.POST.get('accept_waiver', 'off') == 'on'
+        if not has_signed_waiver:
+            messages.warning(request, 'Please sign the waiver.')
+            return self.get(request)
         game = most_recent_game()
-        if request.user.player(game).exists():
+        if request.user.player_set.filter(game=game).exists():
             return redirect('dashboard')
-        Player.objects.create_player(request.useir, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
+        Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
         return redirect('dashboard')
