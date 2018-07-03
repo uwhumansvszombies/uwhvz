@@ -26,7 +26,7 @@ class DashboardView(MobileSupportedView):
             if game.is_running:
                 return redirect('player_info')
             else:
-                return self.mobile_or_desktop(request, {'game': game, 'player': request.user.player(game)})
+                return self.mobile_or_desktop(request, {'game': game})
         else:
             return self.mobile_or_desktop(request)
 
@@ -49,7 +49,7 @@ class PlayerInfoView(MobileSupportedView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
-class ReportTagView(MobileSupportedView):
+class ReportTagView(View):
     def get(self, request):
         return redirect('dashboard')
 
@@ -69,7 +69,7 @@ class ReportTagView(MobileSupportedView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
-class ClaimSupplyCodeView(MobileSupportedView):
+class ClaimSupplyCodeView(View):
     def get(self, request):
         return redirect('player_info')
 

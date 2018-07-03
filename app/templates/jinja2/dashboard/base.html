@@ -30,7 +30,7 @@
       <li><a href="{{ url('player_info') }}">Player Dashboard</a></li>
       <li><a href="/dashboard/game_info/">Game Info</a></li>
       <li><a href="{{ url('player_list') }}">Player List</a></li>
-      {% if (player and not player.is_human) or user.is_moderator %}
+      {% if (player is defined and not player.is_human) or user.is_moderator %}
         <li><a href="#">Zombie Tree</a></li>
       {% endif %}
     </ul>

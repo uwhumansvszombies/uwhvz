@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
 from django.core.exceptions import SuspiciousOperation
+from django.http import Http404
 from django.shortcuts import render
 from django.views import View
 
@@ -18,16 +19,6 @@ def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
     return actual_decorator
 
 
-def game_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
-    def _game_exists(user):
-        return game_exists()
-
-    actual_decorator = user_passes_test(_game_exists, login_url=login_url, redirect_field_name=redirect_field_name)
-    if function:
-        return actual_decorator(function)
-    return actual_decorator
-
-
 def volunteer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_volunteer(user):
         return user.is_authenticated and user.is_volunteer
@@ -38,15 +29,48 @@ def volunteer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
     return actual_decorator
 
 
-def running_game_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
-    # TODO: Make this feel better
-    def _running_game(user):
-        return most_recent_game()
+def game_exists():
+    return Game.objects.exists()
 
-    actual_decorator = user_passes_test(_running_game, login_url=login_url, redirect_field_name=redirect_field_name)
-    if function:
-        return actual_decorator(function)
-    return actual_decorator
+
+def most_recent_game():
+    return Game.objects.all().order_by('-created_at').first()
+
+
+def game_required(function=None):
+    def wrap(request, *args, **kwargs):
+        if game_exists():
+            return function(request, *args, **kwargs)
+        else:
+            raise Http404
+
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
+
+
+def active_game_required(function):
+    def wrap(request, *args, **kwargs):
+        if game_exists() and most_recent_game().is_active:
+            return function(request, *args, **kwargs)
+        else:
+            raise Http404
+
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
+
+
+def running_game_required(function=None):
+    def wrap(request, *args, **kwargs):
+        if game_exists() and most_recent_game().is_running:
+            return function(request, *args, **kwargs)
+        else:
+            raise Http404
+
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
 
 
 def require_post_parameters(request, *parameters):
@@ -83,14 +107,6 @@ def normalize_email(email):
 
 def site_url(request):
     return {'SITE_URL': settings.SITE_URL}
-
-
-def game_exists():
-    return Game.objects.exists()
-
-
-def most_recent_game():
-    return Game.objects.all().order_by('-created_at').first()
 
 
 class MobileSupportedView(View):
