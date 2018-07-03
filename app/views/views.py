@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.models import Player, Tag, SupplyCode, PlayerRole
-from app.util import require_post_parameters, MobileSupportedView, most_recent_game, game_exists, game_required, most_recent_game, running_game_required
+from app.util import require_post_parameters, MobileSupportedView, game_exists, most_recent_game, running_game_required
 
 
 class IndexView(MobileSupportedView):
@@ -96,7 +96,7 @@ class ClaimSupplyCodeView(MobileSupportedView):
 @method_decorator(running_game_required, name='dispatch')
 class PlayerListView(View):
     template_name = 'dashboard/player_list.html'
-    
+
     def get(self, request):
         players = Player.objects.all()
         game = most_recent_game()
@@ -104,4 +104,4 @@ class PlayerListView(View):
             'game': game,
             'player': request.user.player(game),
             'players': players
-    }) 
+        })

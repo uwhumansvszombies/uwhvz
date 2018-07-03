@@ -13,6 +13,8 @@ urlpatterns = [
     path('dashboard/player_list', views.PlayerListView.as_view(), name='player_list'),
     path('dashboard/signup', views.GameSignupView.as_view(), name='game_signup'),
     path('signup/<uuid:signup_invite>', views.signup, name='signup'),
-    path('dashboard/moderator/generate_supply_code', views.GenerateSupplyCodeView.as_view(), name='generate_supply_codes'),
+    path('dashboard/moderator/generate_supply_code', views.GenerateSupplyCodeView.as_view(),
+         name='generate_supply_codes'),
     path('dashboard/moderator/manage_players', views.ManagePlayersView.as_view(), name='manage_players'),
+    path('dashboard/volunteer/signup_player', views.SignUpPlayersView.as_view(), name='signup_player'),
 ]

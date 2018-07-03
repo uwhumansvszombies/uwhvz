@@ -5,13 +5,13 @@ from django.views import View
 
 from app.mail import send_signup_email
 from app.models import Player, SignupLocation, User, SupplyCode
-from app.util import moderator_required, require_post_parameters, MobileSupportedView, most_recent_game
+from app.util import moderator_required, require_post_parameters, most_recent_game
 
 
 @method_decorator(moderator_required, name='dispatch')
 class ManagePlayersView(View):
     template_name = 'dashboard/moderator/manage_players.html'
-    
+
     def get(self, request):
         players = Player.objects.all()
         locations = SignupLocation.objects.all()
@@ -26,7 +26,7 @@ class ManagePlayersView(View):
     def post(self, request):
         location_id, email = require_post_parameters(request, 'signup_location', 'email')
         if User.objects.filter(email=email).exists():
-            messages.add_message(request, messages.WARNING, f'There is already an account associated with: {email}.')
+            messages.warning(request, f'There is already an account associated with: {email}.')
             return self.get(request)
 
         location = SignupLocation.objects.get(pk=location_id)
@@ -39,7 +39,7 @@ class ManagePlayersView(View):
 @method_decorator(moderator_required, name='dispatch')
 class GenerateSupplyCodeView(View):
     template_name = 'dashboard/moderator/generate_supply_codes.html'
-    
+
     def get(self, request):
         supply_codes = SupplyCode.objects.all()
         game = most_recent_game()

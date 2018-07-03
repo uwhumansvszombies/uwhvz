@@ -35,6 +35,12 @@
       {% endif %}
     </ul>
   {% endif %}
+  {% if user.is_volunteer %}
+  <ul class="ui-sidebar-nav">
+    <h1 class="ui-sidebar-nav__title">Volunteer Actions</h1>
+    <li><a href="{{ url('signup_player') }}">Signup Players</a></li>
+  </ul>
+  {% endif %}
   {% if user.is_moderator %}
     <ul class="ui-sidebar-nav">
       <h1 class="ui-sidebar-nav__title">Moderator Actions</h1>
