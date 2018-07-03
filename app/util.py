@@ -1,11 +1,11 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
-from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist
+from django.core.exceptions import SuspiciousOperation
 from django.shortcuts import render
 from django.views import View
 
-from app.models import Game, PlayerRole
+from app.models import Game
 
 
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
@@ -23,6 +23,16 @@ def game_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_
         return game_exists()
 
     actual_decorator = user_passes_test(_game_exists, login_url=login_url, redirect_field_name=redirect_field_name)
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+def volunteer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    def _is_volunteer(user):
+        return user.is_authenticated and user.is_volunteer
+
+    actual_decorator = user_passes_test(_is_volunteer, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:
         return actual_decorator(function)
     return actual_decorator
@@ -81,7 +91,7 @@ def game_exists():
 
 def most_recent_game():
     return Game.objects.all().order_by('-created_at').first()
-    
+
 
 class MobileSupportedView(View):
     desktop_template = 'You did not supply a desktop template'
