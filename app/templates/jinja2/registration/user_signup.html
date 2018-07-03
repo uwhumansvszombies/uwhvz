@@ -5,6 +5,17 @@
 
 {% block subcontent %}
 
+{% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+{% endif %}
+
 {% call card('Signup') %}
   <form action="{{ url('user_signup', kwargs={'signup_invite': signup_invite}) }}" method="post">
     {{ csrf_input }}
@@ -18,7 +29,11 @@
     </div>
     <div class="ui-form-group">
       <label class="ui-label">Password</label>
-      <input class="ui-input" type="password" name="password">
+      <input class="ui-input" type="password" name="password1">
+    </div>
+    <div class="ui-form-group">
+      <label class="ui-label">Confirm Password</label>
+      <input class="ui-input" type="password" name="password2">
     </div>
     <div class="ui-form-group pt-2 text-center">
       <input class="btn btn-primary" type="submit" value="Submit">

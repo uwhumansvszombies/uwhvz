@@ -4,20 +4,68 @@
 {% block title %}Game Signup{% endblock %}
 
 {% block subcontent %}
-  {% call card('Game Signup') %}
-  <form action="{{ url('game_signup') }}" method="post">
-    {{ csrf_input }}
-    <p>Signup for the {{ game.name }} game</p>
-
-    <p>Waiver goes here</p>
-
-    <div class="ui-form-group">
-      <label class="ui-label">Do you want a chance to start off as a zombie?</label>
-      <input class="checkbox" type="checkbox" name="is_oz" />
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="ui-form-group pt-2 text-center">
-      <input type="submit" value="Signup" class="btn btn-primary">
+    {% endfor %}
+  {% endif %}
+  
+  <div class="row justify-content-center">
+    <div class="col-6 flex-column">
+      {% call card(game.name + ' Game Signup') %}
+      <form action="{{ url('game_signup') }}" method="post">
+        {{ csrf_input }}
+        <p>You are now signing up for the {{ game.name }} game. In order to do so, please read and agree to our waiver.</p>
+        <div class="pb-3 text-center">
+          <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#waiverModal">Read Waiver</button>
+        </div>
+        <div class="ui-form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="accept_waiver">
+            <label class="custom-control-label ui-label" for="accept_waiver">I have read and accepted the terms listed in the waiver.</label>
+          </div>
+        </div>
+        <div class="ui-form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="is_oz" name="is_oz">
+            <label class="custom-control-label ui-label" for="is_oz">Do you want a chance to start off as a zombie?</label>
+          </div>
+        </div>
+        <div class="ui-form-group pt-2 text-center">
+          <input type="submit" value="Signup" class="btn btn-primary">
+        </div>
+      </form>
+      {% endcall %}
     </div>
-  </form>
-  {% endcall %}
+  </div>
+
+  <div class="modal fade" id="waiverModal" tabindex="-1" role="dialog" aria-labelledby="waiverModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">UW Humans vs Zombies Waiver</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>I acknowledge that the UWaterloo Humans vs. Zombies Club and the Federation of Students are not responsible for any injuries I may incur during play. I am completely responsible for my own safety, and the consequence for actions I take are on me and the other directly involved.</p>
+          <p>I acknowledge that the UWaterloo Humans vs. Zombies Club and the Federation of Students are not responsible for any property I may lose while playing the game (e.g. Nerf darts).</p>
+          <p>I acknowledge that my email address will be released to the mod team and other players, and that I may receive e-mails from Humans vs. Zombies during the game.</p>
+          <p>I acknowledge that Humans vs. Zombies may take and share photos of me during the game.</p>
+          <p>I have read and understood the rules, and agree to abide to them.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">I refuse</button>
+          <button type="button" class="btn btn-primary">I accept</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
