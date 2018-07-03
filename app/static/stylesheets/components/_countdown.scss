@@ -6,7 +6,6 @@
   line-height: lh(tighter);
 
   div {
-    margin: 1em;
     display: block;
     text-align: center;
   }
@@ -15,9 +14,11 @@
 .js-countdown__num {
   font-family: ff('title');
   font-size: 10rem;
+  letter-spacing: 0.025em;
 }
 
 .js-countdown__text {
   font-family: ff('title');
   font-size: 2rem;
+  letter-spacing: 0.05em;
 }

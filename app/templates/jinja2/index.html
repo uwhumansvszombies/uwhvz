@@ -4,24 +4,29 @@
 
 {% block content %}
 <header id="landing-nav">
+  <div class="sitelogo">{{ svg('site-logo-dark') }}</div>
   <nav>
-    <div class="sitelogo">{{ svg('site-logo-dark') }}</div>
-    <div class="actions">
-    {% if user.is_authenticated %}
-      <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
-      <a class="btn btn-primary" href="{{ url('dashboard') }}">Go to dashboard</a>
-    {% else %}
-      <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
-    {% endif %}
-    </div>
+    <ul>
+      <li>
+        <a class="text-light" href="#signup-schedule">Signup Schedule</a>
+      </li>
+    </ul>
   </nav>
+  <div class="actions">
+  {% if user.is_authenticated %}
+    <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
+    <a class="btn btn-primary" href="{{ url('dashboard') }}">Go to dashboard</a>
+  {% else %}
+    <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
+  {% endif %}
+  </div>
 </header>
 <main class="ui-layout" id="landing">
-  <section class="ui-layout__item">
+  <section class="ui-layout__item" id="intro">
     <div class="ui-section">
       {{ svg('club-logo') }}
       <div class="ui-section__content">
-        <h1>The game begins in:</h1>
+        <h1>The game begins in</h1>
         <div class="js-countdown" id="countdown">
           <div>
             <span class="js-countdown__num" id="days"></span>
@@ -41,6 +46,45 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+  <section class="ui-layout__item" id="signup-schedule">
+    <div class="ui-section">
+      <h1>Signups Schedule</h1>
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>MC 3rd Floor</th>
+            <td>10am-5pm</td>
+            <td>10am-5pm</td>
+            <td>10am-5pm</td>
+            <td>10am-5pm</td>
+          </tr>
+          <tr>
+            <th>SLC</th>
+            <td>10am-5pm</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <th>CPH</th>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>10am-5pm</td>
+            <td>10am-5pm</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 </main>
