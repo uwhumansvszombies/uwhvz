@@ -36,7 +36,6 @@ class Game(models.Model):
 
     def state(self):
         if self.started_on:
-            print(GameState.FINISHED if self.ended_on else GameState.RUNNING)
             return GameState.FINISHED if self.ended_on else GameState.RUNNING
         else:
             return GameState.ACTIVE

@@ -37,13 +37,18 @@ class UserSignupView(MobileSupportedView):
             messages.info(request, f'You\'ve already created an account using {invite.email}.')
             return redirect('dashboard')
 
-        first_name, last_name, password = require_post_parameters(request, 'first_name', 'last_name', 'password')
+        first_name, last_name, password1, password2 = require_post_parameters(request, 'first_name', 'last_name', 'password1', 'password2')
+
+        if password1 != password2:
+            messages.error(request, "The passwords do not match.")
+            return self.get(request, signup_invite=signup_invite)
+
         with transaction.atomic():
-            User.objects.create_user(invite.email, password, first_name=first_name, last_name=last_name)
+            User.objects.create_user(invite.email, password1, first_name=first_name, last_name=last_name)
             invite.used_at = timezone.now()
             invite.save()
 
-        user = authenticate(username=invite.email, password=password)
+        user = authenticate(username=invite.email, password=password1)
         login(request, user)
         return redirect('game_signup')
 
