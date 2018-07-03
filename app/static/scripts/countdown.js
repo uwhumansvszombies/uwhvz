@@ -39,8 +39,5 @@ function initClock(id, endtime) {
   var timeInterval = setInterval(updateClock, 1000);
 }
 
-var deadline = 'Mon Jul 07 2018 00:00:00 GMT-0400 (Eastern Daylight Time)';
+var deadline = 'Sun Jul 08 2018 23:59:59 GMT-0400 (Eastern Daylight Time)';
 initClock('countdown', deadline);
-
-
-
