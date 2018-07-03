@@ -1,0 +1,90 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard - Player Info{% endblock %}
+
+{% block pagetitle %}
+  {% if game.is_running %}{{ game.name }} - {% endif %}Player Dashboard
+{% endblock %}
+{% block pagesubtitle %}My Player Information{% endblock %}
+
+{% block subcontent %}
+
+{% if game is defined and game.is_running %}
+  {% if not player.is_spectator %}
+    <div class="ui-grid s-dashboard__index">
+      <div class="ui-grid">
+        {{ card('My Code', player.code, 'ui-card--display') }}
+        {{ card('My Score', player.score(), 'ui-card--display') }}
+        {{ card('Team', player.role, 'ui-card--display') }}
+        {{ card('Team Score', team_score, 'ui-card--display') }}
+      </div>
+      
+      {% call card('Report Tag') %}
+        <form action="{{ url('report_tag') }}" method="post">
+          {{ csrf_input }}
+          <div class="ui-form-group">
+            <label class="ui-label">Other Player's Code</label>
+            <input class="ui-input" type="text" name="player_code" placeholder="e.g. A1B2C3">
+          </div>
+          <div class="ui-form-group">
+            <label class="ui-label">Date of Tag</label>
+            <input class="ui-input" type="date" name="date">
+          </div>
+          <div class="ui-form-group">
+            <label class="ui-label">Time</label>
+            <input class="ui-input" type="time" name="time">
+          </div>
+          <div class="ui-form-group">
+            <label class="ui-label">Location (optional)</label>
+            <input class="ui-input" type="text" name="location" placeholder="e.g. RCH, DC Green">
+          </div>
+          <div class="ui-form-group">
+            <label class="ui-label">Description (optional)</label>
+            <textarea class="ui-input" rows="5" name="description" placeholder="Tell us how you tagged the player!"></textarea>
+          </div>
+          <div class="ui-form-group pt-2 text-center">
+            <input class="btn btn-primary" type="submit" value="Submit">
+          </div>
+        </form>
+      {% endcall %}
+
+      {% if player.is_human %}
+        <div class="ui-grid align-content-start">
+          {% call card('Redeem Supply Code') %}
+          <form action="{{ url('claim_supply_code') }}" method="post">
+            {{ csrf_input }}
+            <div class="ui-form-group">
+              <input class="ui-input" type="text" name="supply_code" placeholder="e.g. A1B2C3">
+            </div>
+            <div class="ui-form-group pt-2 text-center">
+              <input class="btn btn-primary" type="submit" value="Redeem">
+            </div>
+          </form>
+        {% endcall %}
+
+        {% call card('Faction Information') %}
+        {% endcall %}
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+  <div class="ui-text-container">
+    <p>As a spectator, you cannot access any actions that affect the game (reporting stuns/tags, redeeming supply codes, etc.). However, please feel free to check out some of the other pages on the sidebar.</p>
+  </div>
+  {% endif %}
+{% elif game is defined and game.is_active %}
+  <div class="ui-text-container text-center">
+    {% call card('The game hasn\'t started yet.') %}
+      <p>You will be able to access your player information when the game starts. Please be patient for now, and come back when the game has started!</p>
+    {% endcall %}
+  </div>
+{% else %}
+  <div class="ui-text-container text-center">
+    {% call card('The last game is over, and a new game hasn\'t been announced yet. :(') %}
+      <p>Please come back later when there is notice of a game.</p>
+    {% endcall %}
+  </div>
+{% endif %}
+
+{% endblock %}

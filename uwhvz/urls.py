@@ -11,7 +11,7 @@ urlpatterns = [
     path('', include('app.urls')),
     path('cms/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
-    path('game_info/', include(wagtail_urls)),
+    path('dashboard/', include(wagtail_urls)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}Index{% endblock %}
-
 {% block content %}
-<nav class="ui-titlebar">
+<header class="ui-titlebar">
   <div class="ui-titlebar__section" id="titlebar-logo">
     <a href="{{ url('dashboard') }}">{{ svg('site-logo-dark') }}</a>
   </div>
@@ -20,32 +18,37 @@
     <a class="ui-titlebar__link" href="{{ url('login') }}">Login</a>
     {% endif %}
   </div>
-</nav>
+</header>
 
 <nav class="ui-sidebar">
   <ul class="ui-sidebar-nav">
-    <h1 class="ui-sidebar-nav__title">Player Actions</h1>
     <li><a href="{{ url('dashboard') }}">My Dashboard</a></li>
-    <li><a href="/game_info">Game Information</a></li>
-    <li><a href="{{ url('player_list') }}">View Players</a></li>
-    {% if not player.is_human %}
-    <li><a href="#">View Zombie Tree</a></li>
-    {% endif %}
   </ul>
+  {% if game is defined and game.is_running %}
+    <ul class="ui-sidebar-nav">
+      <h1 class="ui-sidebar-nav__title">Game Actions</h1>
+      <li><a href="{{ url('player_info') }}">Player Dashboard</a></li>
+      <li><a href="/dashboard/game_info/">Game Info</a></li>
+      <li><a href="{{ url('player_list') }}">Player List</a></li>
+      {% if (player and not player.is_human) or user.is_moderator %}
+        <li><a href="#">Zombie Tree</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
   {% if user.is_moderator %}
-  <ul class="ui-sidebar-nav">
-    <h1 class="ui-sidebar-nav__title">Moderator Actions</h1>
-    <li><a href="{{ url('manage_players') }}">Manage Players</a></li>
-    <li><a href="#">Manage OZ Pool</a></li>
-    <li><a href="{{ url('generate_supply_codes') }}">Generate Supply Codes</a></li>
-    <li><a href="/cms">Post Announcements & Missions (Wagtail)</a></li>
-  </ul>
+    <ul class="ui-sidebar-nav">
+      <h1 class="ui-sidebar-nav__title">Moderator Actions</h1>
+      <li><a href="{{ url('manage_players') }}">Manage Players</a></li>
+      <li><a href="#">Manage OZ Pool</a></li>
+      <li><a href="{{ url('generate_supply_codes') }}">Generate Supply Codes</a></li>
+      <li><a href="/cms">Post Announcements & Missions (Wagtail)</a></li>
+    </ul>
   {% endif %}
   {% if user.is_staff %}
-  <ul class="ui-sidebar-nav">
-    <h1 class="ui-sidebar-nav__title">Webmaster Actions</h1>
-    <li><a href="{{ url('admin:index') }}">Site Management (Django Admin)</a></li>
-  </ul>
+    <ul class="ui-sidebar-nav">
+      <h1 class="ui-sidebar-nav__title">Webmaster Actions</h1>
+      <li><a href="{{ url('admin:index') }}">Site Management (Django Admin)</a></li>
+    </ul>
   {% endif %}
 </nav>
 
