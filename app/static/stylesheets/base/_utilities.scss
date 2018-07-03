@@ -73,3 +73,18 @@
     }
   }
 }
+
+
+///
+/// Font declaration mixin.
+/// @param $name - name of the font and its corresponding file.
+
+@mixin font-face($name) {
+  $dest: '/static/fonts/#{$name}/#{$name}';
+
+  font-family: $name;
+  src: url('#{$dest}.eot');
+  src: url('#{$dest}.eot?#iefix') format('embedded-opentype'),
+       url('#{$dest}.woff') format('woff'),
+       url('#{$dest}.ttf') format('truetype');
+}
