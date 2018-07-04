@@ -12,15 +12,11 @@ class ViewableBy(Enum):
     ZOMBIES = 'Z'
 
 
-class RootPage(Page):
-    subpage_types = ['app.GameInfoPage', 'app.NewsPage']
-
-
 class GameInfoPage(Page):
     template = 'wagtail/game_info.html'
 
     subpage_types = ['app.AnnouncementPage', 'app.MissionPage']
-    parent_page_types = ['app.RootPage']
+    parent_page_types = ['app.DashboardPage']
 
     def get_context(self, request, *args, **kwargs):
         context = super(GameInfoPage, self).get_context(request)
@@ -33,25 +29,6 @@ class GameInfoPage(Page):
         context['missions'] = \
             self.get_children().type(MissionPage).live().public().order_by('-first_published_at')
         return context
-
-
-class NewsPage(Page):
-    template = 'wagtail/news.html'
-
-    subpage_types = ['app.Article']
-    parent_page_types = ['app.RootPage']
-
-
-class Article(Page):
-    template = 'wagtail/article.html'
-    body = RichTextField(blank=True)
-
-    content_panels = Page.content_panels + [
-        FieldPanel('body', classname="full")
-    ]
-
-    parent_page_types = ['app.NewsPage']
-    subpage_types = []
 
 
 class AnnouncementPage(Page):

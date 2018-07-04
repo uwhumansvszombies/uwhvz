@@ -103,11 +103,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_moderator(self):
-        return self.groups.filter(name='Moderator').exists() or self.is_superuser
+        return self.groups.filter(name='Moderators').exists() or self.is_superuser
 
     @property
     def is_volunteer(self):
-        return self.groups.filter(name='Volunteer').exists() or self.is_superuser
+        return self.groups.filter(name='Volunteers').exists() or self.is_superuser
 
     def player(self, game):
         return self.player_set.get(game=game, active=True)

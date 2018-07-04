@@ -44,14 +44,22 @@
   nav {
     width: 100%;
     display: flex;
+    flex-flow: row nowrap;
     margin-left: 2rem;
 
     ul {
       padding: 0;
       margin: 0;
+      list-style: none;
+    }
+
+    li {
+      margin: 0 spacing();
+      display: inline;
     }
 
     a {
+      display: inline-block;
       font-size: 1.25rem;
       line-height: 1;
       font-family: ff('heading');
