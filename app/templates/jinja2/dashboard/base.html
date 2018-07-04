@@ -28,16 +28,18 @@
   </nav>
   {% if game is defined and game.is_running %}
     <nav class="ui-menu">
-      <header class="ui-menu__header">
-        <h1 class="ui-menu__title">Game Actions</h1>
-        <a class="ui-menu__icon" href="#player-actions" data-target="#player-actions" data-toggle="collapse" aria-expanded="true">
-          <span class="oi oi-plus"></span>
-          <span class="oi oi-minus"></span>
-        </a>
-      </header>
+      <a class="ui-menu__header-link" href="#player-actions" data-target="#player-actions" data-toggle="collapse" aria-expanded="true">
+        <header class="ui-menu__header">
+          <h1 class="ui-menu__title">Game Actions</h1>
+          <div class="ui-menu__icon">
+            <span aria-hidden="true" class="oi oi-plus"></span>
+            <span aria-hidden="true" class="oi oi-minus"></span>
+          </div>
+        </header>
+      </a>
       <ul class="ui-menu__section collapse show" data-parent="#side-nav" id="player-actions">
         <li><a href="{{ url('player_info') }}">Game Dashboard</a></li>
-        <li><a href="/dashboard/game_info/">Info & News</a></li>
+        <li><a href="/dashboard/game-info/">Info & News</a></li>
         <li><a href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
         <li><a href="{{ url('player_list') }}">Player List</a></li>
         {% if (player is defined and not player.is_human) or user.is_moderator %}
@@ -48,13 +50,15 @@
   {% endif %}
   {% if user.is_volunteer %}
     <nav class="ui-menu">
-      <header class="ui-menu__header">
-        <h1 class="ui-menu__title">Volunteer Actions</h1>
-        <a class="ui-menu__icon " href="#volunteer-actions" data-target="#volunteer-actions" data-toggle="collapse" aria-expanded="false">
-          <span class="oi oi-plus"></span>
-          <span class="oi oi-minus"></span>
-        </a>
-      </header>
+      <a class="ui-menu__header-link" href="#volunteer-actions" data-target="#volunteer-actions" data-toggle="collapse" aria-expanded="false">
+        <header class="ui-menu__header">
+          <h1 class="ui-menu__title">Volunteer Actions</h1>
+          <div class="ui-menu__icon">
+            <span aria-hidden="true" class="oi oi-plus"></span>
+            <span aria-hidden="true" class="oi oi-minus"></span>
+          </div>
+        </header>
+      </a>
       <ul class="ui-menu__section collapse" data-parent="#side-nav" id="volunteer-actions">
         <li><a href="{{ url('signup_player') }}">Signup Players</a></li>
       </ul>
@@ -62,13 +66,15 @@
   {% endif %}
   {% if user.is_moderator %}
     <nav class="ui-menu">
-      <header class="ui-menu__header">
-        <h1 class="ui-menu__title">Moderator Actions</h1>
-        <a class="ui-menu__icon " href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="false">
-          <span class="oi oi-plus"></span>
-          <span class="oi oi-minus"></span>
-        </a>
-      </header>
+      <a class="ui-menu__header-link" href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="false">
+        <header class="ui-menu__header">
+          <h1 class="ui-menu__title">Moderator Actions</h1>
+          <div class="ui-menu__icon">
+            <span aria-hidden="true" class="oi oi-plus"></span>
+            <span aria-hidden="true" class="oi oi-minus"></span>
+          </div>
+        </header>
+      </a>
       <ul class="ui-menu__section collapse" data-parent="#side-nav" id="mod-actions">
         <li><a href="{{ url('manage_players') }}">Manage Players</a></li>
         <li><a href="#">Manage OZ Pool</a></li>
@@ -79,13 +85,15 @@
   {% endif %}
   {% if user.is_staff %}
     <nav class="ui-menu">
-      <header class="ui-menu__header">
-        <h1 class="ui-menu__title">Webmaster Actions</h1>
-        <a class="ui-menu__icon " href="#webmaster-actions" data-target="#webmaster-actions" data-toggle="collapse" aria-expanded="false">
-          <span class="oi oi-plus"></span>
-          <span class="oi oi-minus"></span>
-        </a>
-      </header>
+      <a class="ui-menu__header-link" href="#webmaster-actions" data-target="#webmaster-actions" data-toggle="collapse" aria-expanded="false">
+        <header class="ui-menu__header">
+          <h1 class="ui-menu__title">Webmaster Actions</h1>
+          <div class="ui-menu__icon">
+            <span aria-hidden="true" class="oi oi-plus"></span>
+            <span aria-hidden="true" class="oi oi-minus"></span>
+          </div>
+        </header>
+      </a>
       <ul class="ui-menu__section collapse" data-parent="#side-nav" id="webmaster-actions">
         <li><a href="{{ url('admin:index') }}">Site Management (Django Admin)</a></li>
       </ul>
