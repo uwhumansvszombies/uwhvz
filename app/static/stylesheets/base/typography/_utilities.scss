@@ -50,7 +50,7 @@ $line-height-data: (
 /// Default text styles for smaller text
 
 @mixin type-smallcaps {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   line-height: lh('loose');
   text-transform: uppercase;

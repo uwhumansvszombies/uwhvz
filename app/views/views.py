@@ -83,7 +83,7 @@ class ClaimSupplyCodeView(View):
 
         game = most_recent_game()
         player = request.user.player(game)
-        if player.role != PlayerRole.HUMAN:
+        if not player.is_human:
             messages.error(request, "Only humans can claim supply codes.")
             return redirect('dashboard')
 

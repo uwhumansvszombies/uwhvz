@@ -13,6 +13,7 @@ if not os.path.exists(MEDIA_DIR):
 
 INSTALLED_APPS = [
     'app',
+    'admin_view_permission',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
