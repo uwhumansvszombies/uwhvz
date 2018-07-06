@@ -8,14 +8,16 @@
 {% block subcontent %}
 
 <div class="ui-grid s-dashboard__generate-supply">
-  {% call card('Generate Supply Codes', id="card--generate-supply") %}
-    <form method="post">
-      {{ csrf_input }}
-      <div class="ui-form-group pt-2 text-center">
-        <input type="submit" value="Generate Supply Code" class="btn btn-primary">
-      </div>
-    </form>
-  {% endcall %}
+  <div class="ui-grid align-content-start">
+    {% call card('Generate Supply Codes', id="card--generate-supply") %}
+      <form method="post">
+        {{ csrf_input }}
+        <div class="ui-form-group pt-2 text-center">
+          <input type="submit" value="Generate Supply Codes" class="btn btn-primary">
+        </div>
+      </form>
+    {% endcall %}
+  </div>
   
   {% call card('Unclaimed Codes') %}
   <table class="table table-striped">

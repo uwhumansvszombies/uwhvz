@@ -15,8 +15,8 @@
   flex-flow: row nowrap;
   align-content: center;
   justify-content: space-between;
+  z-index: z-index(header);
   background: color(ink);
-  z-index: 99;
   box-shadow: shadow(dark, titlebar);
 }
 

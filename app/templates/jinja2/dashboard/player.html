@@ -20,7 +20,12 @@
         {{ card('Team Score', team_score, 'ui-card--display') }}
       </div>
       
-      {% call card('Report Tag') %}
+      {% if player.is_human %}
+        {% set report_name = 'Stun' %}
+      {% else %}
+        {% set report_name = 'Tag' %}
+      {% endif %}
+      {% call card('Report ' + report_name) %}
         <form action="{{ url('report_tag') }}" method="post">
           {{ csrf_input }}
           <div class="ui-form-group">

@@ -4,7 +4,8 @@
 ////
 
 .ui-label {
+  @include type-smallcaps;
+
   color: color(sky, dark);
-  font-size: 14px;
-  font-weight: 500;
+  margin-bottom: 0.25em;
 }

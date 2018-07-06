@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 
@@ -26,17 +26,17 @@ class ManagePlayersView(View):
         location_id, email = require_post_parameters(request, 'signup_location', 'email')
         if User.objects.filter(email=email).exists():
             messages.warning(request, f'There is already an account associated with: {email}.')
-            return self.get(request)
+            return redirect('manage_players')
 
         location = SignupLocation.objects.get(pk=location_id)
         game = most_recent_game()
         send_signup_email(request, game, location, email)
         messages.success(request, f'Sent an email to: {email}.')
-        return self.get(request)
+        return redirect('manage_players')
 
 
 @method_decorator(moderator_required, name='dispatch')
-class GenerateSupplyCodeView(View):
+class GenerateSupplyCodesView(View):
     template_name = 'dashboard/moderator/generate_supply_codes.html'
 
     def get(self, request):
@@ -51,4 +51,4 @@ class GenerateSupplyCodeView(View):
         game = most_recent_game()
         supply_code = SupplyCode.objects.create_supply_code(game)
         messages.success(request, f'Generated new code: {supply_code}.')
-        return self.get(request)
+        return redirect('generate_supply_codes')

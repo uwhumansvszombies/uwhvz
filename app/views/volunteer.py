@@ -10,7 +10,7 @@ from app.util import volunteer_required, most_recent_game, require_post_paramete
 
 @method_decorator(volunteer_required, name='dispatch')
 @method_decorator(active_game_required, name='dispatch')
-class SignUpPlayersView(View):
+class SignupPlayersView(View):
     template_name = 'dashboard/volunteer/signup_players.html'
 
     def get(self, request):
@@ -25,10 +25,10 @@ class SignUpPlayersView(View):
         location_id, email = require_post_parameters(request, 'signup_location', 'email')
         if User.objects.filter(email=email).exists():
             messages.warning(request, f'There is already an account associated with: {email}.')
-            return self.get(request)
+            return redirect('signup_players')
 
         location = SignupLocation.objects.get(pk=location_id)
         game = most_recent_game()
         send_signup_email(request, game, location, email)
         messages.success(request, f'Sent an email to: {email}.')
-        return self.get(request)
+        return redirect('signup_players')

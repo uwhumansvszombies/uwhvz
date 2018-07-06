@@ -39,8 +39,7 @@ class SignupLocationAdmin(admin.ModelAdmin):
 
 @admin.register(SignupInvite)
 class SignupInviteAdmin(admin.ModelAdmin):
-    def has_delete_permission(self, request, obj=None):
-        return False
+    pass
 
 
 @admin.register(User)
