@@ -11,10 +11,10 @@ urlpatterns = [
     path('dashboard/report-tag', views.ReportTagView.as_view(), name='report_tag'),
     path('dashboard/player', views.PlayerInfoView.as_view(), name='player_info'),
     path('dashboard/player-list', views.PlayerListView.as_view(), name='player_list'),
-    path('dashboard/signup', views.GameSignupView.as_view(), name='game_signup'),
+    path('dashboard/game-signup', views.GameSignupView.as_view(), name='game_signup'),
     path('signup/<uuid:signup_invite>', views.signup, name='signup'),
-    path('dashboard/moderator/generate-supply-codes', views.GenerateSupplyCodeView.as_view(),
+    path('dashboard/moderator/generate-supply-codes', views.GenerateSupplyCodesView.as_view(),
          name='generate_supply_codes'),
     path('dashboard/moderator/manage-players', views.ManagePlayersView.as_view(), name='manage_players'),
-    path('dashboard/volunteer/signup-player', views.SignUpPlayersView.as_view(), name='signup_player'),
+    path('dashboard/volunteer/signup-players', views.SignupPlayersView.as_view(), name='signup_player'),
 ]

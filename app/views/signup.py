@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.models import SignupInvite, User, Player, PlayerRole
-from app.util import require_post_parameters, most_recent_game, active_game_required
+from app.util import require_post_parameters, most_recent_game, active_game_required, game_required
 
 
 def signup(request, signup_invite):
@@ -52,13 +52,16 @@ class UserSignupView(View):
 
 
 @method_decorator(login_required, name='dispatch')
-@method_decorator(active_game_required, name='dispatch')
+@method_decorator(game_required, name='dispatch')
 class GameSignupView(View):
     def get(self, request):
         game = most_recent_game()
-        if request.user.player_set.filter(game=game).exists():
+        if game.is_active or game.is_running:
+            if request.user.player_set.filter(game=game).exists():
+                return redirect('dashboard')
+            return render(request, 'registration/game_signup.html', {'game': game})
+        else:
             return redirect('dashboard')
-        return render(request, 'registration/game_signup.html', {'game': game})
 
     def post(self, request):
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
