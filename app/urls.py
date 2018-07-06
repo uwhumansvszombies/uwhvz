@@ -16,5 +16,5 @@ urlpatterns = [
     path('dashboard/moderator/generate-supply-codes', views.GenerateSupplyCodesView.as_view(),
          name='generate_supply_codes'),
     path('dashboard/moderator/manage-players', views.ManagePlayersView.as_view(), name='manage_players'),
-    path('dashboard/volunteer/signup-players', views.SignupPlayersView.as_view(), name='signup_player'),
+    path('dashboard/volunteer/signup-players', views.SignupPlayersView.as_view(), name='signup_players'),
 ]
