@@ -5,6 +5,13 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 SITE_URL = 'uwhvz.uwaterloo.ca'
 
+ADMINS = [
+    ('Tristan Ohlson', 'tsohlson@gmail.com'),
+    ('Tiffany Yeung', 'tiffanynwyeung@gmail.com'),
+
+]
+
+SERVER_EMAIL = 'uwhumansvszombies@gmail.com'
 DEFAULT_FROM_EMAIL = 'uwhumansvszombies@gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
