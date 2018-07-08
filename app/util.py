@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
 from django.core.exceptions import SuspiciousOperation
 from django.http import Http404
 from django.shortcuts import render
+from django.utils import dateformat
 from django.views import View
 
 from app.models import Game
@@ -107,6 +108,10 @@ def normalize_email(email):
 
 def site_url(request):
     return {'SITE_URL': settings.SITE_URL}
+
+
+def format_datetime(value):
+    return dateformat.format(value, settings.DATETIME_FORMAT)
 
 
 class MobileSupportedView(View):

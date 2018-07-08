@@ -6,7 +6,8 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from app.models import Player, Tag, SupplyCode
+from app.mail import send_tag_email, send_stun_email
+from app.models import Player, Tag, SupplyCode, PlayerRole
 from app.util import require_post_parameters, MobileSupportedView, game_exists, most_recent_game, running_game_required
 from app.views.forms import ReportTagForm
 
@@ -35,7 +36,7 @@ class DashboardView(MobileSupportedView):
         return self.mobile_or_desktop(request)
 
 
-def render_dashboard(request, report_tag_form=ReportTagForm()):
+def render_player_info(request, report_tag_form=ReportTagForm()):
     template = 'dashboard/player.html' if request.user_agent.is_mobile else 'dashboard/player.html'
 
     game = most_recent_game()
@@ -56,7 +57,7 @@ def render_dashboard(request, report_tag_form=ReportTagForm()):
 @method_decorator(running_game_required, name='dispatch')
 class PlayerInfoView(View):
     def get(self, request):
-        return render_dashboard(request)
+        return render_player_info(request)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -68,7 +69,7 @@ class ReportTagView(View):
     def post(self, request):
         report_tag_form = ReportTagForm(request.POST)
         if not report_tag_form.is_valid():
-            return render_dashboard(request, report_tag_form)
+            return render_player_info(request, report_tag_form)
 
         game = most_recent_game()
         initiating_player = request.user.player(game)
@@ -77,10 +78,14 @@ class ReportTagView(View):
             receiving_player = Player.objects.get(code=cleaned_data['player_code'], active=True)
         except ObjectDoesNotExist:
             report_tag_form.add_error('player_code', 'No player with that code exists')
-            return render_dashboard(request, report_tag_form)
+            return render_player_info(request, report_tag_form)
 
-        Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
-                               cleaned_data['location'], cleaned_data['description'])
+        tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
+                                     cleaned_data['location'], cleaned_data['description'])
+        if receiving_player.role == PlayerRole.HUMAN:
+            send_tag_email(request, tag)
+        else:
+            send_stun_email(request, tag)
         messages.info(request, f'You\'ve reported a tag on {receiving_player.user.get_full_name()}.')
         return redirect('player_info')
 
