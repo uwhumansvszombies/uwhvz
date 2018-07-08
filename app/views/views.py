@@ -29,8 +29,11 @@ class DashboardView(MobileSupportedView):
             else:
                 if not Player.objects.filter(game=game, user=request.user).exists():
                     game_signup_url = reverse('game_signup')
-                    messages.warning(request, f'Please note that you have not finished signing up for the {game} game. '
-                                              f'Finish signing up <a href="{game_signup_url}">here</a>.')
+                    messages.warning(request,
+                        f'Please note that you haven\'t finished signing up for the {game} game. '
+                        f'If you still wish to join the game, <a href="{game_signup_url}">you can finish signing up here</a>.')
+                else:
+                    messages.success(request, f'You\'ve successfully signed up for the {game} game.')
                 return self.mobile_or_desktop(request, {'game': game})
         else:
             return self.mobile_or_desktop(request)
