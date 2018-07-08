@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -12,7 +12,7 @@ from app.util import require_post_parameters, most_recent_game, game_required
 
 
 def signup(request, signup_invite):
-    invite = SignupInvite.objects.get(pk=signup_invite)
+    invite = get_object_or_404(SignupInvite, pk=signup_invite)
     if User.objects.filter(email=invite.email).exists():
         return redirect('game_signup')
     else:
@@ -22,7 +22,7 @@ def signup(request, signup_invite):
 class UserSignupView(View):
     def get(self, request, **kwargs):
         signup_invite = kwargs['signup_invite']
-        invite = SignupInvite.objects.get(pk=signup_invite)
+        invite = get_object_or_404(SignupInvite, pk=signup_invite)
         if invite.used_at:
             messages.info(request, f'You\'ve already created an account using {invite.email}.')
             return redirect('dashboard')
@@ -30,7 +30,7 @@ class UserSignupView(View):
         return render(request, 'registration/user_signup.html', {'signup_invite': signup_invite})
 
     def post(self, request, signup_invite):
-        invite = SignupInvite.objects.get(pk=signup_invite)
+        invite = get_object_or_404(SignupInvite, pk=signup_invite)
         if invite.used_at:
             messages.info(request, f'You\'ve already created an account using {invite.email}.')
             return redirect('dashboard')

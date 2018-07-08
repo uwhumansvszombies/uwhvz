@@ -17,6 +17,17 @@ def send_signup_email(request, game, location, email):
     )
 
 
+def send_signup_reminder(request, email, url):
+    _send_mail_template(
+        request,
+        'email/signup_reminder.txt',
+        'email/signup_reminder.html',
+        '[ACTION REQUIRED] UW Humans vs Zombies',
+        email,
+        {'signup_url': url}
+    )
+
+
 def _send_mail_template(request, plaintext_template, html_template, subject, recipient, context=None):
     msg_plain = render_to_string(plaintext_template, context, request)
     msg_html = render_to_string(html_template, context, request)
