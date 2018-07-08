@@ -1,6 +1,6 @@
 import uuid
-
 from enum import Enum, auto
+
 from django.db import models
 
 from .user import User
@@ -39,7 +39,7 @@ class Game(models.Model):
             return GameState.FINISHED if self.ended_on else GameState.RUNNING
         else:
             return GameState.ACTIVE
-    
+
     @property
     def is_active(self):
         return self.state() == GameState.ACTIVE
@@ -50,7 +50,7 @@ class Game(models.Model):
 
     @property
     def is_finished(self):
-          return self.state() == GameState.FINISHED
+        return self.state() == GameState.FINISHED
 
     def __str__(self):
         return self.name
