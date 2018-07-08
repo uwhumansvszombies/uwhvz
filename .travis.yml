@@ -8,3 +8,6 @@ install:
 
 script:
   - pipenv run python manage.py test
+
+notifications:
+  email: false

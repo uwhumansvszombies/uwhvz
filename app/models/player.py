@@ -14,12 +14,14 @@ class PlayerManager(models.Manager):
         if user.player_set.filter(game=game, active=True).exists():
             raise ValueError(f'The user {user} already exists in the game {game}.')
 
-        code = generate_code(6)
-        # For set of all supply codes, each code must be unique
-        while self.filter(code=code):
+        if 'code' in extra_fields:
+            player = self.model(user=user, game=game, role=role, **extra_fields)
+        else:
             code = generate_code(6)
+            while self.filter(code=code):
+                code = generate_code(6)
+            player = self.model(user=user, game=game, code=code, role=role, **extra_fields)
 
-        player = self.model(user=user, game=game, code=code, role=role, **extra_fields)
         player.save()
         return player
 
@@ -34,7 +36,7 @@ class Player(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    code = models.CharField(max_length=6, unique=True)
+    code = models.CharField(max_length=6)
     role = EnumField(enum=PlayerRole, max_length=1)
     in_oz_pool = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
@@ -75,7 +77,8 @@ class Player(models.Model):
         try:
             with transaction.atomic():
                 self.save()
-                return Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE)
+                return Player.objects.create_player(
+                    self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
         except DatabaseError:
             self.active = True
 
