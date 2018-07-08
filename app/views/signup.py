@@ -57,9 +57,7 @@ class UserSignupView(View):
 class GameSignupView(View):
     def get(self, request):
         game = most_recent_game()
-        if game.is_active or game.is_running:
-            if request.user.player_set.filter(game=game).exists():
-                return redirect('dashboard')
+        if game.is_active and not request.user.player_set.filter(game=game).exists():
             return render(request, 'registration/game_signup.html', {'game': game})
         else:
             return redirect('dashboard')
@@ -74,4 +72,5 @@ class GameSignupView(View):
         if request.user.player_set.filter(game=game).exists():
             return redirect('dashboard')
         Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
+        messages.success(request, f'You\'ve successfully signed up for the {game} game.')
         return redirect('dashboard')

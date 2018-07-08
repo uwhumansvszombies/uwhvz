@@ -23,20 +23,16 @@ class DashboardView(MobileSupportedView):
 
     def get(self, request):
         if game_exists():
-            game = most_recent_game()
-            if game.is_running:
-                return redirect('player_info')
-            else:
+            game = most_recent_game()            
+            if game.is_active:
                 if not Player.objects.filter(game=game, user=request.user).exists():
                     game_signup_url = reverse('game_signup')
-                    messages.warning(request,
-                        f'Please note that you haven\'t finished signing up for the {game} game. '
-                        f'If you still wish to join the game, <a href="{game_signup_url}">you can finish signing up here</a>.')
-                else:
-                    messages.success(request, f'You\'ve successfully signed up for the {game} game.')
-                return self.mobile_or_desktop(request, {'game': game})
-        else:
-            return self.mobile_or_desktop(request)
+                    messages.warning(request, f'You haven\'t finished signing up for the {game} game. '
+                                              f'If you still wish to join, '
+                                              f'<a href="{game_signup_url}">you can finish signing up here</a>.')
+
+            return self.mobile_or_desktop(request, {'game': game})
+        return self.mobile_or_desktop(request)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -48,9 +44,9 @@ class PlayerInfoView(MobileSupportedView):
     def get(self, request):
         game = most_recent_game()
         try:
-            player = request.user.player_set.get()
+            player = request.user.player_set.filter(game=game).get()
         except ObjectDoesNotExist:
-            return redirect('game_signup')
+            return redirect('dashboard')
         team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
         return self.mobile_or_desktop(request, {'game': game, 'player': player, 'team_score': team_score})
 
@@ -58,7 +54,7 @@ class PlayerInfoView(MobileSupportedView):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
 class ReportTagView(View):
-    def get(self, request):
+    def get(self):
         return redirect('player_info')
 
     def post(self, request):
@@ -66,7 +62,11 @@ class ReportTagView(View):
             require_post_parameters(request, 'player_code', 'date', 'time', 'location', 'description')
         game = most_recent_game()
         initiating_player = request.user.player(game)
-        receiving_player = Player.objects.get(code=player_code)
+        try:
+            receiving_player = Player.objects.get(code=player_code)
+        except ObjectDoesNotExist:
+            messages.error(request, 'We can\'t find a player associated with that code.')
+            return redirect('player_info')
         # TODO: Time zone?
         datetime = dateparse.parse_datetime(f'{date} {time}')
 
@@ -78,26 +78,29 @@ class ReportTagView(View):
 @method_decorator(login_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
 class ClaimSupplyCodeView(View):
-    def get(self, request):
+    def get(self):
         return redirect('player_info')
 
     def post(self, request):
-        code = require_post_parameters(request, 'supply_code')
+        # since what's returned is a list, we need to keep the comma there 
+        # so it "dereferences" the list and returns just the string/code value itself
+        code, = require_post_parameters(request, 'supply_code')
         try:
             supply_code = SupplyCode.objects.get(code=code, claimed_by__isnull=True)
+            print(supply_code)
         except ObjectDoesNotExist:
             messages.error(request, "That supply code does not exist or has already been redeemed.")
-            return redirect('dashboard')
+            return redirect('player_info')
 
         game = most_recent_game()
         player = request.user.player(game)
         if not player.is_human:
             messages.error(request, "Only humans can claim supply codes.")
-            return redirect('dashboard')
+            return redirect('player_info')
 
         supply_code.claim(player)
         messages.success(request, 'The code has been redeemed successfully.')
-        return redirect('dashboard')
+        return redirect('player_info')
 
 
 @method_decorator(login_required, name='dispatch')

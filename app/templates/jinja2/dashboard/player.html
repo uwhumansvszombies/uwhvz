@@ -1,12 +1,12 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
-{% block title %}Dashboard - Player Info{% endblock %}
+{% block title %}Dashboard &mdash; Player Info{% endblock %}
 
 {% block pagetitle %}
-  {% if game.is_running %}{{ game.name }} - {% endif %}Game Information
+  {% if game.is_running %}{{ game.name }} &mdash; {% endif %}Game Information
 {% endblock %}
-{% block pagesubtitle %}My Player Dashboard{% endblock %}
+{% block pagesubtitle %}{{ player.user.get_full_name() }} &mdash; Player Dashboard{% endblock %}
 
 {% block subcontent %}
 
