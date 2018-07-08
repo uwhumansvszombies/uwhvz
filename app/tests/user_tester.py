@@ -88,4 +88,4 @@ class UserTester:
             'is_oz': in_oz_pool,
             'accept_waiver': 'on'
         })
-        return User.objects.get(email=email).player_set.get(game=game)
+        return User.objects.get(email=email).player_set.get(game=game, active=True)

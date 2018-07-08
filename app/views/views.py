@@ -44,7 +44,7 @@ class PlayerInfoView(MobileSupportedView):
     def get(self, request):
         game = most_recent_game()
         try:
-            player = request.user.player_set.filter(game=game).get()
+            player = request.user.player_set.get(game=game, active=True)
         except ObjectDoesNotExist:
             return redirect('dashboard')
         team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
@@ -63,7 +63,7 @@ class ReportTagView(View):
         game = most_recent_game()
         initiating_player = request.user.player(game)
         try:
-            receiving_player = Player.objects.get(code=player_code)
+            receiving_player = Player.objects.get(code=player_code, active=True)
         except ObjectDoesNotExist:
             messages.error(request, 'We can\'t find a player associated with that code.')
             return redirect('player_info')
