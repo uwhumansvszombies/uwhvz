@@ -2,11 +2,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import dateparse
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from app.models import Player, Tag, SupplyCode, PlayerRole
+from app.models import Player, Tag, SupplyCode
 from app.util import require_post_parameters, MobileSupportedView, game_exists, most_recent_game, running_game_required
 
 
@@ -26,6 +27,10 @@ class DashboardView(MobileSupportedView):
             if game.is_running:
                 return redirect('player_info')
             else:
+                if not Player.objects.filter(game=game, user=request.user).exists():
+                    game_signup_url = reverse('game_signup')
+                    messages.warning(request, f'Please note that you have not finished signing up for the {game} game. '
+                                              f'Finish signing up <a href="{game_signup_url}">here</a>.')
                 return self.mobile_or_desktop(request, {'game': game})
         else:
             return self.mobile_or_desktop(request)
@@ -51,7 +56,7 @@ class PlayerInfoView(MobileSupportedView):
 @method_decorator(running_game_required, name='dispatch')
 class ReportTagView(View):
     def get(self, request):
-        return redirect('dashboard')
+        return redirect('player_info')
 
     def post(self, request):
         player_code, date, time, location, description = \
@@ -64,7 +69,7 @@ class ReportTagView(View):
 
         Tag.objects.create_tag(initiating_player, receiving_player, datetime, location, description)
         messages.info(request, f'You\'ve reported a tag on {receiving_player.user.get_full_name()}.')
-        return redirect('player_dashboard')
+        return redirect('player_info')
 
 
 @method_decorator(login_required, name='dispatch')

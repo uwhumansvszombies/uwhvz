@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.models import SignupInvite, User, Player, PlayerRole
-from app.util import require_post_parameters, most_recent_game, active_game_required, game_required
+from app.util import require_post_parameters, most_recent_game, game_required
 
 
 def signup(request, signup_invite):
@@ -35,7 +35,8 @@ class UserSignupView(View):
             messages.info(request, f'You\'ve already created an account using {invite.email}.')
             return redirect('dashboard')
 
-        first_name, last_name, password1, password2 = require_post_parameters(request, 'first_name', 'last_name', 'password1', 'password2')
+        first_name, last_name, password1, password2 = \
+            require_post_parameters(request, 'first_name', 'last_name', 'password1', 'password2')
 
         if password1 != password2:
             messages.error(request, "The passwords do not match.")

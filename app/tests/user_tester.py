@@ -35,9 +35,9 @@ class UserTester:
         password: str = 'password',
         game_name: str = 'Test Game',
         signup_location_name: str = 'In a Test',
-        in_oz_pool: bool = False
+        in_oz_pool: str = 'off'
     ) -> Tuple[User, Player]:
-        user = self.create_user(email, first_name, last_name, password, game_name, signup_location_name)
+        user = self.create_user(email, first_name, last_name, password, signup_location_name)
         player = self.create_player(email, game_name, password, in_oz_pool)
         return user, player
 
@@ -47,15 +47,12 @@ class UserTester:
         first_name: str,
         last_name: str,
         password: str = 'password',
-        game_name: str = 'Test Game',
         signup_location_name: str = 'In a Test'
     ) -> User:
         self.client.login(username='root@email.com', password='toor')
-        game = Game.objects.get(name=game_name)
         signup_location = SignupLocation.objects.get(name=signup_location_name)
 
-        self.client.post('/dashboard/moderator/manage_players', {
-            'game': game.id,
+        self.client.post('/dashboard/moderator/manage-players', {
             'email': email,
             'signup_location': signup_location.id
         })
@@ -68,7 +65,8 @@ class UserTester:
         self.client.post(response.url, {
             'first_name': first_name,
             'last_name': last_name,
-            'password': password
+            'password1': password,
+            'password2': password
         })
         return User.objects.get(email=email)
 
@@ -77,14 +75,17 @@ class UserTester:
         email: str,
         game_name: str = 'Test Game',
         password: str = 'password',
-        in_oz_pool: bool = False
+        in_oz_pool: str = 'off'
     ) -> Player:
         self.client.login(username=email, password=password)
         game = Game.objects.get(name=game_name)
 
-        response = self.client.get('/dashboard')
+        regex = f'({settings.SITE_URL}/signup/.+)'
+        signup_url = re.search(regex, mail.outbox[-1].body).group(1)
+
+        response = self.client.get(signup_url)
         self.client.post(response.url, {
-            'game': game.id,
-            'is_oz': in_oz_pool
+            'is_oz': in_oz_pool,
+            'accept_waiver': 'on'
         })
         return User.objects.get(email=email).player_set.get(game=game)
