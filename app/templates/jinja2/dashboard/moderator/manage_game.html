@@ -1,0 +1,28 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Manage Game{% endblock %}
+
+{% block pagetitle %}{{ game.name }} &mdash; Moderator Actions{% endblock %}
+{% block pagesubtitle %}Manage Game{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui-grid s-dashboard__player-list">
+  <div class="ui-grid">
+    {% call card('Start Game') %}
+      <p>This will send all game start emails to players, set OZs as zombies, and start the game.</p>
+      <div class="ui-form-group text-center">
+        <button class="btn btn-primary">Start Game</button>
+      </div>
+    {% endcall %}
+    {% call card('Kill All Unsupplied Humans') %}
+      <p>This will turn all human players who did not attain 5 or more points during the week into zombies.</p>
+      <div class="ui-form-group text-center">
+        <button class="btn btn-danger">Kill All Unsupplied</button>
+      </div>
+    {% endcall %}
+  </div>
+</div>
+
+{% endblock %}

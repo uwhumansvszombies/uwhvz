@@ -15,6 +15,8 @@ urlpatterns = [
     path('signup/<uuid:signup_invite>', views.signup, name='signup'),
     path('dashboard/moderator/generate-supply-codes', views.GenerateSupplyCodesView.as_view(),
          name='generate_supply_codes'),
+    path('dashboard/moderator/manage-game', views.ManageGameView.as_view(), name='manage_game'),
+    path('dashboard/moderator/manage-oz', views.ManageOZView.as_view(), name='manage_oz'),
     path('dashboard/moderator/manage-players', views.ManagePlayersView.as_view(), name='manage_players'),
     path('dashboard/volunteer/signup-players', views.SignupPlayersView.as_view(), name='signup_players'),
 ]

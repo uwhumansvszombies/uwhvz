@@ -8,17 +8,18 @@
   grid-template-columns: minmax(auto, 12.5rem) 2fr 2fr;
 }
 
-.s-dashboard__game-info {
+.s-dashboard__game-info,
+.s-dashboard__manage-oz {
   grid-template-columns: 2fr 2fr;
-
-  ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
 }
 
 .s-dashboard__generate-supply,
 .s-dashboard__player-list {
   grid-template-columns: 1fr 2fr;
+}
+
+.s-dashboard__game-info ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
