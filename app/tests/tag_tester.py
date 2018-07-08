@@ -26,8 +26,8 @@ class TagTester:
         self.client.login(username=initiator.user.email, password=password)
         self.client.post('/dashboard/report-tag', {
             'player_code': receiver.code,
-            'date': occurred_at.strftime('%Y-%m-%d'),
-            'time': occurred_at.strftime('%H:%M%z'),
+            'datetime_0': occurred_at.strftime('%Y-%m-%d'),
+            'datetime_1': occurred_at.strftime('%H:%M'),
             'location': location,
             'description': description
         })

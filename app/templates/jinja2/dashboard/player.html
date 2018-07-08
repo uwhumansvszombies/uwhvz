@@ -19,35 +19,24 @@
         {{ card('Team', player.role, 'ui-card--display') }}
         {{ card('Team Score', team_score, 'ui-card--display') }}
       </div>
-      
+
       {% if player.is_human %}
         {% set report_name = 'Stun' %}
       {% else %}
         {% set report_name = 'Tag' %}
       {% endif %}
       {% call card('Report ' + report_name) %}
-        <form action="{{ url('report_tag') }}" method="post">
+        <form action="{{ url('report_tag') }}" method="post" novalidate>
           {{ csrf_input }}
-          <div class="ui-form-group">
-            <label class="ui-label">Other Player's Code</label>
-            <input class="ui-input" type="text" name="player_code" placeholder="e.g. A1B2C3">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Date of Tag</label>
-            <input class="ui-input" type="date" name="date">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Time</label>
-            <input class="ui-input" type="time" name="time">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Location (optional)</label>
-            <input class="ui-input" type="text" name="location" placeholder="e.g. RCH, DC Green">
-          </div>
-          <div class="ui-form-group">
-            <label class="ui-label">Description (optional)</label>
-            <textarea class="ui-input" rows="5" name="description" placeholder="Tell us how you tagged the player!"></textarea>
-          </div>
+
+          {% for field in report_tag_form %}
+            {{ field.errors }}
+            <div class="ui-form-group">
+              <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+              {{ field }}
+            </div>
+          {% endfor %}
+
           <div class="ui-form-group pt-2 text-center">
             <input class="btn btn-primary" type="submit" value="Submit">
           </div>
