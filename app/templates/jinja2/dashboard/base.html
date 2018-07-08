@@ -28,7 +28,7 @@
   </nav>
   {% if game is defined and game.is_running %}
     <nav class="ui-menu">
-      <a class="ui-menu__header-link" href="#player-actions" data-target="#player-actions" data-toggle="collapse" aria-expanded="true">
+      <a class="ui-menu__header-link" href="#player-actions" data-target="#player-actions" data-toggle="collapse"{% if not user.is_moderator or not user.is_superuser %} aria-expanded="true"{% else %}aria-expanded="false"{% endif %}>
         <header class="ui-menu__header">
           <h1 class="ui-menu__title">Game Actions</h1>
           <div class="ui-menu__icon">
@@ -37,7 +37,7 @@
           </div>
         </header>
       </a>
-      <ul class="ui-menu__section collapse show" data-parent="#side-nav" id="player-actions">
+      <ul class="ui-menu__section collapse{% if not user.is_moderator or not user.is_superuser %} show{% endif %}" data-parent="#side-nav" id="player-actions">
         <li><a href="{{ url('player_info') }}">Game Dashboard</a></li>
         <li><a href="/dashboard/game-info/">Info & News</a></li>
         <li><a href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
@@ -66,7 +66,7 @@
   {% endif %}
   {% if user.is_moderator %}
     <nav class="ui-menu">
-      <a class="ui-menu__header-link" href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="false">
+      <a class="ui-menu__header-link" href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="true">
         <header class="ui-menu__header">
           <h1 class="ui-menu__title">Moderator Actions</h1>
           <div class="ui-menu__icon">
@@ -75,9 +75,10 @@
           </div>
         </header>
       </a>
-      <ul class="ui-menu__section collapse" data-parent="#side-nav" id="mod-actions">
+      <ul class="ui-menu__section collapse show" data-parent="#side-nav" id="mod-actions">
+        <li><a href="{{ url('manage_game') }}">Manage Game</a></li>
         <li><a href="{{ url('manage_players') }}">Manage Players</a></li>
-        <li><a href="#">Manage OZ Pool</a></li>
+        <li><a href="{{ url('manage_oz') }}">Manage OZ Pool</a></li>
         <li><a href="{{ url('generate_supply_codes') }}">Create Supply Codes</a></li>
         <li><a href="/cms">Write News Posts (Wagtail)</a></li>
       </ul>

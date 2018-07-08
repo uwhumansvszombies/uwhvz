@@ -9,6 +9,30 @@ from app.util import moderator_required, require_post_parameters, most_recent_ga
 
 
 @method_decorator(moderator_required, name='dispatch')
+class ManageGameView(View):
+    template_name = 'dashboard/moderator/manage_game.html'
+
+    def get(self, request):
+        game = most_recent_game()
+        return render(request, self.template_name, {
+            'game': game,
+        })
+
+
+@method_decorator(moderator_required, name='dispatch')
+class ManageOZView(View):
+    template_name = 'dashboard/moderator/manage_oz.html'
+
+    def get(self, request):
+        game = most_recent_game()
+        players = Player.objects.filter(in_oz_pool=True)
+        return render(request, self.template_name, {
+            'game': game,
+            'players': players
+        })
+
+
+@method_decorator(moderator_required, name='dispatch')
 class ManagePlayersView(View):
     template_name = 'dashboard/moderator/manage_players.html'
 
