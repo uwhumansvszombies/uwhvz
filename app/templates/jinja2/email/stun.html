@@ -17,8 +17,6 @@
 </head>
 <body>
 <p>Hey {{ tag.receiver }}!</p>
-<p>A stun has been reported on you at {{ tag.tagged_at | format_datetime }} by {{ tag.initiator }}.</p>
-<p>Location: {{ tag.location }}</p>
-<p>Description: {{ tag.description }}</p>
+<p>A stun has been reported on you at {{ tag.tagged_at | format_datetime }} by {{ tag.initiator }}{% if tag.location %} at the location {{ tag.location }}{% endif %}.</p>
 </body>
 </html>

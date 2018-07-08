@@ -82,11 +82,12 @@ class ReportTagView(View):
 
         tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
                                      cleaned_data['location'], cleaned_data['description'])
-        if receiving_player.role == PlayerRole.HUMAN:
+        if receiving_player.is_human:
             send_tag_email(request, tag)
+            messages.info(request, f'You\'ve reported a tag on {receiving_player.user.get_full_name()}.')
         else:
             send_stun_email(request, tag)
-        messages.info(request, f'You\'ve reported a tag on {receiving_player.user.get_full_name()}.')
+            messages.info(request, f'You\'ve reported a stun on {receiving_player.user.get_full_name()}.')
         return redirect('player_info')
 
 
