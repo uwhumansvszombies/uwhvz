@@ -59,6 +59,7 @@
           <th scope="col">Name</th>
           <th scope="col">Email</th>
           <th scope="col">Role</th>
+          <th scope="col">Score</th>
         </tr>
       </thead>
       <tbody>
@@ -67,6 +68,7 @@
           <td scope="col">{{ p.user.get_full_name() }}</td>
           <td scope="col">{{ p.user.email }}</td>
           <td scope="col">{{ p.role }}</td>
+          <td scope="col">{{ p.score() }}</td>
         </tr>
         {% endfor %}
       </tbody>
