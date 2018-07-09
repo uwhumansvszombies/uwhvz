@@ -1,5 +1,17 @@
 {% from "components/card.html" import card %}
-{% extends "dashboard/base.html" %}
+{% if is_mobile %}
+  {% extends "mobile/base.html" %}
+{% else %}
+  {% extends "dashboard/base.html" %}
+{% endif %}
+
+{% block title %}
+  {% if is_mobile %}
+    UW HvZ &mdash; Announcement
+  {% else %}
+    Dashboard - Announcement
+  {% endif %}
+{% endblock %}
 
 {% block pagetitle %}{{ game.name }} &mdash; Announcement Post{% endblock %}
 {% block pagesubtitle %}{{ page.title }}{% endblock %}
