@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.db import models, transaction
 
+from app.util import format_datetime
 from .player import Player, PlayerRole
 
 
@@ -60,4 +61,4 @@ class Tag(models.Model):
     def __str__(self):
         initiator = self.initiator
         receiver = self.receiver
-        return f'{initiator} ({initiator.role}) --> {receiver} ({receiver.role}) at {self.tagged_at}'
+        return f'{initiator} ({initiator.role}) --> {receiver} ({receiver.role}) at {format_datetime(self.tagged_at)}'
