@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.mail import send_signup_email
-from app.models import Player, SignupLocation, User, SupplyCode
+from app.models import Player, SignupLocation, User, SupplyCode, PlayerRole
 from app.util import moderator_required, require_post_parameters, most_recent_game
 
 
@@ -13,9 +13,17 @@ class ManageGameView(View):
     template_name = 'dashboard/moderator/manage_game.html'
 
     def get(self, request):
+        players = Player.objects.filter(active=True)
+        all_emails = [p.user.email for p in players.all()]
+        human_emails = [p.user.email for p in players.filter(role=PlayerRole.HUMAN).all()]
+        zombie_emails = [p.user.email for p in players.filter(role=PlayerRole.ZOMBIE).all()]
+
         game = most_recent_game()
         return render(request, self.template_name, {
             'game': game,
+            'all_emails': all_emails,
+            'human_emails': human_emails,
+            'zombie_emails': zombie_emails,
         })
 
 

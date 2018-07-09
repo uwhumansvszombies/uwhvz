@@ -23,6 +23,23 @@
       </div>
     {% endcall %}
   </div>
+  <div class="ui-grid">
+    {% call card('All Emails') %}
+      <div style="max-height: 150px; overflow: scroll; background: #eee">
+        {{ all_emails|join(', ') }}
+      </div>
+    {% endcall %}
+    {% call card('Human Emails') %}
+      <div style="max-height: 150px; overflow: scroll; background: #eee">
+        {{ human_emails|join(', ') }}
+      </div>
+    {% endcall %}
+    {% call card('Zombie Emails') %}
+      <div style="max-height: 150px; overflow: scroll; background: #eee">
+        {{ zombie_emails|join(', ') }}
+      </div>
+    {% endcall %}
+  </div>
 </div>
 
 {% endblock %}
