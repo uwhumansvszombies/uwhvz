@@ -141,7 +141,7 @@ class PlayerListView(View):
     template_name = 'dashboard/player_list.html'
 
     def get(self, request):
-        players = Player.objects.all()
+        players = Player.objects.filter(active=True).all()
         game = most_recent_game()
         return render(request, self.template_name, {
             'game': game,

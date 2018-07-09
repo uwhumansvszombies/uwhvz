@@ -45,7 +45,7 @@ class ManagePlayersView(View):
     template_name = 'dashboard/moderator/manage_players.html'
 
     def get(self, request):
-        players = Player.objects.all()
+        players = Player.objects.filter(active=True).all()
         locations = SignupLocation.objects.all()
         game = most_recent_game()
         return render(request, self.template_name, {
