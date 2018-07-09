@@ -3,6 +3,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 
+from app.models import Player
 from app.util import most_recent_game
 
 
@@ -21,7 +22,7 @@ class GameInfoPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(GameInfoPage, self).get_context(request)
         game = most_recent_game()
-        player = request.user.player(game)
+        player = Player.objects.filter(user=request.user, game=game, active=True).first()
         context['is_mobile'] = request.user_agent.is_mobile
         context['player'] = player
         context['game'] = game
@@ -52,7 +53,7 @@ class AnnouncementPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(AnnouncementPage, self).get_context(request)
         game = most_recent_game()
-        player = request.user.player(game)
+        player = Player.objects.filter(user=request.user, game=game, active=True).first()
         context['player'] = player
         context['game'] = game
         return context
@@ -86,7 +87,7 @@ class MissionPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(MissionPage, self).get_context(request)
         game = most_recent_game()
-        player = request.user.player(game)
+        player = Player.objects.filter(user=request.user, game=game, active=True).first()
         context['player'] = player
         context['game'] = game
         return context
