@@ -13,12 +13,23 @@
   position: relative;
 }
 
+.ui-layout--mobile {
+  height: auto;
+  display: block;
+}
+
+.ui-layout__item--mobile {
+  padding: spacing();
+  margin: 0 auto;
+  top: layout-element-size(height, titlebar);
+}
+
 .ui-layout--dashboard {
   height: auto;
   position: relative;
-  top: layout-element-size('height', 'titlebar');
+  top: layout-element-size(height, titlebar);
   width: dashboard-width-offset();
-  left: layout-element-size('width', 'sidebar');
+  left: layout-element-size(width, sidebar);
   overflow-y: auto;
 
   > .ui-layout__item {
