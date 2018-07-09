@@ -22,6 +22,7 @@ class GameInfoPage(Page):
         context = super(GameInfoPage, self).get_context(request)
         game = most_recent_game()
         player = request.user.player(game)
+        context['is_mobile'] = request.user_agent.is_mobile
         context['player'] = player
         context['game'] = game
         context['announcements'] = \
