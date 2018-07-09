@@ -1,12 +1,24 @@
 {% from "components/card.html" import card %}
-{% extends "dashboard/base.html" %}
+{% if is_mobile %}
+  {% extends "mobile/base.html" %}
+{% else %}
+  {% extends "dashboard/base.html" %}
+{% endif %}
+
+{% block title %}
+  {% if is_mobile %}
+    UW HvZ &mdash; Mission
+  {% else %}
+    Dashboard - Mission
+  {% endif %}
+{% endblock %}
 
 {% block pagetitle %}{{ game.name }} &mdash; Mission Post{% endblock %}
 {% block pagesubtitle %}{{ page.title }}{% endblock %}
 
 {% block subcontent %}
-{% call card(page.title, class='text-left') %}
-  {{ page.body|richtext }}
-  <p><a class="btn btn-primary" href="{{ page.get_parent().url }}">Return to Game Info</a></p>
-{% endcall %}
+  {% call card(page.title, class='text-left') %}
+    {{ page.body|richtext }}
+    <p><a class="btn btn-primary" href="{{ page.get_parent().url }}">Return to Game Info</a></p>
+  {% endcall %}
 {% endblock %}
