@@ -26,9 +26,9 @@ class GameInfoPage(Page):
         context['player'] = player
         context['game'] = game
         context['announcements'] = \
-            self.get_children().type(AnnouncementPage).live().public().order_by('-first_published_at')
+            self.get_children().type(AnnouncementPage).live().order_by('-first_published_at')
         context['missions'] = \
-            self.get_children().type(MissionPage).live().public().order_by('-first_published_at')
+            self.get_children().type(MissionPage).live().order_by('-first_published_at')
         return context
 
 
