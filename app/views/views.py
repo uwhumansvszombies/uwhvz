@@ -8,8 +8,8 @@ from django.views import View
 
 from app.mail import send_tag_email, send_stun_email
 from app.models import Player, Tag, SupplyCode, Modifier, ModifierType
-from app.util import require_post_parameters, MobileSupportedView, game_exists, most_recent_game, running_game_required
-from app.views.forms import ReportTagForm
+from app.util import MobileSupportedView, game_exists, most_recent_game, running_game_required
+from app.views.forms import ReportTagForm, RedeemSupplyCodeForm
 
 
 class IndexView(MobileSupportedView):
@@ -36,7 +36,7 @@ class DashboardView(MobileSupportedView):
         return self.mobile_or_desktop(request)
 
 
-def render_player_info(request, report_tag_form=ReportTagForm()):
+def render_player_info(request, report_tag_form=ReportTagForm(), redeem_supply_code_form=RedeemSupplyCodeForm()):
     template = 'mobile/dashboard/player.html' if request.user_agent.is_mobile else 'dashboard/player.html'
 
     game = most_recent_game()
@@ -50,6 +50,7 @@ def render_player_info(request, report_tag_form=ReportTagForm()):
         'player': player,
         'team_score': team_score,
         'report_tag_form': report_tag_form,
+        'redeem_supply_code_form': redeem_supply_code_form,
     })
 
 
@@ -69,7 +70,7 @@ class ReportTagView(View):
     def post(self, request):
         report_tag_form = ReportTagForm(request.POST)
         if not report_tag_form.is_valid():
-            return render_player_info(request, report_tag_form)
+            return render_player_info(request, report_tag_form=report_tag_form)
 
         game = most_recent_game()
         initiating_player = request.user.player(game)
@@ -78,7 +79,7 @@ class ReportTagView(View):
             receiving_player = Player.objects.get(code=cleaned_data['player_code'], active=True)
         except ObjectDoesNotExist:
             report_tag_form.add_error('player_code', 'No player with that code exists')
-            return render_player_info(request, report_tag_form)
+            return render_player_info(request, report_tag_form=report_tag_form)
 
         modifier_amount = 0
         try:
@@ -105,17 +106,19 @@ class ClaimSupplyCodeView(View):
         return redirect('player_info')
 
     def post(self, request):
-        # since what's returned is a list, we need to keep the comma there 
-        # so it "dereferences" the list and returns just the string/code value itself
-        code, = require_post_parameters(request, 'supply_code')
-        try:
-            supply_code = SupplyCode.objects.get(code=code, claimed_by__isnull=True)
-        except ObjectDoesNotExist:
-            messages.error(request, "That supply code does not exist or has already been redeemed.")
-            return redirect('player_info')
+        redeem_supply_code_form = RedeemSupplyCodeForm(request.POST)
+        if not redeem_supply_code_form.is_valid():
+            return render_player_info(request, redeem_supply_code_form=redeem_supply_code_form)
 
         game = most_recent_game()
         player = request.user.player(game)
+        cleaned_data = redeem_supply_code_form.cleaned_data
+        try:
+            supply_code = SupplyCode.objects.get(code=cleaned_data['code'], claimed_by__isnull=True)
+        except ObjectDoesNotExist:
+            redeem_supply_code_form.add_error('code', "That supply code does not exist or has already been redeemed.")
+            return render_player_info(request, redeem_supply_code_form=redeem_supply_code_form)
+
         if not player.is_human:
             messages.error(request, "Only humans can claim supply codes.")
             return redirect('player_info')

@@ -47,3 +47,17 @@ class ReportTagForm(forms.Form):
             }
         )
     )
+
+
+class RedeemSupplyCodeForm(forms.Form):
+    code = forms.CharField(
+        label="Supply Code",
+        min_length=6,
+        max_length=6,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. A1B2C3'
+            }
+        )
+    )
