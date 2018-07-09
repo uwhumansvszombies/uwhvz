@@ -20,6 +20,15 @@
   box-shadow: shadow(dark, titlebar);
 }
 
+.ui-titlebar--mobile {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background: color(ink);
+  box-shadow: shadow(dark, titlebar);
+  z-index: z-index(header);
+}
+
 .ui-titlebar__section {
   width: auto;
   height: 100%;

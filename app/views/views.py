@@ -14,7 +14,7 @@ from app.views.forms import ReportTagForm
 
 class IndexView(MobileSupportedView):
     desktop_template = 'index.html'
-    mobile_template = 'index.html'
+    mobile_template = 'mobile/index.html'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -37,7 +37,7 @@ class DashboardView(MobileSupportedView):
 
 
 def render_player_info(request, report_tag_form=ReportTagForm()):
-    template = 'dashboard/player.html' if request.user_agent.is_mobile else 'dashboard/player.html'
+    template = 'mobile/dashboard/player.html' if request.user_agent.is_mobile else 'dashboard/player.html'
 
     game = most_recent_game()
     try:

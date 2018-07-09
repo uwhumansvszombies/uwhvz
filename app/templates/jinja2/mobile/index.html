@@ -1,0 +1,28 @@
+{% extends "mobile/base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+<header class="navbar navbar-expand-lg navbar-dark ui-titlebar--mobile">
+  <a class="navbar-brand text-center" href="/">{{ svg('site-logo-dark') }}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <nav class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item"><a class="nav-link" href="{{ url('login') }}">Login</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="ui-layout ui-layout--mobile" id="landing-mobile">
+  <section class="ui-layout__item ui-layout__item--mobile">
+    <div id="landing-logo">
+      {{ svg('club-logo') }}
+      <div class="ui-form-group pt-2 text-center">
+        <a class="btn btn-lg btn-primary" href="{{ url('login') }}">Login</a>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}
