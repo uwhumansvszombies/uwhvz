@@ -110,7 +110,6 @@ class ClaimSupplyCodeView(View):
         code, = require_post_parameters(request, 'supply_code')
         try:
             supply_code = SupplyCode.objects.get(code=code, claimed_by__isnull=True)
-            print(supply_code)
         except ObjectDoesNotExist:
             messages.error(request, "That supply code does not exist or has already been redeemed.")
             return redirect('player_info')
