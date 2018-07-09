@@ -7,7 +7,7 @@ from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, Sign
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'game', 'code', 'role', 'active')
+    list_display = ('__str__', 'game', 'code', 'role', 'faction', 'active')
 
     def has_delete_permission(self, request, obj=None):
         return False
