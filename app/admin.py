@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, SignupInvite
+from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, SignupInvite, Modifier, Faction
 
 
 @admin.register(Player)
@@ -65,6 +65,16 @@ class CustomUserAdmin(UserAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(Modifier)
+class ModifierAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Faction)
+class FactionAdmin(admin.ModelAdmin):
+    pass
 
 
 admin.site.disable_action('delete_selected')

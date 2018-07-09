@@ -27,21 +27,24 @@ class SupplyCode(models.Model):
     value = models.IntegerField()
     claimed_by = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     claimed_at = models.DateTimeField(null=True, blank=True)
+    modifier = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     objects = SupplyCodeManager()
 
-    def claim(self, player):
+    def claim(self, player, modifier):
         self.claimed_by = player
         self.claimed_at = timezone.now()
+        self.modifier = modifier
         try:
             with transaction.atomic():
                 self.save()
         except DatabaseError:
             self.claimed_by = None
             self.claimed_at = None
+            self.modifier = 0
         return self
 
     def __str__(self):

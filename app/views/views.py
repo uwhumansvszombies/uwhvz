@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.mail import send_tag_email, send_stun_email
-from app.models import Player, Tag, SupplyCode, PlayerRole
+from app.models import Player, Tag, SupplyCode, Modifier, ModifierType
 from app.util import require_post_parameters, MobileSupportedView, game_exists, most_recent_game, running_game_required
 from app.views.forms import ReportTagForm
 
@@ -80,8 +80,15 @@ class ReportTagView(View):
             report_tag_form.add_error('player_code', 'No player with that code exists')
             return render_player_info(request, report_tag_form)
 
+        modifier_amount = 0
+        try:
+            modifier = Modifier.objects.get(faction=initiating_player.faction, modifier_type=ModifierType.TAG)
+            modifier_amount = modifier.modifier_amount
+        except ObjectDoesNotExist:
+            pass
+
         tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
-                                     cleaned_data['location'], cleaned_data['description'])
+                                     cleaned_data['location'], cleaned_data['description'], modifier_amount)
         if receiving_player.is_human:
             send_tag_email(request, tag)
             messages.info(request, f'You\'ve reported a tag on {receiving_player.user.get_full_name()}.')
@@ -114,7 +121,14 @@ class ClaimSupplyCodeView(View):
             messages.error(request, "Only humans can claim supply codes.")
             return redirect('player_info')
 
-        supply_code.claim(player)
+        modifier_amount = 0
+        try:
+            modifier = Modifier.objects.get(faction=player.faction, modifier_type=ModifierType.SUPPLY_CODE)
+            modifier_amount = modifier.modifier_amount
+        except ObjectDoesNotExist:
+            pass
+
+        supply_code.claim(player, modifier_amount)
         messages.success(request, 'The code has been redeemed successfully.')
         return redirect('player_info')
 

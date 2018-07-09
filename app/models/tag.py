@@ -7,7 +7,8 @@ from .player import Player, PlayerRole
 
 
 class TagManager(models.Manager):
-    def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str):
+    def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str,
+                   modifier: int = 0):
         if initiator.role == receiver.role:
             raise ValueError('A tag must be between a human and a zombie.')
         if initiator.game != receiver.game:
@@ -20,6 +21,7 @@ class TagManager(models.Manager):
                 tagged_at=tagged_at,
                 location=location,
                 description=description,
+                modifier=modifier,
             )
             tag.save()
             if receiver.role == PlayerRole.HUMAN:
@@ -45,6 +47,7 @@ class Tag(models.Model):
     tagged_at = models.DateTimeField()
     location = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True)
+    modifier = models.IntegerField(default=0)
 
     # If active is False this tag is ignored.
     active = models.BooleanField(default=True)
