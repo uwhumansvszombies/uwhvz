@@ -18,7 +18,13 @@
 
 {% block subcontent %}
   {% call card(page.title, class='text-left') %}
-    {{ page.body|richtext }}
+    {% if player.is_human and page.viewable_by_zombies %}
+      <p>I'm not really sure how or why you got to this page, but this isn't really allowed. You're a human, remember that. You are <b>not</b> a zombie. Perhaps you want to be?</p>
+    {% elif player.is_zombie and page.viewable_by_humans %}
+      <p>You're a zombie now. You can't look at human missions. Begone! Go tag some humans!</p>
+    {% else %}
+      {{ page.body|richtext }}
+    {% endif %}
     <p><a class="btn btn-primary" href="{{ page.get_parent().url }}">Return to Game Info</a></p>
   {% endcall %}
 {% endblock %}
