@@ -5,6 +5,7 @@ from django.db import transaction, models, DatabaseError
 from enumfields import Enum, EnumField
 
 from app.models.util import generate_code
+from .faction import Faction
 from .game import Game
 from .user import User
 
@@ -40,6 +41,7 @@ class Player(models.Model):
     role = EnumField(enum=PlayerRole, max_length=1)
     in_oz_pool = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
+    faction = models.ForeignKey(Faction, on_delete=models.PROTECT, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -64,9 +66,11 @@ class Player(models.Model):
         """
         total_score = 0
         for tag in self.initiator_tags.filter(active=True).all():
-            total_score += tag.receiver.value(tag.tagged_at)
+            total_score += tag.receiver.value(tag.tagged_at) + tag.modifier
 
-        total_score += sum([code.value for code in self.supplycode_set.all()])
+        for code in self.supplycode_set.all():
+            total_score += code.value + code.modifier
+
         return total_score
 
     def kill(self):

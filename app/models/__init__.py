@@ -6,3 +6,5 @@ from .supply_code import SupplyCode
 from .tag import Tag
 from .user import User
 from .wagtail import *
+from .modifier import Modifier, ModifierType
+from .faction import Faction
