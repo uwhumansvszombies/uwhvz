@@ -16,6 +16,8 @@ class TagTest(TestCase):
         self.human_user, self.human = user_tester.create_user_and_player('human@email.com', 'Human', 'Being')
         _, zombie = user_tester.create_user_and_player('zombie@email.com', 'Zombie', 'Undead')
         self.zombie = zombie.kill()
+        self.game.started_on = timezone.now()
+        self.game.save()
 
     def test_no_tags(self):
         self.assertEqual(self.zombie.value(timezone.now()), 5)

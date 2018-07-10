@@ -4,8 +4,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.mail import send_signup_email
-from app.models import Player, SignupLocation, User, SupplyCode, PlayerRole
-from app.util import moderator_required, require_post_parameters, most_recent_game
+from app.models import Player, SignupInvite, SignupLocation, User, SupplyCode, PlayerRole
+from app.util import moderator_required, most_recent_game
+from app.views.forms import ModeratorSignupPlayerForm
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -44,26 +45,37 @@ class ManageOZView(View):
 class ManagePlayersView(View):
     template_name = 'dashboard/moderator/manage_players.html'
 
-    def get(self, request):
+    def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
+        game = most_recent_game()
         players = Player.objects.filter(active=True).all()
         locations = SignupLocation.objects.all()
-        game = most_recent_game()
+
         return render(request, self.template_name, {
             'game': game,
             'players': players,
             'signup_locations': locations,
+            'mod_signup_player_form': mod_signup_player_form
         })
 
+    def get(self, request):
+        return self.render_manage_players(request)
+
     def post(self, request):
-        location_id, email = require_post_parameters(request, 'signup_location', 'email')
+        mod_signup_player_form = ModeratorSignupPlayerForm(request.POST)
+        if not mod_signup_player_form.is_valid():
+            return self.render_manage_players(request, mod_signup_player_form=mod_signup_player_form)
+
+        game = most_recent_game()
+        cleaned_data = mod_signup_player_form.cleaned_data
+        location, email, player_role = cleaned_data['location'], cleaned_data['email'], cleaned_data['player_role']
+
         if User.objects.filter(email=email).exists():
             messages.warning(request, f'There is already an account associated with: {email}.')
             return redirect('manage_players')
 
-        location = SignupLocation.objects.get(pk=location_id)
-        game = most_recent_game()
-        send_signup_email(request, game, location, email)
-        messages.success(request, f'Sent an email to: {email}.')
+        signup_invite = SignupInvite.objects.create_signup_invite(game, location, email, player_role)
+        send_signup_email(request, signup_invite)
+        messages.success(request, f'Sent a signup email to {email}.')
         return redirect('manage_players')
 
 
@@ -82,5 +94,5 @@ class GenerateSupplyCodesView(View):
     def post(self, request):
         game = most_recent_game()
         supply_code = SupplyCode.objects.create_supply_code(game)
-        messages.success(request, f'Generated new code: {supply_code}.')
+        messages.success(request, f'Generated new supply code "{supply_code}".')
         return redirect('generate_supply_codes')

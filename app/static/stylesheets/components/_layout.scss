@@ -33,7 +33,7 @@
   overflow-y: auto;
 
   > .ui-layout__item {
-    width: calc(100% - #{spacing('loosest') * 2});
+    width: calc(100% - #{spacing(loosest) * 2});
     padding: 2em 0;
   }
 }

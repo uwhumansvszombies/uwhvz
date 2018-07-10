@@ -71,7 +71,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'app.util.site_url',
             ],
         },
     },
@@ -85,7 +84,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'app.util.site_url',
             ],
         },
     },
@@ -107,7 +105,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
-LOGIN_REDIRECT_URL = '/dashboard'
+LOGIN_REDIRECT_URL = '/dashboard/player'
 LOGOUT_REDIRECT_URL = '/'
 
 PASSWORD_HASHERS = [

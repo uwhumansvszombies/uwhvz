@@ -8,23 +8,25 @@
 
 {% block subcontent %}
 
-<div class="ui-grid s-dashboard__player-list">
-  <div class="ui-grid align-content-start">
+<div class="ui-grid">
+  <div class="ui-grid s-dashboard__signup-players">
     {% call card('Add Player to ' + game.name, id='card--add-player') %}
-      <form method="post">
+      <form method="post" novalidate>
         {{ csrf_input }}
-        <div class="ui-form-group">
-          <label class="ui-label">Email:</label>
-          <input class="ui-input" type="email" name="email">
-        </div>
-        <div class="ui-form-group">
-          <label class="ui-label">Location:</label>
-          <select class="custom-select" name="signup_location">
-            {% for location in signup_locations %}
-              <option value="{{ location.id }}">{{ location.name }}</option>
+
+        {% for field in mod_signup_player_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
             {% endfor %}
-          </select>
-        </div>
+            </div>
+          {% endfor %}
+        
         <div class="ui-form-group pt-2 text-center">
           <input type="submit" value="Signup" class="btn btn-primary">
         </div>

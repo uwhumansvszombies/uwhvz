@@ -1,7 +1,7 @@
 Thank you for signing up for Humans vs Zombies Spring 2018!
 
 [Please finish signing up to our website
-here.]({{ SITE_URL }}{{ url('signup', args=[signup_invite.id]) }})
+here.]({{ site_url }}{{ url('signup', args=[signup_invite.id]) }})
 
 Make sure to read and agree to the waiver, read the rules of the game,
 and print out your player card. (Our website is currently being
