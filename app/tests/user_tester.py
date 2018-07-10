@@ -57,7 +57,7 @@ class UserTester:
             'signup_location': signup_location.id
         })
         # Somewhere in the last email sent should be a signup url that looks something like this.
-        regex = f'({settings.SITE_URL}/signup/.+)'
+        regex = f'({settings.site_url}/signup/.+)'
         signup_url = re.search(regex, mail.outbox[-1].body).group(1)
 
         # This will redirect so we "follow" the url by doing "response.url" in the next request.
@@ -80,7 +80,7 @@ class UserTester:
         self.client.login(username=email, password=password)
         game = Game.objects.get(name=game_name)
 
-        regex = f'({settings.SITE_URL}/signup/.+)'
+        regex = f'({settings.site_url}/signup/.+)'
         signup_url = re.search(regex, mail.outbox[-1].body).group(1)
 
         response = self.client.get(signup_url)

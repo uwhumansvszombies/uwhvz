@@ -106,10 +106,6 @@ def normalize_email(email):
     return email
 
 
-def site_url(request):
-    return {'SITE_URL': settings.SITE_URL}
-
-
 def format_datetime(value):
     return dateformat.format(value, settings.DATETIME_FORMAT)
 
