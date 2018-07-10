@@ -7,6 +7,6 @@ class Command(BaseCommand):
     help = 'Prints a list of all human emails'
 
     def handle(self, *args, **options):
-        players = Player.objects.filter(active=True, role=PlayerRole.HUMAN).all()
+        players = Player.objects.exclude(role=PlayerRole.ZOMBIE).all()
         player_emails = [p.user.email for p in players]
         print(", ".join(player_emails))

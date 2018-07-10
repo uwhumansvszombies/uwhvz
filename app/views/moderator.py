@@ -16,8 +16,8 @@ class ManageGameView(View):
     def get(self, request):
         players = Player.objects.filter(active=True)
         all_emails = [p.user.email for p in players.all()]
-        human_emails = [p.user.email for p in players.filter(role=PlayerRole.HUMAN).all()]
-        zombie_emails = [p.user.email for p in players.filter(role=PlayerRole.ZOMBIE).all()]
+        human_emails = [p.user.email for p in players.exclude(role=PlayerRole.ZOMBIE).all()]
+        zombie_emails = [p.user.email for p in players.exclude(role=PlayerRole.HUMAN).all()]
 
         game = most_recent_game()
         return render(request, self.template_name, {
