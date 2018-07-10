@@ -28,12 +28,8 @@
       {% if missions %}
         <ul>
           {% for mission in missions %}
-            {% if player.is_human and mission.specific.viewable_by_humans %}
-              <li><a href="{{ pageurl(mission) }}">{{ mission.title }}</a></li>
-            {% elif player.is_zombie and mission.specific.viewable_by_zombies %}
-              <li><a href="{{ pageurl(mission) }}">{{ mission.title }}</a></li>
-            {% elif player.is_spectator %}
-              <li><a href="{{ pageurl(mission) }}">(For {{ mission.specific.viewable_by }}) {{ mission.title }}</a></li>
+            {% if mission.specific.is_viewable_by(player) %}
+              <li><a href="{{ pageurl(mission) }}">{% if player.is_spectator %}(For {{ mission.specific.viewable_by }}) {% endif %}{{ mission.title }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>
@@ -46,12 +42,8 @@
       {% if announcements %}
         <ul>
           {% for announcement in announcements %}
-            {% if player.is_human and announcement.specific.viewable_by_humans %}
-              <li><a href="{{ pageurl(announcement) }}">{{ announcement.title }}</a></li>
-            {% elif player.is_zombie and announcement.specific.viewable_by_zombies %}
-              <li><a href="{{ pageurl(announcement) }}">{{ announcement.title }}</a></li>
-            {% elif player.is_spectator %}
-              <li><a href="{{ pageurl(announcement) }}">(For {{ announcement.specific.viewable_by }}) {{ announcement.title }}</a></li>
+            {% if announcement.specific.is_viewable_by(player) %}
+              <li><a href="{{ pageurl(announcement) }}">{% if player.is_spectator %}(For {{ announcement.specific.viewable_by }}) {% endif %}{{ announcement.title }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>

@@ -58,13 +58,16 @@ class AnnouncementPage(Page):
         context['game'] = game
         return context
 
-    @property
-    def viewable_by_humans(self):
-        return self.viewable_by == ViewableBy.HUMANS or self.viewable_by == ViewableBy.ALL
-
-    @property
-    def viewable_by_zombies(self):
-        return self.viewable_by == ViewableBy.ZOMBIES or self.viewable_by == ViewableBy.ALL
+    def is_viewable_by(self, player):
+        if self.viewable_by == ViewableBy.ALL:
+            return True
+        if self.viewable_by == ViewableBy.HUMANS and player.is_human:
+            return True
+        if self.viewable_by == ViewableBy.ZOMBIES and player.is_zombie:
+            return True
+        if player.is_spectator or player.user.is_superuser:
+            return True
+        return False
 
 
 class MissionPage(Page):
@@ -92,10 +95,13 @@ class MissionPage(Page):
         context['game'] = game
         return context
 
-    @property
-    def viewable_by_humans(self):
-        return self.viewable_by == ViewableBy.HUMANS or self.viewable_by == ViewableBy.ALL
-
-    @property
-    def viewable_by_zombies(self):
-        return self.viewable_by == ViewableBy.ZOMBIES or self.viewable_by == ViewableBy.ALL
+    def is_viewable_by(self, player):
+        if self.viewable_by == ViewableBy.ALL:
+            return True
+        if self.viewable_by == ViewableBy.HUMANS and player.is_human:
+            return True
+        if self.viewable_by == ViewableBy.ZOMBIES and player.is_zombie:
+            return True
+        if player.is_spectator or player.user.is_superuser:
+            return True
+        return False
