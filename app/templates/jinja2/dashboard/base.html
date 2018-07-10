@@ -26,9 +26,9 @@
       <li><a href="{{ url('dashboard') }}">Home</a></li>
     </ul>
   </nav>
-  {% if game is defined and game.is_running %}
+  {% if game is defined and game is not none and game.is_running %}
     <nav class="ui-menu">
-      <a class="ui-menu__header-link" href="#player-actions" data-target="#player-actions" data-toggle="collapse" aria-expanded="{% if not "/moderator" in request.path %}true{% else %}false{% endif %}">
+      <a class="ui-menu__header-link" href="#player-actions" data-target="#player-actions" data-toggle="collapse" aria-expanded="{% if "/moderator" not in request.path %}true{% else %}false{% endif %}">
         <header class="ui-menu__header">
           <h1 class="ui-menu__title">Game Actions</h1>
           <div class="ui-menu__icon">
@@ -37,12 +37,12 @@
           </div>
         </header>
       </a>
-      <ul class="ui-menu__section collapse{% if not "/moderator" in request.path %} show{% endif %}" data-parent="#side-nav" id="player-actions">
+      <ul class="ui-menu__section collapse{% if "/moderator" not in request.path %} show{% endif %}" data-parent="#side-nav" id="player-actions">
         <li><a href="{{ url('player_info') }}">Game Dashboard</a></li>
         <li><a href="/dashboard/game-info/">Info & News</a></li>
         <li><a href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
         <li><a href="{{ url('player_list') }}">Player List</a></li>
-        {% if (player is defined and not player.is_human) or user.is_moderator %}
+        {% if (player is defined and player is not none and not player.is_human) or user.is_moderator %}
           <li><a href="#">Zombie Tree</a></li>
         {% endif %}
       </ul>

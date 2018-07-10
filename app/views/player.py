@@ -125,8 +125,14 @@ class PlayerListView(View):
     def get(self, request):
         players = Player.objects.filter(active=True).all()
         game = most_recent_game()
+
+        try:
+            player = request.user.player(game)
+        except ObjectDoesNotExist:
+            return redirect('dashboard')
+
         return render(request, self.template_name, {
             'game': game,
-            'player': request.user.player(game),
+            'player': player,
             'players': players
         })

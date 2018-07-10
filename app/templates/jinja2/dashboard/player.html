@@ -10,7 +10,7 @@
 
 {% block subcontent %}
 
-{% if game is defined and game.is_running %}
+{% if game is defined and game is not none and game.is_running %}
   {% if not player.is_spectator %}
     <div class="ui-grid s-dashboard__index">
       <div class="ui-grid">
@@ -82,7 +82,7 @@
     {% endcall %}
   </div>
   {% endif %}
-{% elif game is defined and game.is_active %}
+{% elif game is defined and game is not none and game.is_active %}
   <div class="ui-text-container text-center">
     {% call card('The game hasn\'t started yet.') %}
       <p>You will be able to access your player information when the game starts. Please be patient for now, and come back when the game has started!</p>

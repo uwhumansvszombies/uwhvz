@@ -35,7 +35,7 @@
     {% call card('Claimed Codes') %}
     <table class="table table-striped">
       {% for code in supply_codes %}
-        {% if not code.claimed_by is none %}
+        {% if code.claimed_by is not none %}
           <tr>
             <td>{{ code.code }}</td>
           </tr>

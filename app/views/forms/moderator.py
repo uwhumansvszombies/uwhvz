@@ -28,8 +28,8 @@ class ModeratorSignupPlayerForm(forms.Form):
     player_role = EnumField(PlayerRole, max_length=1).formfield(
         required=False,
         help_text=
-        'If the game is running and this is blank, the player won\'t be able to sign up for the game.'
-        'However, if the game is in signup mode, the player will sign up as normal.',
+        'Hint: If the player role is blank and the game is running, the player will NOT be able to sign up for the game. '
+        'However, if this is blank and the game is in signup mode, the player will sign up normally.',
         widget=forms.Select(
             attrs={
                 'class': 'custom-select',
