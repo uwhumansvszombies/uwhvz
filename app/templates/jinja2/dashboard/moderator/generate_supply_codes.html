@@ -19,17 +19,31 @@
     {% endcall %}
   </div>
   
-  {% call card('Unclaimed Codes') %}
-  <table class="table table-striped">
-    {% for code in supply_codes %}
-      {% if code.claimed_by is none %}
-        <tr>
-          <td>{{ code.code }}</td>
-        </tr>
-      {% endif %}
-    {% endfor %}
-  </table>
-  {% endcall %}
+  <div class="ui-grid">
+    {% call card('Unclaimed Codes') %}
+    <table class="table table-striped">
+      {% for code in supply_codes %}
+        {% if code.claimed_by is none %}
+          <tr>
+            <td>{{ code.code }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+    {% endcall %}
+  
+    {% call card('Claimed Codes') %}
+    <table class="table table-striped">
+      {% for code in supply_codes %}
+        {% if not code.claimed_by is none %}
+          <tr>
+            <td>{{ code.code }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+    {% endcall %}
+  </div>
 </div>
 
 {% endblock %}

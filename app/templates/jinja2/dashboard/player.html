@@ -30,10 +30,12 @@
           {{ csrf_input }}
 
           {% for field in report_tag_form %}
-            {{ field.errors }}
             <div class="ui-form-group">
               <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
               {{ field }}
+              {% for error in field.errors %}
+                <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+              {% endfor %}
             </div>
           {% endfor %}
 
@@ -49,23 +51,33 @@
           <form action="{{ url('claim_supply_code') }}" method="post" novalidate>
             {{ csrf_input }}
 
-            {% for field in redeem_supply_code_form %}
-              {{ field.errors }}
+            {% for field in claim_supply_code_form %}
               <div class="ui-form-group">
                 {{ field }}
+                {% for error in field.errors %}
+                  <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+                {% endfor %}
               </div>
             {% endfor %}
+            
             <div class="ui-form-group pt-2 text-center">
               <input class="btn btn-primary" type="submit" value="Redeem">
             </div>
           </form>
         {% endcall %}
+
+        {% if player.has_faction %}
+          {% call card('Faction Information') %}
+            <p>You are part of the <span class="font-weight-bold text-uppercase">{{ player.faction.name }}</span> faction.</p>
+            {% if player.faction.description %}<p>{{ player.faction.description }}</p>{% endif %}
+          {% endcall %}
+        {% endif %}
         </div>
       {% endif %}
     </div>
   {% else %}
   <div class="ui-text-container">
-    {% call card('') %}
+    {% call card('You are a spectator.') %}
       <p>As a spectator, you cannot access any actions that affect the game (reporting stuns/tags, redeeming supply codes, etc.). However, please feel free to check out some of the other pages on the sidebar.</p>
     {% endcall %}
   </div>

@@ -57,20 +57,32 @@ class UserSignupView(View):
 class GameSignupView(View):
     def get(self, request):
         game = most_recent_game()
-        if game.is_active and not request.user.player_set.filter(game=game, active=True).exists():
-            return render(request, 'registration/game_signup.html', {'game': game})
+        forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+
+        if not game.is_finished and not request.user.player_set.filter(game=game, active=True).exists():
+            return render(request, 'registration/game_signup.html', {'game': game, 'player_role': forced_role})
         else:
+            messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
 
     def post(self, request):
+        game = most_recent_game()
+        forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
         has_signed_waiver = request.POST.get('accept_waiver', 'off') == 'on'
+
         if not has_signed_waiver:
             messages.warning(request, 'Please sign the waiver.')
             return self.get(request)
-        game = most_recent_game()
+
         if request.user.player_set.filter(game=game, active=True).exists():
+            messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
-        Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
+
+        if forced_role:
+            Player.objects.create_player(request.user, game, forced_role)
+        else:
+            Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
+
         messages.success(request, f'You\'ve successfully signed up for the {game} game.')
         return redirect('dashboard')

@@ -49,7 +49,7 @@ class ReportTagForm(forms.Form):
     )
 
 
-class RedeemSupplyCodeForm(forms.Form):
+class ClaimSupplyCodeForm(forms.Form):
     code = forms.CharField(
         label="Supply Code",
         min_length=6,

@@ -9,11 +9,11 @@
 {% block subcontent %}
 
 <div class="ui-grid s-dashboard__player-list">
-  <div class="ui-grid">
+  <div class="ui-grid align-content-start">
     {% call card('Start Game') %}
       <p>This will send all game start emails to players, set OZs as zombies, and start the game.</p>
       <div class="ui-form-group text-center">
-        <button class="btn btn-primary">Start Game</button>
+        <button class="btn btn-primary"{% if game.is_running %}disabled title="The game has already started."{% endif %}>Start Game</button>
       </div>
     {% endcall %}
     {% call card('Kill All Unsupplied Humans') %}
@@ -24,20 +24,14 @@
     {% endcall %}
   </div>
   <div class="ui-grid">
-    {% call card('All Emails') %}
-      <div style="max-height: 150px; overflow: scroll; background: #eee">
-        {{ all_emails|join(', ') }}
-      </div>
+    {% call card('All Emails (Use BCC)') %}
+      <textarea class="ui-input" rows="5">{{ all_emails|join(', ') }}</textarea>
     {% endcall %}
-    {% call card('Human Emails') %}
-      <div style="max-height: 150px; overflow: scroll; background: #eee">
-        {{ human_emails|join(', ') }}
-      </div>
+    {% call card('Human Emails (Use BCC)') %}
+      <textarea class="ui-input" rows="5">{{ human_emails|join(', ') }}</textarea>
     {% endcall %}
-    {% call card('Zombie Emails') %}
-      <div style="max-height: 150px; overflow: scroll; background: #eee">
-        {{ zombie_emails|join(', ') }}
-      </div>
+    {% call card('Zombie Emails (Use BCC)') %}
+      <textarea class="ui-input" rows="5">{{ zombie_emails|join(', ') }}</textarea>
     {% endcall %}
   </div>
 </div>

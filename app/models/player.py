@@ -98,5 +98,9 @@ class Player(models.Model):
     def is_human(self):
         return self.role == PlayerRole.HUMAN
 
+    @property
+    def has_faction(self):
+        return self.faction != None
+
     def __str__(self):
         return self.user.get_full_name()

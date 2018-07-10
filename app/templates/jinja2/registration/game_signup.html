@@ -4,24 +4,44 @@
 {% block title %}Game Signup{% endblock %}
 
 {% block subcontent %}
-  {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endfor %}
-  {% endif %}
-  
   <div class="row justify-content-center">
     <div class="col-6 flex-column">
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+      {% endif %}
       {% if game.is_running %}
-        {% call card('The game is already running.') %}
-        <p>You can no longer sign up for the game since the game is now running. Please speak to the moderators if you wish to spectate the game.</p>
-        {% endcall %}
-      {% elif game.is_active %}
+        {% if player_role is none %}
+          {% call card('The game is already running.') %}
+          <p>You can no longer sign up for the game since the game is now running. Please speak to the moderators if you wish to spectate the game.</p>
+          {% endcall %}
+        {% else %}
+          {% call card(game.name + ' Game Signup') %}
+          <form action="{{ url('game_signup') }}" method="post">
+            {{ csrf_input }}
+            <p>You are now signing up for the {{ game.name }} game. In order to do so, please read and agree to our waiver. As well, because the game is already running, you will be signed up as a <span class="text-uppercase font-weight-bold">{{ player_role }}</span>.</p>
+            <div class="pb-3 text-center">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#waiverModal">Read Waiver</button>
+            </div>
+            <div class="ui-form-group">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="accept_waiver" name="accept_waiver">
+                <label class="custom-control-label ui-label" for="accept_waiver">I have read and accepted the terms listed in the waiver.</label>
+              </div>
+            </div>
+            <div class="ui-form-group pt-2 text-center">
+              <input type="submit" value="Signup" class="btn btn-primary">
+            </div>
+          </form>
+          {% endcall %}
+        {% endif %}
+      {% elif game.is_active or not player_role is none %}
         {% call card(game.name + ' Game Signup') %}
         <form action="{{ url('game_signup') }}" method="post">
           {{ csrf_input }}

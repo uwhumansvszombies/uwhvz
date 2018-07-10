@@ -1,0 +1,70 @@
+////
+/// Default styling for all form inputs and labels live here.
+/// @group components
+////
+
+
+.ui-form-group {
+  margin: spacing(tight) 0;
+}
+
+.ui-input {
+  width: 100%;
+  min-height: 2rem;
+  padding: spacing(tighter);
+  margin-bottom: spacing(tightest);
+  border-radius: radius();
+  font-size: 1rem;
+  border: 0;
+}
+
+
+.ui-form__text {
+  @include type-smallcaps;
+
+  padding-top: spacing(tight);
+  color: color(sky, dark);
+  text-transform: none;
+}
+
+.ui-form__text--info {
+  font-weight: $fw-regular;
+}
+
+.ui-form__text--error {
+  color: color(red);
+}
+
+
+.ui-label {
+  @include type-smallcaps;
+
+  color: color(sky, dark);
+  margin-bottom: 0.25em;
+}
+
+.custom-control-label.ui-label {
+  margin: 0;
+  line-height: lh('looser');
+}
+
+
+.custom-select {
+  display: block;
+  margin-bottom: spacing(tighter);
+}
+
+
+.th--light {
+  .ui-input {
+    background: color(gray);
+    color: color(ink);
+  }
+}
+
+.th--dark {
+  .ui-input {
+    background: color(ink);
+    color: color(sky);
+  }
+}
