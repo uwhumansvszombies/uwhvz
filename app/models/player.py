@@ -7,6 +7,7 @@ from enumfields import Enum, EnumField
 from app.models.util import generate_code
 from .faction import Faction
 from .game import Game
+from .modifier import Modifier, ModifierType
 from .user import User
 
 
@@ -42,6 +43,7 @@ class Player(models.Model):
     in_oz_pool = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     faction = models.ForeignKey(Faction, on_delete=models.PROTECT, blank=True, null=True)
+    modifier = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -64,12 +66,17 @@ class Player(models.Model):
         """
         Individual score of a player.
         """
-        total_score = 0
+        total_score = self.modifier
         for tag in self.initiator_tags.filter(active=True).all():
             total_score += tag.receiver.value(tag.tagged_at) + tag.modifier
 
         for code in self.supplycode_set.all():
             total_score += code.value + code.modifier
+
+        faction_score_modifiers = Modifier.objects.filter(faction=self.faction,
+                                                          modifier_type=ModifierType.ONE_TIME_USE).all()
+        for faction_modifier in faction_score_modifiers:
+            total_score += faction_modifier.modifier_amount
 
         return total_score
 

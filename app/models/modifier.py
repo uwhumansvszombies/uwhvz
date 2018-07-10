@@ -7,6 +7,7 @@ from .faction import Faction
 
 
 class ModifierType(Enum):
+    ONE_TIME_USE = 'O'
     SUPPLY_CODE = 'S'
     TAG = 'T'
 
@@ -22,4 +23,4 @@ class Modifier(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.faction} +{self.modifier_amount} for {self.modifier_type}'
+        return f'{self.faction} +{self.modifier_amount}pts for {self.modifier_type}'

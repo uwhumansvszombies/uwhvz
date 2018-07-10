@@ -1,9 +1,13 @@
+from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
+    path('accounts/password_reset/', auth_views.PasswordResetView.as_view(
+        html_email_template_name='registration/password_reset_email_html.html'
+    )),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/<uuid:signup_invite>', views.UserSignupView.as_view(), name='user_signup'),
     path('dashboard', views.DashboardView.as_view(), name='dashboard'),

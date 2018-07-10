@@ -7,7 +7,14 @@ from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, Sign
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'game', 'code', 'role', 'faction', 'active')
+    search_fields = ('user__first_name', 'user__last_name', 'role', 'faction__name')
+    list_display = ('get_full_name', 'game', 'code', 'role', 'faction', 'score', 'active')
+
+    def get_full_name(self, obj):
+        return obj.user.get_full_name()
+
+    get_full_name.admin_order_field = 'user__first_name'
+    get_full_name.short_description = 'Name'
 
     def has_delete_permission(self, request, obj=None):
         return False

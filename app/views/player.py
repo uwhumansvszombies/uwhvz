@@ -55,8 +55,9 @@ class ReportTagView(View):
         game = most_recent_game()
         initiating_player = request.user.player(game)
         cleaned_data = report_tag_form.cleaned_data
+        receiver_code = cleaned_data['player_code'].upper()
         try:
-            receiving_player = Player.objects.get(code=cleaned_data['player_code'], active=True)
+            receiving_player = Player.objects.get(code=receiver_code, active=True)
         except ObjectDoesNotExist:
             report_tag_form.add_error('player_code', 'No player with that code exists.')
             return render_player_info(request, report_tag_form=report_tag_form)
@@ -93,8 +94,9 @@ class ClaimSupplyCodeView(View):
         game = most_recent_game()
         player = request.user.player(game)
         cleaned_data = claim_supply_code_form.cleaned_data
+        cleaned_supply_code = cleaned_data['code'].upper()
         try:
-            supply_code = SupplyCode.objects.get(code=cleaned_data['code'], claimed_by__isnull=True)
+            supply_code = SupplyCode.objects.get(code=cleaned_supply_code, claimed_by__isnull=True)
         except ObjectDoesNotExist:
             claim_supply_code_form.add_error('code', "That supply code does not exist or has already been redeemed.")
             return render_player_info(request, claim_supply_code_form=claim_supply_code_form)
