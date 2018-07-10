@@ -43,15 +43,16 @@ class ManageOZView(View):
 
 @method_decorator(moderator_required, name='dispatch')
 class ManagePlayersView(View):
-    def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
-        template = 'dashboard/moderator/manage_players.html'
+    template_name = 'dashboard/moderator/manage_players.html'
 
+    def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
         game = most_recent_game()
         players = Player.objects.filter(active=True).all()
         locations = SignupLocation.objects.all()
 
-        return render(request, template, {
+        return render(request, self.template_name, {
             'game': game,
+            'players': players,
             'signup_locations': locations,
             'mod_signup_player_form': mod_signup_player_form
         })

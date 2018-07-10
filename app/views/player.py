@@ -13,7 +13,7 @@ from app.views.forms import ReportTagForm, ClaimSupplyCodeForm
 
 def render_player_info(request, report_tag_form=ReportTagForm(),
                        claim_supply_code_form=ClaimSupplyCodeForm()):
-    template = 'mobile/dashboard/player.html' if request.user_agent.is_mobile else 'dashboard/player.html'
+    template_name = 'mobile/dashboard/player.html' if request.user_agent.is_mobile else 'dashboard/player.html'
 
     game = most_recent_game()
     try:
@@ -21,7 +21,7 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
     except ObjectDoesNotExist:
         return redirect('dashboard')
     team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
-    return render(request, template, {
+    return render(request, template_name, {
         'game': game,
         'player': player,
         'team_score': team_score,

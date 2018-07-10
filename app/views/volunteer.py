@@ -12,13 +12,13 @@ from .forms import VolunteerSignupPlayerForm
 @method_decorator(volunteer_required, name='dispatch')
 @method_decorator(active_game_required, name='dispatch')
 class SignupPlayersView(View):
-    def render_signup_players(self, request, volunteer_signup_player_form=VolunteerSignupPlayerForm()):
-        template = 'dashboard/volunteer/signup_players.html'
+    template_name = 'dashboard/volunteer/signup_players.html'
 
+    def render_signup_players(self, request, volunteer_signup_player_form=VolunteerSignupPlayerForm()):
         game = most_recent_game()
         locations = SignupLocation.objects.all()
 
-        return render(request, template, {
+        return render(request, self.template_name, {
             'game': game,
             'signup_locations': locations,
             'volunteer_signup_player_form': volunteer_signup_player_form
@@ -30,7 +30,7 @@ class SignupPlayersView(View):
     def post(self, request):
         volunteer_signup_player_form = VolunteerSignupPlayerForm(request.POST)
         if not volunteer_signup_player_form.is_valid():
-            return self.render_manage_players(request, volunteer_signup_player_form=volunteer_signup_player_form)
+            return self.render_signup_players(request, volunteer_signup_player_form=volunteer_signup_player_form)
 
         game = most_recent_game()
         cleaned_data = volunteer_signup_player_form.cleaned_data

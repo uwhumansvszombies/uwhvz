@@ -23,7 +23,7 @@ class UserTester:
         if not SignupLocation.objects.filter(name='In a Test').exists():
             SignupLocation.objects.create_signup_location('In a Test')
         if not Game.objects.filter(name='Test Game').exists():
-            game = Game.objects.create_game('Test Game', started_on=timezone.now())
+            game = Game.objects.create_game('Test Game')
         if not Player.objects.filter(user=user, game=game).exists():
             Player.objects.create_player(user, game, PlayerRole.SPECTATOR)
 
@@ -52,12 +52,12 @@ class UserTester:
         self.client.login(username='root@email.com', password='toor')
         signup_location = SignupLocation.objects.get(name=signup_location_name)
 
-        self.client.post('/dashboard/moderator/manage-players', {
+        self.client.post('/dashboard/volunteer/signup-players', {
             'email': email,
-            'signup_location': signup_location.id
+            'location': signup_location.id
         })
         # Somewhere in the last email sent should be a signup url that looks something like this.
-        regex = f'({settings.site_url}/signup/.+)'
+        regex = f'({settings.SITE_URL}/signup/.+)'
         signup_url = re.search(regex, mail.outbox[-1].body).group(1)
 
         # This will redirect so we "follow" the url by doing "response.url" in the next request.
@@ -80,7 +80,7 @@ class UserTester:
         self.client.login(username=email, password=password)
         game = Game.objects.get(name=game_name)
 
-        regex = f'({settings.site_url}/signup/.+)'
+        regex = f'({settings.SITE_URL}/signup/.+)'
         signup_url = re.search(regex, mail.outbox[-1].body).group(1)
 
         response = self.client.get(signup_url)
