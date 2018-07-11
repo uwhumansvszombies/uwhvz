@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
@@ -30,11 +32,11 @@ def volunteer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
     return actual_decorator
 
 
-def game_exists():
+def game_exists() -> bool:
     return Game.objects.exists()
 
 
-def most_recent_game():
+def most_recent_game() -> Game:
     return Game.objects.all().order_by('-created_at').first()
 
 
@@ -74,27 +76,9 @@ def running_game_required(function=None):
     return wrap
 
 
-def require_post_parameters(request, *parameters):
-    params = []
-    for p in parameters:
-        param = request.POST.get(p)
-        params.append(param)
-        check_argument(request, param, f'{p} cannot be blank.')
-    return params
-
-
-def check_argument(request, predicate, message="Something went wrong", level=messages.ERROR):
-    if not predicate:
-        messages.add_message(request, level, message)
-        # TODO: Does this fail nicely? Really all I want here is a way to return to
-        # the current view with a message added. Perhaps a custom middleware to catch
-        # some exception?
-        raise SuspiciousOperation(message)
-
-
-def normalize_email(email):
+def normalize_email(email) -> str:
     """
-    Normalize the email address by lowercasing the domain part of it.
+    Normalize the email address by making the domain part of it lowercase.
     """
     email = email or ''
     try:
@@ -106,13 +90,13 @@ def normalize_email(email):
     return email
 
 
-def format_datetime(value):
+def format_datetime(value) -> datetime:
     return dateformat.format(value, settings.DATETIME_FORMAT)
 
 
 class MobileSupportedView(View):
-    desktop_template = 'You did not supply a desktop template'
-    mobile_template = 'You did not supply a mobile template'
+    desktop_template = "You did not supply a desktop template."
+    mobile_template = "You did not supply a mobile template."
 
     def get(self, request):
         return self.mobile_or_desktop(request)

@@ -12,7 +12,10 @@
 
 {% block subcontent %}
 <div class="ui-grid">
-  {{ card('Code', player.code, class="ui-card--display") }}
+  <div class="ui-grid s-mobile-dashboard__player-info">
+    {{ card('Code', player.code, class="ui-card--display") }}
+    {{ card('My Score', player.score(), 'ui-card--display') }}
+  </div>
 
   {% if player.is_human %}
     {% set report_name = 'Stun' %}
@@ -42,9 +45,17 @@
     {% call card('Redeem Supply Code') %}
     <form action="{{ url('claim_supply_code') }}" method="post">
         {{ csrf_input }}
-        <div class="ui-form-group">
-          <input class="ui-input" type="text" name="supply_code" placeholder="e.g. A1B2C3">
-        </div>
+
+        {% for field in claim_supply_code_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endfor %}
+        
         <div class="ui-form-group pt-2 text-center">
           <input class="btn btn-primary" type="submit" value="Redeem">
         </div>

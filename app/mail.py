@@ -18,9 +18,9 @@ def _send_mail_template(request, plaintext_template, html_template, subject, rec
 def send_signup_email(request, signup_invite):
     _send_mail_template(
         request,
-        'email/signup.txt',
-        'email/signup.html',
-        'Welcome to HvZ',
+        "email/signup.txt",
+        "email/signup.html",
+        "Welcome to HvZ",
         signup_invite.email,
         {'signup_invite': signup_invite}
     )
@@ -29,9 +29,9 @@ def send_signup_email(request, signup_invite):
 def send_signup_reminder(request, email, url):
     _send_mail_template(
         request,
-        'email/signup_reminder.txt',
-        'email/signup_reminder.html',
-        '[ACTION REQUIRED] UW Humans vs Zombies',
+        "email/signup_reminder.txt",
+        "email/signup_reminder.html",
+        "[ACTION REQUIRED] UW HvZ - Uncompleted Game Signup",
         email,
         {'signup_url': url}
     )
@@ -40,9 +40,9 @@ def send_signup_reminder(request, email, url):
 def send_stun_email(request, tag):
     _send_mail_template(
         request,
-        'email/stun.txt',
-        'email/stun.html',
-        'You\'ve Been Stunned',
+        "email/stun.txt",
+        "email/stun.html",
+        "You've Been Stunned",
         tag.receiver.user.email,
         {'tag': tag}
     )
@@ -51,9 +51,9 @@ def send_stun_email(request, tag):
 def send_tag_email(request, tag):
     _send_mail_template(
         request,
-        'email/tag.txt',
-        'email/tag.html',
-        'You\'ve Been Tagged',
+        "email/tag.txt",
+        "email/tag.html",
+        "You've Been Tagged",
         tag.receiver.user.email,
         {'tag': tag}
     )

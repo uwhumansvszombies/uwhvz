@@ -11,7 +11,7 @@ from app.views.forms import ModeratorSignupPlayerForm
 
 @method_decorator(moderator_required, name='dispatch')
 class ManageGameView(View):
-    template_name = 'dashboard/moderator/manage_game.html'
+    template_name = "dashboard/moderator/manage_game.html"
 
     def get(self, request):
         players = Player.objects.filter(active=True)
@@ -30,7 +30,7 @@ class ManageGameView(View):
 
 @method_decorator(moderator_required, name='dispatch')
 class ManageOZView(View):
-    template_name = 'dashboard/moderator/manage_oz.html'
+    template_name = "dashboard/moderator/manage_oz.html"
 
     def get(self, request):
         game = most_recent_game()
@@ -43,7 +43,7 @@ class ManageOZView(View):
 
 @method_decorator(moderator_required, name='dispatch')
 class ManagePlayersView(View):
-    template_name = 'dashboard/moderator/manage_players.html'
+    template_name = "dashboard/moderator/manage_players.html"
 
     def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
         game = most_recent_game()
@@ -70,18 +70,18 @@ class ManagePlayersView(View):
         location, email, player_role = cleaned_data['location'], cleaned_data['email'], cleaned_data['player_role']
 
         if User.objects.filter(email=email).exists():
-            messages.warning(request, f'There is already an account associated with: {email}.')
+            messages.warning(request, f"There is already an account associated with: {email}.")
             return redirect('manage_players')
 
         signup_invite = SignupInvite.objects.create_signup_invite(game, location, email, player_role)
         send_signup_email(request, signup_invite)
-        messages.success(request, f'Sent a signup email to {email}.')
+        messages.success(request, f"Sent a signup email to {email}.")
         return redirect('manage_players')
 
 
 @method_decorator(moderator_required, name='dispatch')
 class GenerateSupplyCodesView(View):
-    template_name = 'dashboard/moderator/generate_supply_codes.html'
+    template_name = "dashboard/moderator/generate_supply_codes.html"
 
     def get(self, request):
         supply_codes = SupplyCode.objects.all()
@@ -94,5 +94,5 @@ class GenerateSupplyCodesView(View):
     def post(self, request):
         game = most_recent_game()
         supply_code = SupplyCode.objects.create_supply_code(game)
-        messages.success(request, f'Generated new supply code "{supply_code}".')
+        messages.success(request, f"Generated new supply code \"{supply_code}\".")
         return redirect('generate_supply_codes')

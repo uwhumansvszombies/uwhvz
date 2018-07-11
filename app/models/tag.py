@@ -3,17 +3,21 @@ from datetime import datetime
 
 from django.db import models, transaction
 
+from .player import Player
 from app.util import format_datetime
-from .player import Player, PlayerRole
 
 
 class TagManager(models.Manager):
     def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str,
-                   modifier: int = 0):
+                   point_modifier: int = 0) -> 'Tag':
+
+        if initiator.is_spectator or receiver.is_spectator:
+            raise ValueError("Spectators cannot submit stun/tag reports or be stunned/tagged.")
         if initiator.role == receiver.role:
-            raise ValueError('A tag must be between a human and a zombie.')
+            tag_type = "stuns" if initiator.is_human else "tags"
+            raise ValueError(f"You cannot report {tag_type} on players of the same team as you.")
         if initiator.game != receiver.game:
-            raise ValueError('A tag must be between two players in the same game.')
+            raise ValueError("A stun/tag must be between two players in the same game.")
 
         with transaction.atomic():
             tag = self.model(
@@ -22,10 +26,10 @@ class TagManager(models.Manager):
                 tagged_at=tagged_at,
                 location=location,
                 description=description,
-                modifier=modifier,
+                point_modifier=point_modifier,
             )
             tag.save()
-            if receiver.role == PlayerRole.HUMAN:
+            if receiver.is_human:
                 receiver.kill()
         return tag
 
@@ -34,31 +38,32 @@ class Tag(models.Model):
     """
     A tag is defined as an "initiator" who has tagged a "receiver".
     """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    initiator = models.ForeignKey(
+    id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    initiator: Player = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
         related_name='initiator_tags'
     )
-    receiver = models.ForeignKey(
+    receiver: Player = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
         related_name='receiver_tags'
     )
-    tagged_at = models.DateTimeField()
-    location = models.CharField(blank=True, max_length=100)
-    description = models.TextField(blank=True)
-    modifier = models.IntegerField(default=0)
+    tagged_at: datetime = models.DateTimeField()
+    location: str = models.CharField(blank=True, max_length=100)
+    description: str = models.TextField(blank=True)
 
-    # If active is False this tag is ignored.
-    active = models.BooleanField(default=True)
+    # If the active property is set to False, then this tag is ignored.
+    active: bool = models.BooleanField(default=True)
+    point_modifier: int = models.IntegerField(default=0)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
+    created_at: datetime = models.DateTimeField(auto_now_add=True)
+    modified_at: datetime = models.DateTimeField(auto_now=True)
 
     objects = TagManager()
 
     def __str__(self):
         initiator = self.initiator
         receiver = self.receiver
-        return f'{initiator} ({initiator.role}) --> {receiver} ({receiver.role}) at {format_datetime(self.tagged_at)}'
+        return f"{initiator} ({initiator.role}) --> {receiver} ({receiver.role}) at {format_datetime(self.tagged_at)}"
