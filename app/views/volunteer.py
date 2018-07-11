@@ -5,14 +5,14 @@ from django.views import View
 
 from app.mail import send_signup_email
 from app.models import SignupInvite, SignupLocation, User
-from app.util import volunteer_required, most_recent_game, require_post_parameters, active_game_required
+from app.util import volunteer_required, most_recent_game, active_game_required
 from .forms import VolunteerSignupPlayerForm
 
 
 @method_decorator(volunteer_required, name='dispatch')
 @method_decorator(active_game_required, name='dispatch')
 class SignupPlayersView(View):
-    template_name = 'dashboard/volunteer/signup_players.html'
+    template_name = "dashboard/volunteer/signup_players.html"
 
     def render_signup_players(self, request, volunteer_signup_player_form=VolunteerSignupPlayerForm()):
         game = most_recent_game()
@@ -37,10 +37,10 @@ class SignupPlayersView(View):
         location, email = cleaned_data['location'], cleaned_data['email']
 
         if User.objects.filter(email=email).exists():
-            messages.warning(request, f'There is already an account associated with: {email}.')
+            messages.warning(request, f"There is already an account associated with: {email}.")
             return redirect('signup_players')
 
         signup_invite = SignupInvite.objects.create_signup_invite(game, location, email)
         send_signup_email(request, signup_invite)
-        messages.success(request, f'Sent a signup email to {email}.')
+        messages.success(request, f"Sent a signup email to {email}.")
         return redirect('signup_players')

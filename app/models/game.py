@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from enum import Enum, auto
 
 from django.db import models
@@ -7,49 +8,67 @@ from .user import User
 
 
 class GameManager(models.Manager):
-    def create_game(self, name, **kwargs):
+    def create_game(self, name: str, **kwargs) -> 'Game':
         game = self.model(name=name, **kwargs)
         game.save()
         return game
 
 
 class GameState(Enum):
-    ACTIVE = auto()
-    RUNNING = auto()
-    FINISHED = auto()
+    """
+    The three states a game can take.
+    ACTIVE: when a game has been created but has not started yet; a game in its signup period.
+    RUNNING: when a game has been created and has started; a game that's started.
+    FINISHED: when a game has ended; a past/previous game.
+    """
+    ACTIVE: Enum = auto()
+    RUNNING: Enum = auto()
+    FINISHED: Enum = auto()
 
 
 class Game(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True)
+    id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name: str = models.CharField(max_length=100, unique=True)
 
-    started_on = models.DateTimeField(null=True, blank=True)
-    started_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='started_games', null=True, blank=True)
+    started_on: datetime = models.DateTimeField(null=True, blank=True)
+    started_by: User = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='started_games',
+        null=True,
+        blank=True
+    )
 
-    ended_on = models.DateTimeField(null=True, blank=True)
-    ended_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ended_games', null=True, blank=True)
+    ended_on: datetime = models.DateTimeField(null=True, blank=True)
+    ended_by: User = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='ended_games',
+        null=True,
+        blank=True
+    )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
+    created_at: datetime = models.DateTimeField(auto_now_add=True)
+    modified_at: datetime = models.DateTimeField(auto_now=True)
 
     objects = GameManager()
 
-    def state(self):
+    def state(self) -> Enum:
         if self.started_on:
             return GameState.FINISHED if self.ended_on else GameState.RUNNING
         else:
             return GameState.ACTIVE
 
     @property
-    def is_active(self):
+    def is_active(self) -> bool:
         return self.state() == GameState.ACTIVE
 
     @property
-    def is_running(self):
+    def is_running(self) -> bool:
         return self.state() == GameState.RUNNING
 
     @property
-    def is_finished(self):
+    def is_finished(self) -> bool:
         return self.state() == GameState.FINISHED
 
     def __str__(self):

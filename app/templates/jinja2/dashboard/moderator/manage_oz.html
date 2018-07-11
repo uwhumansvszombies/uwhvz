@@ -18,10 +18,10 @@
         </tr>
       </thead>
       <tbody>
-        {% for player in players %}
+        {% for p in players %}
         <tr>
-          <td scope="col">{{ player.user.get_full_name() }}</td>
-          <td scope="col">{{ player.user.email }}</td>
+          <td scope="col">{{ p.user.get_full_name() }}</td>
+          <td scope="col">{{ p.user.email }}</td>
         </tr>
         {% endfor %}
       </tbody>

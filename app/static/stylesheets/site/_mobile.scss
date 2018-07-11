@@ -12,3 +12,7 @@
   max-width: 20rem;
   margin: 0 auto;
 }
+
+.s-mobile-dashboard__player-info {
+  grid-template-columns: 1fr 1fr;
+}

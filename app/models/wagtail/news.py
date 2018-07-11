@@ -4,15 +4,16 @@ from wagtail.core.models import Page
 
 
 class NewsPage(Page):
-    template = 'wagtail/news.html'
+    template = "wagtail/news.html"
 
     subpage_types = ['app.Article']
     parent_page_types = ['app.DashboardPage']
 
 
 class Article(Page):
-    template = 'wagtail/article.html'
-    body = RichTextField(blank=True)
+    template = "wagtail/article.html"
+
+    body: str = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('body', classname="full")

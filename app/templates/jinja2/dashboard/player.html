@@ -69,7 +69,7 @@
         {% if player.has_faction %}
           {% call card('Faction Information') %}
             <p>You are part of the <span class="font-weight-bold text-uppercase">{{ player.faction.name }}</span> faction.</p>
-            {% if player.faction.description %}<p>{{ player.faction.description }}</p>{% endif %}
+            {% if player.faction.description %}{{ player.faction.description|safe }}{% endif %}
           {% endcall %}
         {% endif %}
         </div>

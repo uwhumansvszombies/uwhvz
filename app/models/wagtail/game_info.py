@@ -1,4 +1,4 @@
-from enumfields import EnumField, Enum
+from enumfields import Enum, EnumField
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -8,13 +8,13 @@ from app.util import most_recent_game
 
 
 class ViewableBy(Enum):
-    ALL = 'A'
-    HUMANS = 'H'
-    ZOMBIES = 'Z'
+    ALL: Enum = 'A'
+    HUMANS: Enum = 'H'
+    ZOMBIES: Enum = 'Z'
 
 
 class GameInfoPage(Page):
-    template = 'wagtail/game_info.html'
+    template = "wagtail/game_info.html"
 
     subpage_types = ['app.AnnouncementPage', 'app.MissionPage']
     parent_page_types = ['app.DashboardPage']
@@ -34,10 +34,10 @@ class GameInfoPage(Page):
 
 
 class AnnouncementPage(Page):
-    template = 'wagtail/announcement.html'
-    body = RichTextField(blank=True)
+    template = "wagtail/announcement.html"
 
-    viewable_by = EnumField(enum=ViewableBy, max_length=1)
+    body: str = RichTextField(blank=True)
+    viewable_by: Enum = EnumField(enum=ViewableBy, max_length=1)
 
     content_panels = Page.content_panels + [
         FieldPanel('viewable_by'),
@@ -47,7 +47,7 @@ class AnnouncementPage(Page):
     parent_page_types = ['app.GameInfoPage']
     subpage_types = []
 
-    def get_admin_display_title(self):
+    def get_admin_display_title(self) -> str:
         return f'<{self.viewable_by}> {self.draft_title or self.title}'
 
     def get_context(self, request, *args, **kwargs):
@@ -58,7 +58,7 @@ class AnnouncementPage(Page):
         context['game'] = game
         return context
 
-    def is_viewable_by(self, player):
+    def is_viewable_by(self, player) -> bool:
         if self.viewable_by == ViewableBy.ALL:
             return True
         if self.viewable_by == ViewableBy.HUMANS and player.is_human:
@@ -71,10 +71,10 @@ class AnnouncementPage(Page):
 
 
 class MissionPage(Page):
-    template = 'wagtail/mission.html'
-    body = RichTextField(blank=True)
+    template = "wagtail/mission.html"
 
-    viewable_by = EnumField(enum=ViewableBy, max_length=1)
+    body: str = RichTextField(blank=True)
+    viewable_by: Enum = EnumField(enum=ViewableBy, max_length=1)
 
     content_panels = Page.content_panels + [
         FieldPanel('viewable_by'),
@@ -84,7 +84,7 @@ class MissionPage(Page):
     parent_page_types = ['app.GameInfoPage']
     subpage_types = []
 
-    def get_admin_display_title(self):
+    def get_admin_display_title(self) -> str:
         return f'<{self.viewable_by}> {self.draft_title or self.title}'
 
     def get_context(self, request, *args, **kwargs):
@@ -95,7 +95,7 @@ class MissionPage(Page):
         context['game'] = game
         return context
 
-    def is_viewable_by(self, player):
+    def is_viewable_by(self, player) -> bool:
         if self.viewable_by == ViewableBy.ALL:
             return True
         if self.viewable_by == ViewableBy.HUMANS and player.is_human:
