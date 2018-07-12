@@ -176,22 +176,26 @@ class ZombieTreeView(View):
         player_codes = {}
         nodes = []
         edges = []
+        # Since we don't want repeated instances of OZs, we use a set instead of a list.
+        ozs = set()
 
         tags = Tag.objects.filter(initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
 
         for tag in tags:
-            edges.append({"from": tag.initiator.code, "to": tag.receiver.code})
+            edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})
 
-            player_codes[tag.initiator.code] = {
-                'label': tag.initiator.user.get_full_name(),
-            }
+            player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
+            player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
 
-            player_codes[tag.receiver.code] = {
-                'label': tag.receiver.user.get_full_name(),
-            }
+            if not Player.objects.filter(code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
+                ozs.add(tag.initiator)
 
-        for code, info in player_codes.items():
-            nodes.append({'id': code, 'label': info['label']})
+        for code, name in player_codes.items():
+            nodes.append({'id': code, 'label': name})
+
+        nodes.append({'id': 'NECROMANCER', 'label': "Necromancer"})
+        for oz in ozs:
+            edges.append({'from': 'NECROMANCER', 'to': oz.code})
 
         return render(request, self.template_name, {
             'game': game,
