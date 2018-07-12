@@ -170,11 +170,11 @@ class ZombieTreeView(View):
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
-        if game.is_running and player.is_human and not (player.user.is_superuser or player.user.is_moderator or player.user.is_staff):
+        if game.is_running and player.is_human and not player.user.is_moderator:
             raise PermissionDenied
 
         player_codes = {}
-        nodes = []
+        nodes = {}
         edges = []
         # Since we don't want repeated instances of OZs, we use a set instead of a list.
         ozs = set()
@@ -191,15 +191,38 @@ class ZombieTreeView(View):
                 ozs.add(tag.initiator)
 
         for code, name in player_codes.items():
-            nodes.append({'id': code, 'label': name})
+            nodes[code] = {'label': name}
 
-        nodes.append({'id': 'NECROMANCER', 'label': "Necromancer"})
+        nodes['NECROMANCER'] = {'label': "Necromancer"}
         for oz in ozs:
             edges.append({'from': 'NECROMANCER', 'to': oz.code})
+
+        # BFS on the edge list so that we can put each node into a group based on
+        # its level in the tree.
+        queue = ['NECROMANCER']
+        level = 0
+        while queue:
+            popped = []
+            while queue:
+                node_id = queue.pop(0)
+                popped.append(node_id)
+                nodes[node_id]['group'] = level
+
+            children = []
+            while popped:
+                node_id = popped.pop(0)
+                children.extend([n['to'] for n in edges if n['from'] == node_id])
+
+            queue.extend(children)
+            level += 1
+
+        node_list = []
+        for key, value in nodes.items():
+            node_list.append({'id': key, **value})
 
         return render(request, self.template_name, {
             'game': game,
             'player': player,
-            'nodes': json.dumps(nodes),
+            'nodes': json.dumps(node_list),
             'edges': json.dumps(edges),
         })
