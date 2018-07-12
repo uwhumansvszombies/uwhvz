@@ -34,6 +34,11 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
+    search_fields = ('initiator__user__first_name', 'initiator__user__last_name', 'receiver__user__first_name', 'receiver__user__last_name')
+
+    def get_full_name(self, obj):
+        return obj.user.get_full_name()
+
     def has_delete_permission(self, request, obj=None):
         return False
 

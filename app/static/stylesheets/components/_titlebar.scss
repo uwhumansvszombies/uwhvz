@@ -46,6 +46,7 @@
 #titlebar-title {
   justify-content: flex-start;
   flex: 1 1 auto;
+  border-right: 1px solid;
 
   h1 {
     font-size: 1rem;
@@ -68,6 +69,7 @@
   &:active,
   &:focus,
   &:hover {
+    color: color(sky, lighter);
     text-decoration: underline;
   }
 }

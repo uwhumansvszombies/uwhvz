@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
+from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
-from app.models import Player, Tag, SupplyCode, Modifier, ModifierType
+from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
 from app.util import most_recent_game, game_required, running_game_required
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm
 
@@ -53,10 +54,15 @@ class ReportTagView(View):
             return render_player_info(request, report_tag_form=report_tag_form)
 
         game = most_recent_game()
-        initiating_player = request.user.player(game)
+
+        try:
+            initiating_player = request.user.player(game)
+        except ObjectDoesNotExist:
+            return redirect('dashboard')
+
         cleaned_data = report_tag_form.cleaned_data
         receiver_code = cleaned_data['player_code'].upper()
-        
+
         try:
             receiving_player = Player.objects.get(code=receiver_code, active=True)
         except ObjectDoesNotExist:
@@ -72,17 +78,19 @@ class ReportTagView(View):
 
         try:
             tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
-                                        cleaned_data['location'], cleaned_data['description'], tag_modifier_amount)
+                                         cleaned_data['location'], cleaned_data['description'], tag_modifier_amount)
         except ValueError as err:
             messages.error(request, err)
             return redirect('player_info')
 
         if initiating_player.is_human:
             send_stun_email(request, tag)
-            messages.success(request, f"You've successfully submitted a stun on {receiving_player.user.get_full_name()}.")
+            messages.success(request,
+                             f"You've successfully submitted a stun on {receiving_player.user.get_full_name()}.")
         else:
             send_tag_email(request, tag)
-            messages.success(request, f"You've successfully submitted a tag on {receiving_player.user.get_full_name()}.")
+            messages.success(request,
+                             f"You've successfully submitted a tag on {receiving_player.user.get_full_name()}.")
         return redirect('player_info')
 
 
@@ -98,7 +106,12 @@ class ClaimSupplyCodeView(View):
             return render_player_info(request, claim_supply_code_form=claim_supply_code_form)
 
         game = most_recent_game()
-        player = request.user.player(game)
+
+        try:
+            player = request.user.player(game)
+        except ObjectDoesNotExist:
+            return redirect('dashboard')
+
         cleaned_data = claim_supply_code_form.cleaned_data
         cleaned_supply_code = cleaned_data['code'].upper()
         try:
@@ -141,4 +154,48 @@ class PlayerListView(View):
             'game': game,
             'player': player,
             'players': players
+        })
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(game_required, name='dispatch')
+class ZombieTreeView(View):
+    template_name = 'dashboard/zombie_tree.html'
+
+    def get(self, request):
+        game = most_recent_game()
+
+        try:
+            player = request.user.player(game)
+        except ObjectDoesNotExist:
+            return redirect('dashboard')
+
+        if game.is_running and player.is_human and not (player.user.is_superuser or player.user.is_moderator or player.user.is_staff):
+            raise PermissionDenied
+
+        player_codes = {}
+        nodes = []
+        edges = []
+
+        tags = Tag.objects.filter(initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
+
+        for tag in tags:
+            edges.append({"from": tag.initiator.code, "to": tag.receiver.code})
+
+            player_codes[tag.initiator.code] = {
+                'label': tag.initiator.user.get_full_name(),
+            }
+
+            player_codes[tag.receiver.code] = {
+                'label': tag.receiver.user.get_full_name(),
+            }
+
+        for code, info in player_codes.items():
+            nodes.append({'id': code, 'label': info['label']})
+
+        return render(request, self.template_name, {
+            'game': game,
+            'player': player,
+            'nodes': json.dumps(nodes),
+            'edges': json.dumps(edges),
         })

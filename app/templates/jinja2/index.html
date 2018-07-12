@@ -2,6 +2,12 @@
 
 {% block title %}Index{% endblock %}
 
+{% block styles %}
+  {% compress css %}
+    <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
+  {% endcompress %}
+{% endblock %}
+
 {% block content %}
 <header id="landing-nav">
   <a href="/" class="sitelogo">{{ svg('site-logo-dark') }}</a>

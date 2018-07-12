@@ -15,6 +15,7 @@ django-user-agents = "*"
 wagtail = "*"
 gunicorn = "*"
 django-admin-view-permission = "*"
+django-compressor = "*"
 
 [dev-packages]
 

@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sass_processor',
+    'compressor',
     'svg',
     'django_user_agents',
     'wagtail.contrib.forms',
@@ -65,6 +66,7 @@ TEMPLATES = [
                 'wagtail.core.jinja2tags.core',
                 'wagtail.admin.jinja2tags.userbar',
                 'wagtail.images.jinja2tags.images',
+                'compressor.contrib.jinja2ext.CompressorExtension',
             ],
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -133,6 +135,7 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
+    'compressor.finders.CompressorFinder',
 ]
 
 WAGTAIL_SITE_NAME = 'UW Humans vs Zombies'

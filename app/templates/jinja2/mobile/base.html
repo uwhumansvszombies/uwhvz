@@ -3,12 +3,19 @@
 {% block content %}
 <header class="navbar navbar-expand-lg navbar-dark ui-titlebar--mobile">
   <a class="navbar-brand text-center" href="/">{{ svg('site-logo-dark') }}</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button onclick="$('#navbar').collapse('toggle')" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <nav class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      {% block navigation %}{% endblock %}
+  <nav class="justify-content-end collapse navbar-collapse" id="navbar">
+    <ul class="navbar-nav">
+      {% if user.is_authenticated %}
+        <li class="nav-item active"><a class="nav-link" href="{{ url('player_info') }}">Player Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="/dashboard/game-info/">Game Info</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url('logout') }}">Logout</a></li>
+      {% else %}
+        <li class="nav-item"><a class="nav-link" href="{{ url('login') }}">Login</a></li>
+      {% endif %}
     </ul>
   </nav>
 </header>

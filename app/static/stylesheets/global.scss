@@ -14,7 +14,7 @@
 // Fonts
 @import 'fonts/komu';
 
-// Layout and Typography Utilities
+// Layout & typography Utilities
 @import 'base/layout';
 @import 'base/typography/utilities';
 
@@ -25,17 +25,11 @@
 
 // Components
 @import 'components/card';
-@import 'components/countdown';
 @import 'components/form';
 @import 'components/layout';
 @import 'components/logo';
-@import 'components/menu';
-@import 'components/sidebar';
 @import 'components/text-container';
-@import 'components/titlebar';
 
 // Site-specific pages
-@import 'site/landing';
 @import 'site/signups';
-@import 'site/dashboard';
 @import 'site/mobile';
