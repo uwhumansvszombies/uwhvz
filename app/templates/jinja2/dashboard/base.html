@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block styles %}
+  {% compress css %}
+    <link href="{% sass_src 'stylesheets/dashboard.scss' %}" rel="stylesheet" type="text/css">
+  {% endcompress %}
+  {% block additional_styles %}{% endblock %}
+{% endblock %}
+
 {% block content %}
 <header class="ui-titlebar">
   <div class="ui-titlebar__section" id="titlebar-logo">
@@ -30,7 +37,7 @@
     <nav class="ui-menu">
       <a class="ui-menu__header-link" href="#player-actions" data-target="#player-actions" data-toggle="collapse" aria-expanded="{% if "/moderator" not in request.path %}true{% else %}false{% endif %}">
         <header class="ui-menu__header">
-          <h1 class="ui-menu__title">Game Actions</h1>
+          <h1 class="ui-menu__title">Player Actions</h1>
           <div class="ui-menu__icon">
             <span aria-hidden="true" class="oi oi-plus"></span>
             <span aria-hidden="true" class="oi oi-minus"></span>
@@ -38,13 +45,13 @@
         </header>
       </a>
       <ul class="ui-menu__section collapse{% if "/moderator" not in request.path %} show{% endif %}" data-parent="#side-nav" id="player-actions">
-        <li><a href="{{ url('player_info') }}">Game Dashboard</a></li>
-        <li><a href="/dashboard/game-info/">Info & News</a></li>
-        <li><a href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
+        <li><a href="{{ url('player_info') }}">Player Dashboard</a></li>
+        <li><a href="/dashboard/game-info/">Game Info & News</a></li>
         <li><a href="{{ url('player_list') }}">Player List</a></li>
         {% if (player is defined and player is not none and not player.is_human) or user.is_moderator %}
-          <li><a href="#">Zombie Tree</a></li>
+        <li><a href="{{ url('zombie_tree') }}">Zombie Tree</a></li>
         {% endif %}
+        <li><a href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
       </ul>
     </nav>
   {% endif %}

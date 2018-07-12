@@ -1,0 +1,16 @@
+{% from "components/card.html" import card %}
+{% extends "mobile/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block subcontent %}
+
+<div class="ui-grid">
+  {% call card('Welcome to the website!', class='text-left') %}
+    <p>Since this is a newly built website, we hope you'll be patient with us as we work to polish it and make it awesome when the game starts.</p>
+    <p>For now, if you don't see anything else, just sit tight and wait for the game to start, as all the fun stuff will be out and ready for you to play with when it starts!</p>
+    <p>Thank you! :)</p>
+  {% endcall %}
+</div>
+
+{% endblock %}

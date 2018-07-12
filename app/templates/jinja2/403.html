@@ -1,0 +1,21 @@
+{% from "components/card.html" import card %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="ui-layout">
+  <section class="container ui-layout__item">
+    <div class="row">
+      <div class="col-lg-6 mx-auto text-center">
+        {% call card('You are not allowed to view this page.') %}
+          <p>You do not have the proper permissions to view this page.</p>
+          <div class="ui-form-group">
+            <a class="btn btn-primary" href="{{ url('index') }}">Return to Site</a>
+          </div>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

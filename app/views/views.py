@@ -15,7 +15,7 @@ class IndexView(MobileSupportedView):
 @method_decorator(login_required, name='dispatch')
 class DashboardView(MobileSupportedView):
     desktop_template = "dashboard/index.html"
-    mobile_template = "dashboard/index.html"
+    mobile_template = "mobile/dashboard/index.html"
 
     def get(self, request):
         if game_exists():

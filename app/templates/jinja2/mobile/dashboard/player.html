@@ -3,13 +3,6 @@
 
 {% block title %}UW HvZ &mdash; Player Dashboard{% endblock %}
 
-{% block navigation %}
-  <li class="nav-item active"><a class="nav-link" href="{{ url('player_info') }}">Player Dashboard</a></li>
-  <li class="nav-item"><a class="nav-link" href="/dashboard/game-info/">Game Info</a></li>
-  <li class="nav-item"><a class="nav-link" href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
-  <li class="nav-item"><a class="nav-link" href="{{ url('logout') }}">Logout</a></li>
-{% endblock %}
-
 {% block subcontent %}
 <div class="ui-grid">
   <div class="ui-grid s-mobile-dashboard__player-info">

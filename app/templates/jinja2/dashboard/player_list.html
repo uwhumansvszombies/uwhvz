@@ -9,24 +9,26 @@
 {% block pagesubtitle %}View Player List{% endblock %}
 
 {% block subcontent %}
-  {% call card('Player List') %}
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Role</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for p in players %}
-      <tr>
-        <td scope="col">{{ p.user.get_full_name() }}</td>
-        <td scope="col">{{ p.user.email }}</td>
-        <td scope="col">{% if player.is_human and not p.is_spectator %}Player{% else %}{{ p.role }}{% endif %}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% endcall %}
+
+{% call card('Player List') %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in players %}
+    <tr>
+      <td scope="col">{{ p.user.get_full_name() }}</td>
+      <td scope="col">{{ p.user.email }}</td>
+      <td scope="col">{% if player.is_human and not p.is_spectator %}Player{% else %}{{ p.role }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endcall %}
+
 {% endblock %}

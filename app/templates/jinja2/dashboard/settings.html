@@ -1,0 +1,14 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard - Settings{% endblock %}
+
+{% block pagetitle %}Dashboard - Settings{% endblock %}
+{% block pagesubtitle %}Website Settings{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid">
+  {% call card('Notifications') %}
+  {% endcall %}
+</div>
+{% endblock %}

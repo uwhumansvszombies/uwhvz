@@ -1,0 +1,47 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard &mdash; Zombie Tree{% endblock %}
+
+{% block additional_styles %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous">
+{% endblock %}
+
+{% block pagetitle %}
+  {% if game.is_running %}{{ game.name }} &mdash; {% endif %}Game Information
+{% endblock %}
+{% block pagesubtitle %}View Zombie Tree{% endblock %}
+
+{% block subcontent %}
+
+<div id="zombie-tree"></div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js" integrity="sha256-JuQeAGbk9rG/EoRMixuy5X8syzICcvB0dj3KindZkY0=" crossorigin="anonymous"></script>
+  <script>
+    var container = document.getElementById('zombie-tree');
+
+    var data = {
+      nodes: {{ nodes|safe }},
+      edges: {{ edges|safe }},
+    };
+
+    var options = {
+      nodes: {
+        shape: 'dot',
+        size: 20,
+        font: {
+          size: 16,
+          color: '#000',
+        },
+        borderWidth: 1
+      },
+      edges: {
+        width: 2
+      }
+    };
+    network = new vis.Network(container, data, options);
+  </script>
+{% endblock %}
