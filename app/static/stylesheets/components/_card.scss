@@ -48,7 +48,7 @@
   }
 
   .ui-card__content {
-    @include type-heading;
+    @include type-title;
 
     font-weight: 400;
     text-align: left;

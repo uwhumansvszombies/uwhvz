@@ -10,16 +10,16 @@
 
 <div class="ui-grid s-dashboard__player-list">
   <div class="ui-grid align-content-start">
-    {% call card("Start Game", class="text-center") %}
+    {% call card("Start Game") %}
       <p>This will send all game start emails to players, set OZs as zombies, and start the game.</p>
-      <div class="ui-form-group text-center">
-        <button class="btn btn-primary"{% if game.is_running %}disabled title="The game has already started."{% endif %}>Start Game</button>
+      <div class="ui-form-group">
+        <button class="btn btn-block btn-primary"{% if game.is_running %}disabled title="The game has already started."{% endif %}>Start Game</button>
       </div>
     {% endcall %}
-    {% call card("Kill All Unsupplied Humans", class="text-center") %}
+    {% call card("Kill All Unsupplied Humans") %}
       <p>This will turn all human players who did not attain 5 or more points during the week into zombies.</p>
-      <div class="ui-form-group text-center">
-        <button class="btn btn-danger" data-toggle="modal" data-target="#killHumansModal">Kill All Unsupplied</button>
+      <div class="ui-form-group">
+        <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal">Kill All Unsupplied</button>
       </div>
     {% endcall %}
   </div>
