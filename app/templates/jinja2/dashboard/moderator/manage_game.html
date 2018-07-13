@@ -10,30 +10,53 @@
 
 <div class="ui-grid s-dashboard__player-list">
   <div class="ui-grid align-content-start">
-    {% call card('Start Game') %}
+    {% call card("Start Game", class="text-center") %}
       <p>This will send all game start emails to players, set OZs as zombies, and start the game.</p>
       <div class="ui-form-group text-center">
         <button class="btn btn-primary"{% if game.is_running %}disabled title="The game has already started."{% endif %}>Start Game</button>
       </div>
     {% endcall %}
-    {% call card('Kill All Unsupplied Humans') %}
+    {% call card("Kill All Unsupplied Humans", class="text-center") %}
       <p>This will turn all human players who did not attain 5 or more points during the week into zombies.</p>
       <div class="ui-form-group text-center">
-        <button class="btn btn-danger">Kill All Unsupplied</button>
+        <button class="btn btn-danger" data-toggle="modal" data-target="#killHumansModal">Kill All Unsupplied</button>
       </div>
     {% endcall %}
   </div>
   <div class="ui-grid">
-    {% call card('All Emails (Use BCC)') %}
+    {% call card("All Emails (Use BCC)") %}
       <textarea class="ui-input" rows="5">{{ all_emails|join(', ') }}</textarea>
     {% endcall %}
-    {% call card('Human Emails (Use BCC)') %}
+    {% call card("Human Emails (Use BCC)") %}
       <textarea class="ui-input" rows="5">{{ human_emails|join(', ') }}</textarea>
     {% endcall %}
-    {% call card('Zombie Emails (Use BCC)') %}
+    {% call card("Zombie Emails (Use BCC)") %}
       <textarea class="ui-input" rows="5">{{ zombie_emails|join(', ') }}</textarea>
     {% endcall %}
   </div>
 </div>
+
+  <div class="modal fade" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Are you sure about killing all humans?</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>All humans who do not have 5 points will become zombies. This is an <b>irreversible</b> change. Are you sure you want to continue killing all humans?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+          <form class="mb-0" action="{{ url('kill_unsupplied_humans') }}" method="post">
+            {{ csrf_input }}
+            <input type="submit" class="btn btn-danger" value="Yes, Kill Them">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}

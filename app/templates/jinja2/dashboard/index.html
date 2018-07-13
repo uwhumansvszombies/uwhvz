@@ -9,13 +9,11 @@
 {% block subcontent %}
 
 <div class="ui-grid">
-  <div class="ui-text-container">
-    {% call card('Welcome to the website!', class='text-left') %}
-      <p>Since this is a newly built website, we hope you'll be patient with us as we work to polish it and make it awesome throughout this term's game.</p>
-      <p>If you'd like to report some bugs or give us general feedback on the website, contact the mods at <a href="mailto:uwhumansvszombies@gmail.com">uwhumansvszombies@gmail.com</a> so we can fix anything that goes wrong as soon as possible.</p>
-      <p>Thank you! :)</p>
-    {% endcall %}
-  </div>
+  {% call card("Welcome to the website!", class="text-left") %}
+    <p>Since this is a newly built website, we hope you'll be patient with us as we work to polish it and make it awesome throughout this term's game.</p>
+    <p>If you'd like to report some bugs or give us general feedback on the website, contact the mods at <a href="mailto:uwhumansvszombies@gmail.com">uwhumansvszombies@gmail.com</a> so we can fix anything that goes wrong as soon as possible.</p>
+    <p>Thank you! :)</p>
+  {% endcall %}
 </div>
 
 {% endblock %}

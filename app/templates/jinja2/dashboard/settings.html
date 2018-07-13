@@ -8,7 +8,9 @@
 
 {% block subcontent %}
 <div class="ui-grid">
-  {% call card('Notifications') %}
+  {% call card("Notifications") %}
+  {% endcall %}
+  {% call card("Change Password") %}
   {% endcall %}
 </div>
 {% endblock %}

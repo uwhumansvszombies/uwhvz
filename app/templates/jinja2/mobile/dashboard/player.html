@@ -6,16 +6,16 @@
 {% block subcontent %}
 <div class="ui-grid">
   <div class="ui-grid s-mobile-dashboard__player-info">
-    {{ card('Code', player.code, class="ui-card--display") }}
-    {{ card('My Score', player.score(), 'ui-card--display') }}
+    {{ card("Code", player.code, "ui-card--display") }}
+    {{ card("My Score", player.score(), "ui-card--display") }}
   </div>
 
   {% if player.is_human %}
-    {% set report_name = 'Stun' %}
+    {% set report_name = "Stun" %}
   {% else %}
-    {% set report_name = 'Tag' %}
+    {% set report_name = "Tag" %}
   {% endif %}
-  {% call card('Report ' + report_name) %}
+  {% call card("Report " + report_name) %}
     <form action="{{ url('report_tag') }}" method="post" novalidate>
       {{ csrf_input }}
 
@@ -35,7 +35,7 @@
     </form>
   {% endcall %}
   {% if player.is_human %}
-    {% call card('Redeem Supply Code') %}
+    {% call card("Redeem Supply Code") %}
     <form action="{{ url('claim_supply_code') }}" method="post">
         {{ csrf_input }}
 

@@ -10,6 +10,22 @@ from app.views.forms import ModeratorSignupPlayerForm
 
 
 @method_decorator(moderator_required, name='dispatch')
+class KillUnsuppliedHumansView(View):
+    def get(self, request):
+        return redirect('manage_game')
+
+    def post(self, request):
+        minimum_score_threshold = 5
+        human_players = Player.objects.filter(role=PlayerRole.HUMAN, active=True)
+
+        for human in human_players:
+            if human.score() < minimum_score_threshold:
+                human.kill()
+
+        return redirect('manage_game')
+
+
+@method_decorator(moderator_required, name='dispatch')
 class ManageGameView(View):
     template_name = "dashboard/moderator/manage_game.html"
 

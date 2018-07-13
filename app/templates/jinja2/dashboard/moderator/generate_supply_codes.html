@@ -9,7 +9,7 @@
 
 <div class="ui-grid s-dashboard__generate-supply">
   <div class="ui-grid align-content-start">
-    {% call card('Generate Supply Codes', id="card--generate-supply") %}
+    {% call card("Generate Supply Codes", class="text-center") %}
       <form method="post">
         {{ csrf_input }}
         <div class="ui-form-group pt-2 text-center">
@@ -20,28 +20,16 @@
   </div>
   
   <div class="ui-grid">
-    {% call card('Unclaimed Codes') %}
-    <table class="table table-striped">
-      {% for code in supply_codes %}
-        {% if code.claimed_by is none %}
-          <tr>
-            <td>{{ code.code }}</td>
-          </tr>
-        {% endif %}
-      {% endfor %}
-    </table>
-    {% endcall %}
-  
-    {% call card('Claimed Codes') %}
-    <table class="table table-striped">
-      {% for code in supply_codes %}
-        {% if code.claimed_by is not none %}
-          <tr>
-            <td>{{ code.code }}</td>
-          </tr>
-        {% endif %}
-      {% endfor %}
-    </table>
+    {% call card("Unclaimed Codes") %}
+      <table class="table table-striped">
+        {% for code in supply_codes %}
+          {% if code.claimed_by is none %}
+            <tr>
+              <td>{{ code.code }}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </table>
     {% endcall %}
   </div>
 </div>

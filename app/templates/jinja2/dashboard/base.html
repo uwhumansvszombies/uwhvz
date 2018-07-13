@@ -8,21 +8,19 @@
 {% endblock %}
 
 {% block content %}
-<header class="ui-titlebar">
-  <div class="ui-titlebar__section" id="titlebar-logo">
+<header class="ui-title-bar">
+  <div class="ui-title-bar__logo">
     <a href="/">{{ svg('site-logo-dark') }}</a>
   </div>
-  <div class="ui-titlebar__section" id="titlebar-title">
-    <div class="ui-titlebar__content">
-      <h1 class="ui-titlebar__breadcrumbs">{% block pagetitle %}{% endblock %}</h1>
-      <h2 class="ui-titlebar__page-title">{% block pagesubtitle %}{% endblock %}</h2>
-    </div>
+  <div class="ui-title-bar__heading-group">
+    <h1 class="ui-title-bar__title">{% block pagetitle %}{% endblock %}</h1>
+    <h2 class="ui-title-bar__subtitle">{% block pagesubtitle %}{% endblock %}</h2>
   </div>
-  <div class="ui-titlebar__section">
+  <ul class="ui-title-bar__actions">
     {% if user.is_authenticated %}
-    <a class="ui-titlebar__link" href="{{ url('logout') }}">Logout</a>
+      <li><a class="ui-title-bar__link" href="{{ url('logout') }}">Logout</a></li>
     {% else %}
-    <a class="ui-titlebar__link" href="{{ url('login') }}">Login</a>
+      <li><a class="ui-title-bar__link" href="{{ url('login') }}">Login</a></li>
     {% endif %}
   </div>
 </header>
