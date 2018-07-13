@@ -6,8 +6,6 @@ SECRET_KEY = '6e4#bj2ea@i)f*xj4ht6rrthq@f3vw9(v8az+9==pf+3ys8pb!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-COMPRESS_OFFLINE = True
-
 ALLOWED_HOSTS = ['*']
 
 SITE_URL = 'http://127.0.0.1:8000'

@@ -14,18 +14,18 @@
   {% if not player.is_spectator %}
     <div class="ui-grid s-dashboard__index">
       <div class="ui-grid">
-        {{ card('My Code', player.code, 'ui-card--display') }}
-        {{ card('My Score', player.score(), 'ui-card--display') }}
-        {{ card('Team', player.role, 'ui-card--display') }}
-        {{ card('Team Score', team_score, 'ui-card--display') }}
+        {{ card("My Code", player.code, "ui-card--display") }}
+        {{ card("My Score", player.score(), "ui-card--display") }}
+        {{ card("Team", player.role, "ui-card--display") }}
+        {{ card("Team Score", team_score, "ui-card--display") }}
       </div>
 
       {% if player.is_human %}
-        {% set report_name = 'Stun' %}
+        {% set report_name = "Stun" %}
       {% else %}
-        {% set report_name = 'Tag' %}
+        {% set report_name = "Tag" %}
       {% endif %}
-      {% call card('Report ' + report_name) %}
+      {% call card("Report " + report_name) %}
         <form action="{{ url('report_tag') }}" method="post" novalidate>
           {{ csrf_input }}
 
@@ -39,15 +39,15 @@
             </div>
           {% endfor %}
 
-          <div class="ui-form-group pt-2 text-center">
-            <input class="btn btn-primary" type="submit" value="Submit">
+          <div class="ui-form-group pt-2">
+            <input class="btn btn-block btn-primary" type="submit" value="Submit">
           </div>
         </form>
       {% endcall %}
 
       {% if player.is_human %}
         <div class="ui-grid align-content-start">
-          {% call card('Redeem Supply Code') %}
+          {% call card("Redeem Supply Code") %}
           <form action="{{ url('claim_supply_code') }}" method="post" novalidate>
             {{ csrf_input }}
 
@@ -60,14 +60,14 @@
               </div>
             {% endfor %}
             
-            <div class="ui-form-group pt-2 text-center">
-              <input class="btn btn-primary" type="submit" value="Redeem">
+            <div class="ui-form-group pt-2">
+              <input class="btn btn-block btn-primary" type="submit" value="Redeem">
             </div>
           </form>
         {% endcall %}
 
         {% if player.has_faction %}
-          {% call card('Faction Information') %}
+          {% call card("Faction Information") %}
             <p>You are part of the <span class="font-weight-bold text-uppercase">{{ player.faction.name }}</span> faction.</p>
             {% if player.faction.description %}{{ player.faction.description|safe }}{% endif %}
           {% endcall %}
@@ -76,24 +76,18 @@
       {% endif %}
     </div>
   {% else %}
-  <div class="ui-text-container">
-    {% call card('You are a spectator.') %}
-      <p>As a spectator, you cannot access any actions that affect the game (reporting stuns/tags, redeeming supply codes, etc.). However, please feel free to check out some of the other pages on the sidebar.</p>
-    {% endcall %}
-  </div>
+  {% call card("You are a spectator.") %}
+    <p>As a spectator, you cannot access any actions that affect the game (reporting stuns/tags, redeeming supply codes, etc.). However, please feel free to check out some of the other pages on the sidebar.</p>
+  {% endcall %}
   {% endif %}
 {% elif game is defined and game is not none and game.is_active %}
-  <div class="ui-text-container text-center">
-    {% call card('The game hasn\'t started yet.') %}
-      <p>You will be able to access your player information when the game starts. Please be patient for now, and come back when the game has started!</p>
-    {% endcall %}
-  </div>
+  {% call card("The game hasn't started yet.") %}
+    <p>You will be able to access your player information when the game starts. Please be patient for now, and come back when the game has begun!</p>
+  {% endcall %}
 {% else %}
-  <div class="ui-text-container text-center">
-    {% call card('The last game is over, and a new game hasn\'t been announced yet. :(') %}
-      <p>Please come back later when there is notice of a game.</p>
-    {% endcall %}
-  </div>
+  {% call card("The last game is over, and a new game hasn't been announced yet.") %}
+    <p>Please come back later when there is notice of a game.</p>
+  {% endcall %}
 {% endif %}
 
 {% endblock %}

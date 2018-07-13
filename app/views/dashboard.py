@@ -32,3 +32,12 @@ class DashboardView(MobileSupportedView):
 
             return self.mobile_or_desktop(request, {'game': game})
         return self.mobile_or_desktop(request)
+
+
+@method_decorator(login_required, name='dispatch')
+class SettingsView(MobileSupportedView):
+    desktop_template = "dashboard/settings.html"
+    mobile_template = "mobile/dashboard/settings.html"
+
+    def get(self, request):
+        return self.mobile_or_desktop(request)

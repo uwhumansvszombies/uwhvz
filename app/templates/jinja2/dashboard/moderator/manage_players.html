@@ -10,7 +10,7 @@
 
 <div class="ui-grid">
   <div class="ui-grid s-dashboard__signup-players">
-    {% call card('Add Player to ' + game.name, id='card--add-player') %}
+    {% call card("Add Player to " + game.name, id="card--add-player") %}
       <form method="post" novalidate>
         {{ csrf_input }}
 
@@ -28,11 +28,11 @@
           {% endfor %}
         
         <div class="ui-form-group pt-2 text-center">
-          <input type="submit" value="Signup" class="btn btn-primary">
+          <input type="submit" value="Signup" class="btn btn-block btn-primary">
         </div>
       </form>
     {% endcall %}
-    {% call card('Signup Locations') %}
+    {% call card("Signup Locations") %}
     <table class="table table-striped">
       <thead>
       <tr>
@@ -54,7 +54,7 @@
     {% endcall %}
   </div>
 
-  {% call card('Player List', class='align-self-start') %}
+  {% call card("Player List", class="align-self-start") %}
     <table class="table table-striped">
       <thead>
         <tr>

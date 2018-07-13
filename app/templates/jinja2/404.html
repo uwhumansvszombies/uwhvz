@@ -7,10 +7,10 @@
   <section class="container ui-layout__item">
     <div class="row">
       <div class="col-lg-6 mx-auto text-center">
-        {% call card('Oops! We can\'t find the page you\'re looking for.') %}
-          <p>Unfortunately, we couldn't find the page you were looking for. Would you like to try again from the beginning, and go back to the main site?</p>
+        {% call card("Oops! We can't find the page you're looking for.") %}
+          <p>Perhaps you got lost along the way. Would you like to try again from the beginning, and go back to the main site?</p>
           <div class="ui-form-group">
-            <a class="btn btn-primary" href="{{ url('index') }}">Return to Site</a>
+            <a class="btn btn-block btn-primary" href="{{ url('index') }}">Return to Site</a>
           </div>
         {% endcall %}
       </div>

@@ -26,6 +26,14 @@ p {
   @include type-body;
 }
 
+h1 {
+  @include type-title;
+}
+
+h2 {
+  @include type-heading;
+}
+
 
 ///
 /// Headings
@@ -36,26 +44,4 @@ h3,
 h4 {
   padding: 0;
   margin: 0;
-}
-
-
-.th--light {
-  h1 {
-    color: color(ink, light);
-  }
-
-  h2 {
-    color: color(ink);
-  }
-}
-
-
-.th--dark {
-  h1 {
-    color: color(sky);
-  }
-
-  h2 {
-    color: color(sky, light);
-  }
 }

@@ -18,14 +18,14 @@
       {% endif %}
       {% if game.is_running %}
         {% if player_role is none %}
-          {% call card('The game is already running.') %}
+          {% call card("The game is already running.") %}
           <p>You can no longer sign up for the game since the game is now running. Please speak to the moderators if you wish to spectate the game.</p>
           {% endcall %}
         {% else %}
-          {% call card(game.name + ' Game Signup') %}
+          {% call card(game.name + " Game Signup") %}
           <form action="{{ url('game_signup') }}" method="post">
             {{ csrf_input }}
-            <p>You are now signing up for the {{ game.name }} game. In order to do so, please read and agree to our waiver. As well, because the game is already running, you will be signed up as a <span class="text-uppercase font-weight-bold">{{ player_role }}</span>.</p>
+            <p>You will be joining the {{ game.name }} game as a <span class="text-uppercase font-weight-bold">{{ player_role }}</span>. To finish signing up, please read and agree to our waiver first.</p>
             <div class="pb-3 text-center">
               <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#waiverModal">Read Waiver</button>
             </div>
@@ -36,16 +36,16 @@
               </div>
             </div>
             <div class="ui-form-group pt-2 text-center">
-              <input type="submit" value="Signup" class="btn btn-primary">
+              <input type="submit" value="Signup" class="btn btn-block btn-primary">
             </div>
           </form>
           {% endcall %}
         {% endif %}
       {% elif game.is_active or not player_role is none %}
-        {% call card(game.name + ' Game Signup') %}
+        {% call card(game.name + " Game Signup") %}
         <form action="{{ url('game_signup') }}" method="post">
           {{ csrf_input }}
-          <p>You are now signing up for the {{ game.name }} game. In order to do so, please read and agree to our waiver.</p>
+          <p>In order to finish signing up for the {{ game.name }} game, please read and agree to our waiver.</p>
           <div class="pb-3 text-center">
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#waiverModal">Read Waiver</button>
           </div>
@@ -62,12 +62,12 @@
             </div>
           </div>
           <div class="ui-form-group pt-2 text-center">
-            <input type="submit" value="Signup" class="btn btn-primary">
+            <input type="submit" value="Signup" class="btn btn-block btn-primary">
           </div>
         </form>
         {% endcall %}
       {% else %}
-        {% call card('There is no game announced for the term right now.') %}
+        {% call card("There is no game announced for the term right now.") %}
           <p>Please check back later.</p>
         {% endcall %}
       {% endif %}

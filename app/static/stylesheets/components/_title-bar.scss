@@ -1,0 +1,78 @@
+////
+/// Sitewide "titlebar" styles live here.
+/// @group components, @layout default
+////
+
+
+.ui-title-bar {
+  width: 100%;
+  height: layout-element-size(height, titlebar);
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  z-index: z-index(header);
+  background: color(titlebar);
+}
+
+.ui-title-bar__logo {
+  display: flex;
+  flex: 0 0 layout-element-size(width, sidebar);
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid rgba(color(sky), 0.1);
+}
+
+.ui-title-bar__heading-group {
+  padding-left: spacing(looser) * 1.5;
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 0 auto;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.ui-title-bar__title {
+  @include type-body;
+
+  font-weight: $fw-light;
+  line-height: lh('tight');
+  color: color(sky, lighter);
+}
+
+.ui-title-bar__subtitle {
+  @include type-heading;
+
+  line-height: lh('tight');
+  color: color(sky, lighter);
+}
+
+.ui-title-bar__actions {
+  padding: 0 spacing(looser) * 1.5;
+  margin: 0;
+  display: flex;
+  flex: 0 1 auto;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  border-left: 1px solid rgba(color(sky), 0.1);
+}
+
+.ui-title-bar__link {
+  color: color(sky);
+  border: 0;
+  text-decoration: none;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: color(sky, light);
+    text-decoration: underline;
+  }
+}
+
+
+.ui-titlebar--mobile {
+  height: auto;
+}

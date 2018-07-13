@@ -1,4 +1,3 @@
-{% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
 {% block title %}Dashboard &mdash; Zombie Tree{% endblock %}
@@ -30,7 +29,7 @@
 
     var options = {
       nodes: {
-        shape: 'dot',
+        shape: 'ellipse',
         size: 20,
         font: {
           size: 16,
@@ -39,7 +38,55 @@
         borderWidth: 1
       },
       edges: {
-        width: 2
+        width: 1.5,
+        arrows: {
+          to: {
+            enabled: true,
+            scaleFactor: 0.75,
+            type: 'arrow'
+          },
+        },
+      },
+      groups: {
+        0: {
+          color: {
+            background: '#032E04',
+            border: '#032E04'
+          },
+          font: {
+            color: '#fff'
+          }
+        },
+        1: {
+          color: {
+            background: '#145706',
+            border: '#145706'
+          },
+          font: {
+            color: '#fff'
+          }
+        },
+        2: {
+          color: {
+            background: '#27A333',
+            border: '#27A333'
+          },
+          font: {
+            color: '#fff'
+          }
+        },
+        3: {
+          color: {
+            background: '#60DB6C',
+            border: '#60DB6C'
+          },
+        },
+        4: {
+          color: {
+            background: '#60DB6C',
+            border: '#60DB6C'
+          },
+        }
       }
     };
     network = new vis.Network(container, data, options);

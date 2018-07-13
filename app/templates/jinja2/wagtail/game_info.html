@@ -21,10 +21,12 @@
 {% block subcontent %}
 
 {% if player is none %}
-  hey you have no player account please contact mod
+  {% call card("You do not have a player account.") %}
+    <p>Please finish signing up for the game or contact the moderators to fix this issue.</p>
+  {% endcall %}
 {% else %}
   {% if is_mobile %}<div class="ui-grid">{% else %}<div class="ui-grid s-dashboard__game-info">{% endif %}
-    {% call card('Missions') %}
+    {% call card("Missions") %}
       {% if missions %}
         <ul>
           {% for mission in missions %}
@@ -38,7 +40,7 @@
       {% endif %}
     {% endcall %}
 
-    {% call card('Announcements') %}
+    {% call card("Announcements") %}
       {% if announcements %}
         <ul>
           {% for announcement in announcements %}
