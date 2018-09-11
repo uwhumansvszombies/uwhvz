@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from app.models import Game, Player, PlayerRole
-from app.tests.user_tester import UserTester
+from app.tests.helpers.user_tester import UserTester
 
 
 class PlayerTest(TestCase):
@@ -16,4 +16,4 @@ class PlayerTest(TestCase):
 
     def test_killing(self):
         self.player.kill()
-        self.assertEqual(self.user.player(self.game).role, PlayerRole.ZOMBIE)
+        self.assertEqual(self.user.participant(self.game).role, PlayerRole.ZOMBIE)

@@ -16,6 +16,7 @@ wagtail = "*"
 gunicorn = "*"
 django-admin-view-permission = "*"
 django-compressor = "*"
+django-model-utils = "*"
 
 [dev-packages]
 

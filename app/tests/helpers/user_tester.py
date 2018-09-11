@@ -4,9 +4,8 @@ from typing import Tuple
 from django.conf import settings
 from django.core import mail
 from django.test import Client
-from django.utils import timezone
 
-from app.models import User, SignupLocation, Game, Player, PlayerRole
+from app.models import User, SignupLocation, Game, Player, Participant, Moderator
 
 
 class UserTester:
@@ -24,8 +23,8 @@ class UserTester:
             SignupLocation.objects.create_signup_location('In a Test')
         if not Game.objects.filter(name='Test Game').exists():
             game = Game.objects.create_game('Test Game')
-        if not Player.objects.filter(user=user, game=game).exists():
-            Player.objects.create_player(user, game, PlayerRole.SPECTATOR)
+        if not Participant.objects.filter(user=user, game=game).exists():
+            Moderator.objects.create_moderator(user, game)
 
     def create_user_and_player(
         self,
@@ -88,4 +87,4 @@ class UserTester:
             'is_oz': in_oz_pool,
             'accept_waiver': 'on'
         })
-        return User.objects.get(email=email).player_set.get(game=game, active=True)
+        return User.objects.get(email=email).participant_set.select_subclasses('player').get(game=game, active=True)

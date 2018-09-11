@@ -2,7 +2,7 @@ import random
 
 from django.core.management.base import BaseCommand
 
-from app.models import User, Game, Player, PlayerRole, SignupLocation
+from app.models import User, Game, Player, PlayerRole, SignupLocation, Spectator, Moderator
 
 names = ['Eliseo Perlman',
          'Hettie Pugsley',
@@ -65,12 +65,12 @@ class Command(BaseCommand):
 
         root = User.objects.create_superuser('root', 'toor', first_name='Super', last_name='User')
 
-        roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, PlayerRole.SPECTATOR]
+        roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, 'SPECTATOR', 'MODERATOR']
 
         SignupLocation.objects.create_signup_location('SLC')
         SignupLocation.objects.create_signup_location('Online')
-        SignupLocation.objects.create_signup_location('EIT')
-        SignupLocation.objects.create_signup_location('DC')
+        SignupLocation.objects.create_signup_location('MC')
+        SignupLocation.objects.create_signup_location('CPH')
 
         users = []
         for name in names:
@@ -79,10 +79,16 @@ class Command(BaseCommand):
             users.append(user)
 
         game = Game.objects.create_game('Spring 2018')
-        Player.objects.create_player(root, game, PlayerRole.SPECTATOR)
+        Moderator.objects.create_moderator(root, game)
 
         for i in range(0, 50):
-            Player.objects.create_player(users[i], game, random.choice(roles))
+            role = random.choice(roles)
+            if role == 'MODERATOR':
+                Moderator.objects.create_moderator(user=users[i], game=game)
+            elif role == 'SPECTATOR':
+                Spectator.objects.create_spectator(user=users[i], game=game)
+            else:
+                Player.objects.create_player(user=users[i], game=game, role=role)
 
         zombie = User.objects.create_user('zombie@email.com', 'password', first_name='Zombie', last_name='Player')
         human = User.objects.create_user('human@email.com', 'password', first_name='Human', last_name='Player')
@@ -90,4 +96,4 @@ class Command(BaseCommand):
 
         Player.objects.create_player(zombie, game, PlayerRole.ZOMBIE)
         Player.objects.create_player(human, game, PlayerRole.HUMAN)
-        Player.objects.create_player(spectator, game, PlayerRole.SPECTATOR)
+        Spectator.objects.create_spectator(spectator, game)

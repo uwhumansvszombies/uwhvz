@@ -29,7 +29,8 @@ class SupplyCode(models.Model):
     value: int = models.IntegerField()
     point_modifier: int = models.IntegerField(default=0)
 
-    claimed_by: datetime = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
+    claimed_by: Player = models.ForeignKey(Player, to_field='participant', on_delete=models.CASCADE,
+                                           null=True, blank=True)
     claimed_at: datetime = models.DateTimeField(null=True, blank=True)
 
     created_at: datetime = models.DateTimeField(auto_now_add=True)

@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from app.models import SignupInvite, User, Player, PlayerRole
+from app.models import SignupInvite, User, Player, PlayerRole, ParticipantRole, Moderator, Spectator
 from app.util import most_recent_game, game_required
 from .forms import UserSignupForm
 
@@ -64,17 +64,20 @@ class UserSignupView(View):
 class GameSignupView(View):
     def get(self, request):
         game = most_recent_game()
-        forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+        forced_role = SignupInvite.objects.filter(game=game, used_at__isnull=False,
+                                                  email=request.user.email).get().participant_role
 
-        if not game.is_finished and not request.user.player_set.filter(game=game, active=True).exists():
-            return render(request, "registration/game_signup.html", {'game': game, 'player_role': forced_role})
+        if not request.user.participant_set.filter(game=game, active=True).exists() \
+            and (game.is_active or (game.is_running and forced_role)):
+            return render(request, "registration/game_signup.html", {'game': game, 'participant_role': forced_role})
         else:
             messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
 
     def post(self, request):
         game = most_recent_game()
-        forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+        forced_role = SignupInvite.objects.filter(game=game, used_at__isnull=False,
+                                                  email=request.user.email).get().participant_role
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
         has_signed_waiver = request.POST.get('accept_waiver', 'off') == 'on'
 
@@ -82,12 +85,17 @@ class GameSignupView(View):
             messages.warning(request, "Please sign the waiver.")
             return self.get(request)
 
-        if request.user.player_set.filter(game=game, active=True).exists():
+        if request.user.participant_set.filter(game=game, active=True).exists():
             messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
 
         if forced_role:
-            Player.objects.create_player(request.user, game, forced_role)
+            if forced_role == ParticipantRole.MODERATOR:
+                Moderator.objects.create_moderator(request.user, game)
+            elif forced_role == ParticipantRole.SPECTATOR:
+                Spectator.objects.create_spectator(request.user, game)
+            else:
+                Player.objects.create_player(request.user, game, forced_role)
         else:
             Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
 

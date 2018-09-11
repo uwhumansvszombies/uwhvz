@@ -1,9 +1,7 @@
 from datetime import datetime
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
-from django.core.exceptions import SuspiciousOperation
 from django.http import Http404
 from django.shortcuts import render
 from django.utils import dateformat
@@ -12,9 +10,21 @@ from django.views import View
 from app.models import Game
 
 
+def player_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    def _is_player(user):
+        game = most_recent_game()
+        return user.is_authenticated and user.participant(game).type == 'Player'
+
+    actual_decorator = user_passes_test(_is_player, login_url=login_url, redirect_field_name=redirect_field_name)
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_moderator(user):
-        return user.is_authenticated and user.is_moderator
+        game = most_recent_game()
+        return user.is_authenticated and user.participant(game).type == 'Moderator'
 
     actual_decorator = user_passes_test(_is_moderator, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:

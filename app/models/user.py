@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from typing import Optional, Union
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.mail import send_mail
@@ -96,12 +97,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     @property
-    def is_moderator(self) -> bool:
-        return self.groups.filter(name='Moderators').exists() or self.is_superuser
-
-    @property
     def is_volunteer(self) -> bool:
         return self.groups.filter(name='Volunteers').exists() or self.is_superuser
 
-    def player(self, game) -> 'Player':
-        return self.player_set.get(game=game, active=True)
+    def participant(self, game: 'Game') -> Union['Player', 'Moderator', 'Spectator']:
+        """
+        This method specifically returns a User's Participant in a Game as its subclass of either
+        Player, Spectator, or Moderator, since Participant is just used for lookups.
+        """
+        return self.participant_set.select_subclasses('player', 'spectator', 'moderator').get(game=game, active=True)

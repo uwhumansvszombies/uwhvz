@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 
-from app.models import Player
+from app.models import Participant
 from app.util import MobileSupportedView, game_exists, most_recent_game
 
 
@@ -21,7 +21,7 @@ class DashboardView(MobileSupportedView):
         if game_exists():
             game = most_recent_game()
             if game.is_active:
-                if not Player.objects.filter(game=game, user=request.user).exists():
+                if not Participant.objects.filter(game=game, user=request.user).exists():
                     game_signup_url = reverse('game_signup')
                     messages.warning(
                         request,

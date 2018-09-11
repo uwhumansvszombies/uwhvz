@@ -2,7 +2,13 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, SignupInvite, Modifier, Faction
+from app.models import *
+
+
+@admin.register(Participant)
+class ParticipantAdmin(admin.ModelAdmin):
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Player)
@@ -16,6 +22,18 @@ class PlayerAdmin(admin.ModelAdmin):
     get_full_name.admin_order_field = 'user__first_name'
     get_full_name.short_description = 'Name'
 
+    def has_delete_permission(self, request, obj=None):
+        return True
+
+
+@admin.register(Moderator)
+class ModeratorAdmin(admin.ModelAdmin):
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Spectator)
+class SpectatorAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -34,7 +52,8 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    search_fields = ('initiator__user__first_name', 'initiator__user__last_name', 'receiver__user__first_name', 'receiver__user__last_name')
+    search_fields = ('initiator__user__first_name', 'initiator__user__last_name', 'receiver__user__first_name',
+                     'receiver__user__last_name')
 
     def get_full_name(self, obj):
         return obj.user.get_full_name()

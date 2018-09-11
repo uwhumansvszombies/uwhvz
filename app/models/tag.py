@@ -11,8 +11,6 @@ class TagManager(models.Manager):
     def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str,
                    point_modifier: int = 0) -> 'Tag':
 
-        if initiator.is_spectator or receiver.is_spectator:
-            raise ValueError("Spectators cannot submit stun/tag reports or be stunned/tagged.")
         if initiator.role == receiver.role:
             tag_type = "stuns" if initiator.is_human else "tags"
             raise ValueError(f"You cannot report {tag_type} on players of the same team as you.")
@@ -42,11 +40,13 @@ class Tag(models.Model):
 
     initiator: Player = models.ForeignKey(
         Player,
+        to_field='participant',
         on_delete=models.CASCADE,
         related_name='initiator_tags'
     )
     receiver: Player = models.ForeignKey(
         Player,
+        to_field='participant',
         on_delete=models.CASCADE,
         related_name='receiver_tags'
     )

@@ -4,8 +4,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.mail import send_signup_email
-from app.models import Player, SignupInvite, SignupLocation, User, SupplyCode, PlayerRole
-from app.util import moderator_required, most_recent_game
+from app.models import Player, SignupInvite, SignupLocation, User, SupplyCode, PlayerRole, Participant, Spectator, \
+    Moderator
+from app.util import moderator_required, most_recent_game, running_game_required
 from app.views.forms import ModeratorSignupPlayerForm
 
 
@@ -16,7 +17,8 @@ class KillUnsuppliedHumansView(View):
 
     def post(self, request):
         minimum_score_threshold = 5
-        human_players = Player.objects.filter(role=PlayerRole.HUMAN, active=True)
+        game = most_recent_game()
+        human_players = Player.objects.filter(game=game, role=PlayerRole.HUMAN, active=True)
 
         for human in human_players:
             if human.score() < minimum_score_threshold:
@@ -30,12 +32,20 @@ class ManageGameView(View):
     template_name = "dashboard/moderator/manage_game.html"
 
     def get(self, request):
-        players = Player.objects.filter(active=True)
-        all_emails = [p.user.email for p in players.all()]
-        human_emails = [p.user.email for p in players.exclude(role=PlayerRole.ZOMBIE).all()]
-        zombie_emails = [p.user.email for p in players.exclude(role=PlayerRole.HUMAN).all()]
-
         game = most_recent_game()
+
+        participants = Participant.objects.filter(game=game, active=True)
+        spectators = Spectator.objects.filter(game=game)
+        moderators = Moderator.objects.filter(game=game)
+        humans = Player.objects.filter(game=game, active=True, role=PlayerRole.HUMAN)
+        zombies = Player.objects.filter(game=game, active=True, role=PlayerRole.ZOMBIE)
+
+        all_emails = [p.user.email for p in participants]
+        spectator_emails = [p.user.email for p in spectators]
+        moderator_emails = [p.user.email for p in moderators]
+        human_emails = [p.user.email for p in humans] + spectator_emails + moderator_emails
+        zombie_emails = [p.user.email for p in zombies] + spectator_emails + moderator_emails
+
         return render(request, self.template_name, {
             'game': game,
             'all_emails': all_emails,
@@ -50,7 +60,7 @@ class ManageOZView(View):
 
     def get(self, request):
         game = most_recent_game()
-        players = Player.objects.filter(in_oz_pool=True)
+        players = Player.objects.filter(game=game, in_oz_pool=True)
         return render(request, self.template_name, {
             'game': game,
             'players': players
@@ -63,12 +73,13 @@ class ManagePlayersView(View):
 
     def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
         game = most_recent_game()
-        players = Player.objects.filter(active=True).all()
+        participants = \
+            Participant.objects.filter(game=game, active=True).select_subclasses('player', 'spectator', 'moderator')
         locations = SignupLocation.objects.all()
 
         return render(request, self.template_name, {
             'game': game,
-            'players': players,
+            'participants': participants,
             'signup_locations': locations,
             'mod_signup_player_form': mod_signup_player_form
         })
@@ -83,25 +94,28 @@ class ManagePlayersView(View):
 
         game = most_recent_game()
         cleaned_data = mod_signup_player_form.cleaned_data
-        location, email, player_role = cleaned_data['location'], cleaned_data['email'], cleaned_data['player_role']
+        location, email, participant_role = cleaned_data['location'], cleaned_data['email'], cleaned_data[
+            'participant_role']
 
         if User.objects.filter(email=email).exists():
             messages.warning(request, f"There is already an account associated with: {email}.")
             return redirect('manage_players')
 
-        signup_invite = SignupInvite.objects.create_signup_invite(game, location, email, player_role)
+        signup_invite = SignupInvite.objects.create_signup_invite(game, location, email, participant_role)
         send_signup_email(request, signup_invite)
         messages.success(request, f"Sent a signup email to {email}.")
         return redirect('manage_players')
 
 
 @method_decorator(moderator_required, name='dispatch')
+@method_decorator(running_game_required, name='dispatch')
 class GenerateSupplyCodesView(View):
     template_name = "dashboard/moderator/generate_supply_codes.html"
 
     def get(self, request):
-        supply_codes = SupplyCode.objects.all()
         game = most_recent_game()
+        supply_codes = SupplyCode.objects.filter(game=game)
+
         return render(request, self.template_name, {
             'game': game,
             'supply_codes': supply_codes
