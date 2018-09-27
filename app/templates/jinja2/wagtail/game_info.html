@@ -21,8 +21,8 @@
 {% block subcontent %}
 
 {% if player is none %}
-  {% call card("You do not have a player account.") %}
-    <p>Please finish signing up for the game or contact the moderators to fix this issue.</p>
+  {% call card("You have not signed up for the game.") %}
+    <p>Please finish signing up for the game, or contact the moderators to fix this issue.</p>
   {% endcall %}
 {% else %}
   {% if is_mobile %}<div class="ui-grid">{% else %}<div class="ui-grid s-dashboard__game-info">{% endif %}
@@ -31,7 +31,7 @@
         <ul>
           {% for mission in missions %}
             {% if mission.specific.is_viewable_by(player) %}
-              <li><a href="{{ pageurl(mission) }}">{% if player.is_spectator %}(For {{ mission.specific.viewable_by }}) {% endif %}{{ mission.title }}</a></li>
+              <li><a href="{{ pageurl(mission) }}">{% if player.is_spectator or player.user.is_staff %}(For {{ mission.specific.get_viewable_by_display() }}) {% endif %}{{ mission.title }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>
@@ -45,7 +45,7 @@
         <ul>
           {% for announcement in announcements %}
             {% if announcement.specific.is_viewable_by(player) %}
-              <li><a href="{{ pageurl(announcement) }}">{% if player.is_spectator %}(For {{ announcement.specific.viewable_by }}) {% endif %}{{ announcement.title }}</a></li>
+              <li><a href="{{ pageurl(announcement) }}">{% if player.is_spectator or player.user.is_staff %}(For {{ announcement.specific.get_viewable_by_display() }}) {% endif %}{{ announcement.title }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>

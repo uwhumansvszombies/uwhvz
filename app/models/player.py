@@ -12,9 +12,9 @@ from .util import generate_code
 
 
 class PlayerRole(Enum):
-    HUMAN: Enum = 'H'
-    ZOMBIE: Enum = 'Z'
-    SPECTATOR: Enum = 'S'
+    HUMAN = 'H'
+    ZOMBIE = 'Z'
+    SPECTATOR = 'S'
 
 
 class PlayerManager(models.Manager):

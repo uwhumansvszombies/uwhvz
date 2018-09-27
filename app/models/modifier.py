@@ -8,9 +8,9 @@ from .faction import Faction
 
 
 class ModifierType(Enum):
-    ONE_TIME_USE: Enum = 'O'
-    SUPPLY_CODE: Enum = 'S'
-    TAG: Enum = 'T'
+    ONE_TIME_USE = 'O'
+    SUPPLY_CODE = 'S'
+    TAG = 'T'
 
 
 class Modifier(models.Model):

@@ -21,9 +21,9 @@ class GameState(Enum):
     RUNNING: when a game has been created and has started; a game that's started.
     FINISHED: when a game has ended; a past/previous game.
     """
-    ACTIVE: Enum = auto()
-    RUNNING: Enum = auto()
-    FINISHED: Enum = auto()
+    ACTIVE = auto()
+    RUNNING = auto()
+    FINISHED = auto()
 
 
 class Game(models.Model):
