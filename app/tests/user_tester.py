@@ -4,7 +4,6 @@ from typing import Tuple
 from django.conf import settings
 from django.core import mail
 from django.test import Client
-from django.utils import timezone
 
 from app.models import User, SignupLocation, Game, Player, PlayerRole
 
@@ -20,10 +19,11 @@ class UserTester:
         self.client = Client()
         if not User.objects.filter(email='root@email.com').exists():
             user = User.objects.create_superuser('root@email.com', 'toor')
-        if not SignupLocation.objects.filter(name='In a Test').exists():
-            SignupLocation.objects.create_signup_location('In a Test')
         if not Game.objects.filter(name='Test Game').exists():
             game = Game.objects.create_game('Test Game')
+        if not SignupLocation.objects.filter(name='In a Test').exists():
+            game = Game.objects.get(name='Test Game')
+            SignupLocation.objects.create_signup_location('In a Test', game=game)
         if not Player.objects.filter(user=user, game=game).exists():
             Player.objects.create_player(user, game, PlayerRole.SPECTATOR)
 
