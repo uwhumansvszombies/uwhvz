@@ -64,13 +64,12 @@ class Command(BaseCommand):
             return
 
         root = User.objects.create_superuser('root', 'toor', first_name='Super', last_name='User')
+        game = Game.objects.create_game('Spring 2018')
 
-        roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, PlayerRole.SPECTATOR]
-
-        SignupLocation.objects.create_signup_location('SLC')
-        SignupLocation.objects.create_signup_location('Online')
-        SignupLocation.objects.create_signup_location('EIT')
-        SignupLocation.objects.create_signup_location('DC')
+        SignupLocation.objects.create_signup_location('SLC', game=game)
+        SignupLocation.objects.create_signup_location('Online', game=game)
+        SignupLocation.objects.create_signup_location('EIT', game=game)
+        SignupLocation.objects.create_signup_location('DC', game=game)
 
         users = []
         for name in names:
@@ -78,9 +77,9 @@ class Command(BaseCommand):
             user = User.objects.create_user(f'{first.lower()}@email.com', 'password', first_name=first, last_name=last)
             users.append(user)
 
-        game = Game.objects.create_game('Spring 2018')
         Player.objects.create_player(root, game, PlayerRole.SPECTATOR)
 
+        roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, PlayerRole.SPECTATOR]
         for i in range(0, 50):
             Player.objects.create_player(users[i], game, random.choice(roles))
 
