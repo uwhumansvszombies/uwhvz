@@ -1,4 +1,5 @@
-from enumfields import Enum, EnumField
+from django.db import models
+from enumfields import Enum
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
@@ -8,9 +9,9 @@ from app.util import most_recent_game
 
 
 class ViewableBy(Enum):
-    ALL: Enum = 'A'
-    HUMANS: Enum = 'H'
-    ZOMBIES: Enum = 'Z'
+    ALL = 'A'
+    HUMANS = 'H'
+    ZOMBIES = 'Z'
 
 
 class GameInfoPage(Page):
@@ -37,7 +38,7 @@ class AnnouncementPage(Page):
     template = "wagtail/announcement.html"
 
     body: str = RichTextField(blank=True)
-    viewable_by: Enum = EnumField(enum=ViewableBy, max_length=1)
+    viewable_by: Enum = models.CharField(choices=[(tag.value, tag.label) for tag in ViewableBy], max_length=1)
 
     content_panels = Page.content_panels + [
         FieldPanel('viewable_by'),
@@ -48,7 +49,7 @@ class AnnouncementPage(Page):
     subpage_types = []
 
     def get_admin_display_title(self) -> str:
-        return f'<{self.viewable_by}> {self.draft_title or self.title}'
+        return f'<{self.get_viewable_by_display()}> {self.draft_title or self.title}'
 
     def get_context(self, request, *args, **kwargs):
         context = super(AnnouncementPage, self).get_context(request)
@@ -59,13 +60,13 @@ class AnnouncementPage(Page):
         return context
 
     def is_viewable_by(self, player) -> bool:
-        if self.viewable_by == ViewableBy.ALL:
+        if self.viewable_by == ViewableBy.ALL.value:
             return True
-        if self.viewable_by == ViewableBy.HUMANS and player.is_human:
+        if self.viewable_by == ViewableBy.HUMANS.value and player.is_human:
             return True
-        if self.viewable_by == ViewableBy.ZOMBIES and player.is_zombie:
+        if self.viewable_by == ViewableBy.ZOMBIES.value and player.is_zombie:
             return True
-        if player.is_spectator or player.user.is_superuser:
+        if player.is_spectator or player.user.is_staff:
             return True
         return False
 
@@ -74,7 +75,7 @@ class MissionPage(Page):
     template = "wagtail/mission.html"
 
     body: str = RichTextField(blank=True)
-    viewable_by: Enum = EnumField(enum=ViewableBy, max_length=1)
+    viewable_by = models.CharField(choices=[(tag.value, tag.label) for tag in ViewableBy], max_length=1)
 
     content_panels = Page.content_panels + [
         FieldPanel('viewable_by'),
@@ -85,7 +86,7 @@ class MissionPage(Page):
     subpage_types = []
 
     def get_admin_display_title(self) -> str:
-        return f'<{self.viewable_by}> {self.draft_title or self.title}'
+        return f'<{self.get_viewable_by_display()}> {self.draft_title or self.title}'
 
     def get_context(self, request, *args, **kwargs):
         context = super(MissionPage, self).get_context(request)
@@ -96,12 +97,12 @@ class MissionPage(Page):
         return context
 
     def is_viewable_by(self, player) -> bool:
-        if self.viewable_by == ViewableBy.ALL:
+        if self.viewable_by == ViewableBy.ALL.value:
             return True
-        if self.viewable_by == ViewableBy.HUMANS and player.is_human:
+        if self.viewable_by == ViewableBy.HUMANS.value and player.is_human:
             return True
-        if self.viewable_by == ViewableBy.ZOMBIES and player.is_zombie:
+        if self.viewable_by == ViewableBy.ZOMBIES.value and player.is_zombie:
             return True
-        if player.is_spectator or player.user.is_superuser:
+        if player.is_spectator or player.user.is_staff:
             return True
         return False

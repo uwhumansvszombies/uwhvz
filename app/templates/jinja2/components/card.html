@@ -1,8 +1,10 @@
-{% macro card(title, simple_content=None, class='', id='') -%}
+{% macro card(title=None, simple_content=None, class='', id='') -%}
   <div class="ui-card{% if class %} {{ class }}{% endif %}"{% if id %} id="{{ id }}"{% endif %}>
+    {% if title %}
     <div class="ui-card__header">
       <h1 class="ui-card__title">{{ title }}</h1>
     </div>
+    {% endif %}
     <div class="ui-card__content">
       {{ caller() if simple_content is none else simple_content}}
     </div>
