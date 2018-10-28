@@ -13,10 +13,6 @@ def add_game_to_signup_locations(apps, schema_editor):
         sl.save()
 
 
-def remove_game_from_signup_locations(apps, schema_editor):
-    pass
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -32,6 +28,6 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(
             code=add_game_to_signup_locations,
-            reverse_code=remove_game_from_signup_locations,
+            reverse_code=migrations.RunPython.noop,
         ),
     ]
