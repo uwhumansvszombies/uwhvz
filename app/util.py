@@ -1,9 +1,8 @@
 from datetime import datetime
+from functools import wraps
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
-from django.core.exceptions import SuspiciousOperation
 from django.http import Http404
 from django.shortcuts import render
 from django.utils import dateformat
@@ -41,38 +40,38 @@ def most_recent_game() -> Game:
 
 
 def game_required(function=None):
+    @wraps(function)
     def wrap(request, *args, **kwargs):
         if game_exists():
-            return function(request, *args, **kwargs)
+            pass
         else:
-            raise Http404
+            raise Http404()
+        return function(request, *args, **kwargs)
 
-    wrap.__doc__ = function.__doc__
-    wrap.__name__ = function.__name__
     return wrap
 
 
 def active_game_required(function):
+    @wraps(function)
     def wrap(request, *args, **kwargs):
         if game_exists() and most_recent_game().is_active:
-            return function(request, *args, **kwargs)
+            pass
         else:
-            raise Http404
+            raise Http404()
+        return function(request, *args, **kwargs)
 
-    wrap.__doc__ = function.__doc__
-    wrap.__name__ = function.__name__
     return wrap
 
 
 def running_game_required(function=None):
+    @wraps(function)
     def wrap(request, *args, **kwargs):
         if game_exists() and most_recent_game().is_running:
-            return function(request, *args, **kwargs)
+            pass
         else:
-            raise Http404
+            raise Http404()
+        return function(request, *args, **kwargs)
 
-    wrap.__doc__ = function.__doc__
-    wrap.__name__ = function.__name__
     return wrap
 
 
