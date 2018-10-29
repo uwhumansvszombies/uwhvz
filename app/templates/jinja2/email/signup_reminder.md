@@ -1,5 +1,5 @@
 You're receiving this email because you've requested to sign up for
-the UW Humans vs Zombies Spring 2018 game but are **not yet eligible to
+the UW Humans vs Zombies Fall 2018 game but are **not yet eligible to
 play.**
 
 This will take 30 seconds. Please finish signing up here: {{ signup_url }}.

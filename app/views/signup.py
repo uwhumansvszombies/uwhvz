@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
@@ -64,7 +65,11 @@ class UserSignupView(View):
 class GameSignupView(View):
     def get(self, request):
         game = most_recent_game()
-        forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+
+        try:
+            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+        except ObjectDoesNotExist:
+            forced_role = None
 
         if not game.is_finished and not request.user.player_set.filter(game=game, active=True).exists():
             return render(request, "registration/game_signup.html", {'game': game, 'player_role': forced_role})
@@ -74,7 +79,12 @@ class GameSignupView(View):
 
     def post(self, request):
         game = most_recent_game()
-        forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+
+        try:
+            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+        except ObjectDoesNotExist:
+            forced_role = None
+
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
         has_signed_waiver = request.POST.get('accept_waiver', 'off') == 'on'
 
