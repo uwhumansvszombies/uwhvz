@@ -4,7 +4,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 
-from app.models import Player
+from app.models import Player, Game
 from app.util import most_recent_game
 
 
@@ -39,10 +39,13 @@ class AnnouncementPage(Page):
 
     body: str = RichTextField(blank=True)
     viewable_by: Enum = models.CharField(choices=[(tag.value, tag.label) for tag in ViewableBy], max_length=1)
+    game: Game = models.ForeignKey(Game, on_delete=models.PROTECT)
 
     content_panels = Page.content_panels + [
         FieldPanel('viewable_by'),
+        FieldPanel('game'),
         FieldPanel('body', classname="full"),
+
     ]
 
     parent_page_types = ['app.GameInfoPage']
@@ -60,6 +63,10 @@ class AnnouncementPage(Page):
         return context
 
     def is_viewable_by(self, player) -> bool:
+        game = most_recent_game()
+        if self.game != game:
+            return False
+
         if self.viewable_by == ViewableBy.ALL.value:
             return True
         if self.viewable_by == ViewableBy.HUMANS.value and player.is_human:
@@ -76,9 +83,11 @@ class MissionPage(Page):
 
     body: str = RichTextField(blank=True)
     viewable_by = models.CharField(choices=[(tag.value, tag.label) for tag in ViewableBy], max_length=1)
+    game: Game = models.ForeignKey(Game, on_delete=models.PROTECT)
 
     content_panels = Page.content_panels + [
         FieldPanel('viewable_by'),
+        FieldPanel('game'),
         FieldPanel('body', classname="full")
     ]
 
@@ -97,6 +106,10 @@ class MissionPage(Page):
         return context
 
     def is_viewable_by(self, player) -> bool:
+        game = most_recent_game()
+        if self.game != game:
+            return False
+
         if self.viewable_by == ViewableBy.ALL.value:
             return True
         if self.viewable_by == ViewableBy.HUMANS.value and player.is_human:
