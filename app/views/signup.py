@@ -74,7 +74,12 @@ class GameSignupView(View):
 
     def post(self, request):
         game = most_recent_game()
-        forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+
+        try:
+            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+        except DoesNotExist:
+            forced_role = None
+        
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
         has_signed_waiver = request.POST.get('accept_waiver', 'off') == 'on'
 
