@@ -4,17 +4,16 @@
   align-items: center;
   align-content: center;
   line-height: lh(tighter);
-}
 
-.js-countdown__block {
-  width: 7rem;
-  display: block;
-  text-align: center;
+  div {
+    display: block;
+    text-align: center;
+  }
 }
 
 .js-countdown__num {
   font-family: ff('title');
-  font-size: 8rem;
+  font-size: 10rem;
   letter-spacing: 0.025em;
 }
 

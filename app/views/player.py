@@ -115,8 +115,7 @@ class ClaimSupplyCodeView(View):
         cleaned_data = claim_supply_code_form.cleaned_data
         cleaned_supply_code = cleaned_data['code'].upper()
         try:
-            supply_code = SupplyCode.objects.get(game=game, code=cleaned_supply_code, claimed_by__isnull=True,
-                                                 active=True)
+            supply_code = SupplyCode.objects.get(code=cleaned_supply_code, claimed_by__isnull=True)
         except ObjectDoesNotExist:
             claim_supply_code_form.add_error('code', "That supply code does not exist or has already been redeemed.")
             return render_player_info(request, claim_supply_code_form=claim_supply_code_form)

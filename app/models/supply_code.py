@@ -28,7 +28,6 @@ class SupplyCode(models.Model):
     code: str = models.CharField(max_length=6, unique=True)
     value: int = models.IntegerField()
     point_modifier: int = models.IntegerField(default=0)
-    active: bool = models.BooleanField(default=True)
 
     claimed_by: datetime = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     claimed_at: datetime = models.DateTimeField(null=True, blank=True)
