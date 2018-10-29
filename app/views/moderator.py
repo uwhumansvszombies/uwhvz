@@ -101,7 +101,7 @@ class GenerateSupplyCodesView(View):
 
     def get(self, request):
         game = most_recent_game()
-        supply_codes = SupplyCode.objects.filer(game=game, active=True).all()
+        supply_codes = SupplyCode.objects.filter(game=game, active=True).all()
         return render(request, self.template_name, {
             'game': game,
             'supply_codes': supply_codes
