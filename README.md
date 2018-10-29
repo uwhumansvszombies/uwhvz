@@ -18,7 +18,7 @@ To make a migration after changing models, etc., use `python manage.py makemigra
 
 ## Production Setup
 
-## General
+### General
 The site is currently hosted on: Computer Science Club (CSC) servers.
 
 We use a detached screen to run Gunicorn, which lets us run the site. Important commands include:
@@ -32,7 +32,7 @@ gunicorn --bind 0.0.0.0:53271 uwhvz.wsgi
 ```
 Exit out of the screen session (but keep it running) with `Ctrl+A+D`, and then check if the website is running. If so, you're all set.
 
-## Assets
+### Assets
 If frontend-related changes are not refreshed on the site originally upon `pull`ing, use `python manage.py collectstatic`, and restart the server. If that doesn't work, do the following:
 ```bash
 rm -rf /static/
