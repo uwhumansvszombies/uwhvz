@@ -16,7 +16,7 @@ class SignupLocationManager(models.Manager):
 class SignupLocation(models.Model):
     id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     game: Game = models.ForeignKey(Game, on_delete=models.PROTECT)
-    name: str = models.CharField(max_length=150, unique=True)
+    name: str = models.CharField(max_length=150)
 
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     modified_at: datetime = models.DateTimeField(auto_now=True)
