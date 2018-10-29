@@ -45,6 +45,11 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(SignupLocation)
 class SignupLocationAdmin(admin.ModelAdmin):
+    list_display = ('get_name',)
+
+    def get_name(self, obj):
+        return f'{obj.game}: {obj.name}'
+
     def has_delete_permission(self, request, obj=None):
         return False
 

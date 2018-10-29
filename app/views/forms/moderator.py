@@ -2,6 +2,11 @@ from django import forms
 from enumfields import EnumField
 
 from app.models import PlayerRole, SignupLocation
+from app.util import most_recent_game
+
+
+def get_signup_locations():
+    return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()).all())
 
 
 class ModeratorSignupPlayerForm(forms.Form):
@@ -14,10 +19,9 @@ class ModeratorSignupPlayerForm(forms.Form):
         )
     )
 
-    location = forms.ModelChoiceField(
+    location = forms.ChoiceField(
         label="Signup Location",
-        empty_label=None,
-        queryset=SignupLocation.objects.all(),
+        choices=get_signup_locations,
         widget=forms.Select(
             attrs={
                 'class': 'custom-select',
@@ -36,3 +40,7 @@ class ModeratorSignupPlayerForm(forms.Form):
             }
         ),
     )
+
+    def clean_location(self):
+        data = self.cleaned_data['location']
+        return SignupLocation.objects.get(pk=data)
