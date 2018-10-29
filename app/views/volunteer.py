@@ -16,7 +16,7 @@ class SignupPlayersView(View):
 
     def render_signup_players(self, request, volunteer_signup_player_form=VolunteerSignupPlayerForm()):
         game = most_recent_game()
-        locations = SignupLocation.objects.all()
+        locations = SignupLocation.objects.filter(game=game).all()
 
         return render(request, self.template_name, {
             'game': game,

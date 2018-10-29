@@ -30,12 +30,12 @@ class ManageGameView(View):
     template_name = "dashboard/moderator/manage_game.html"
 
     def get(self, request):
-        players = Player.objects.filter(active=True)
+        game = most_recent_game()
+        players = Player.objects.filter(game=game, active=True).all()
         all_emails = [p.user.email for p in players.all()]
         human_emails = [p.user.email for p in players.exclude(role=PlayerRole.ZOMBIE).all()]
         zombie_emails = [p.user.email for p in players.exclude(role=PlayerRole.HUMAN).all()]
 
-        game = most_recent_game()
         return render(request, self.template_name, {
             'game': game,
             'all_emails': all_emails,
@@ -63,8 +63,8 @@ class ManagePlayersView(View):
 
     def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
         game = most_recent_game()
-        players = Player.objects.filter(active=True).all()
-        locations = SignupLocation.objects.all()
+        players = Player.objects.filter(game=game, active=True).all()
+        locations = SignupLocation.objects.filter(game=game).all()
 
         return render(request, self.template_name, {
             'game': game,
@@ -100,8 +100,8 @@ class GenerateSupplyCodesView(View):
     template_name = "dashboard/moderator/generate_supply_codes.html"
 
     def get(self, request):
-        supply_codes = SupplyCode.objects.all()
         game = most_recent_game()
+        supply_codes = SupplyCode.objects.filer(game=game, active=True).all()
         return render(request, self.template_name, {
             'game': game,
             'supply_codes': supply_codes
