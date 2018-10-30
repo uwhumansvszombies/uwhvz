@@ -1,7 +1,7 @@
 Thank you for signing up for Humans vs Zombies Fall 2018!
 
 [Please finish signing up to our website
-here.]({{ site_url }}{{ url('signup', args=[signup_invite.id]) }})
+here.](https://{{ site_url }}{{ url('signup', args=[signup_invite.id]) }})
 
 Make sure to read and agree to the waiver, as well as read the rules of the game.
 

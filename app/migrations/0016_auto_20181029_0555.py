@@ -4,7 +4,7 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 
-def add_game_to_missions_and_annoucements(apps, schema_editor):
+def add_game_to_missions_and_announcements(apps, schema_editor):
     Game = apps.get_model('app', 'Game')
     MissionPage = apps.get_model('app', 'MissionPage')
     AnnouncementPage = apps.get_model('app', 'AnnouncementPage')
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=True),
         ),
         migrations.RunPython(
-            code=add_game_to_missions_and_annoucements,
+            code=add_game_to_missions_and_announcements,
             reverse_code=migrations.RunPython.noop,
         ),
     ]
