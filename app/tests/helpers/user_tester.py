@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core import mail
 from django.test import Client
 
-from app.models import User, SignupLocation, Game, Player, PlayerRole
+from app.models import User, SignupLocation, Game, Player, Moderator, ParticipantRole
 
 
 class UserTester:
@@ -25,7 +25,7 @@ class UserTester:
             game = Game.objects.get(name='Test Game')
             SignupLocation.objects.create_signup_location('In a Test', game=game)
         if not Player.objects.filter(user=user, game=game).exists():
-            Player.objects.create_player(user, game, PlayerRole.SPECTATOR)
+            Moderator.objects.create_moderator(user, game)
 
     def create_user_and_player(
         self,

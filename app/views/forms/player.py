@@ -9,7 +9,7 @@ class ReportTagForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
-                'placeholder': 'e.g. A1B2C3'
+                'placeholder': "e.g. A1B2C3"
             }
         )
     )
@@ -32,7 +32,7 @@ class ReportTagForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
-                'placeholder': 'e.g. RCH, DC Green'
+                'placeholder': "e.g. RCH, DC Green"
             }
         )
     )
@@ -43,7 +43,7 @@ class ReportTagForm(forms.Form):
             attrs={
                 'class': 'ui-input',
                 'rows': '5',
-                'placeholder': 'Tell us how you tagged the player!'
+                'placeholder': "Tell us how you tagged the player!"
             }
         )
     )

@@ -2,7 +2,7 @@ import random
 
 from django.core.management.base import BaseCommand
 
-from app.models import User, Game, Player, PlayerRole, SignupLocation
+from app.models import User, Game, Player, PlayerRole, SignupLocation, Spectator, Moderator, ParticipantRole
 
 names = ['Eliseo Perlman',
          'Hettie Pugsley',
@@ -77,16 +77,22 @@ class Command(BaseCommand):
             user = User.objects.create_user(f'{first.lower()}@email.com', 'password', first_name=first, last_name=last)
             users.append(user)
 
-        Player.objects.create_player(root, game, PlayerRole.SPECTATOR)
+        Moderator.objects.create_moderator(root, game)
 
-        roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, PlayerRole.SPECTATOR]
+        roles = [PlayerRole.HUMAN, PlayerRole.ZOMBIE, ParticipantRole.MODERATOR, ParticipantRole.SPECTATOR]
         for i in range(0, 50):
-            Player.objects.create_player(users[i], game, random.choice(roles))
+            role = random.choice(roles)
+            if role == ParticipantRole.MODERATOR:
+                Moderator.objects.create_moderator(user=users[i], game=game)
+            elif role == ParticipantRole.SPECTATOR:
+                Spectator.objects.create_spectator(user=users[i], game=game)
+            else:
+                Player.objects.create_player(user=users[i], game=game, role=role)
 
         zombie = User.objects.create_user('zombie@email.com', 'password', first_name='Zombie', last_name='Player')
         human = User.objects.create_user('human@email.com', 'password', first_name='Human', last_name='Player')
-        spectator = User.objects.create_user('spectator@email.com', 'password', first_name='Spectator', last_name='Player')
+        spectator = User.objects.create_user('spectator@email.com', 'password', first_name='A', last_name='Spectator')
 
         Player.objects.create_player(zombie, game, PlayerRole.ZOMBIE)
         Player.objects.create_player(human, game, PlayerRole.HUMAN)
-        Player.objects.create_player(spectator, game, PlayerRole.SPECTATOR)
+        Spectator.objects.create_spectator(spectator, game)

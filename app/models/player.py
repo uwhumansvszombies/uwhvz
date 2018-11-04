@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime, timedelta
 
 from django.db import transaction, models, DatabaseError
@@ -7,6 +6,7 @@ from enumfields import Enum, EnumField
 from .faction import Faction
 from .game import Game
 from .modifier import Modifier, ModifierType
+from .participant import Participant
 from .user import User
 from .util import generate_code
 
@@ -19,7 +19,7 @@ class PlayerRole(Enum):
 
 class PlayerManager(models.Manager):
     def create_player(self, user: User, game: Game, role: PlayerRole, **extra_fields) -> 'Player':
-        if user.player_set.filter(game=game, active=True).exists():
+        if user.participant(game):
             raise ValueError(f"The user {user} already exists in the game {game}.")
 
         if 'code' in extra_fields:
@@ -28,28 +28,20 @@ class PlayerManager(models.Manager):
             code = generate_code(6)
             while self.filter(code=code):
                 code = generate_code(6)
+
             player = self.model(user=user, game=game, role=role, code=code, **extra_fields)
 
         player.save()
         return player
 
 
-class Player(models.Model):
-    id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    user: User = models.ForeignKey(User, on_delete=models.CASCADE)
-    game: Game = models.ForeignKey(Game, on_delete=models.CASCADE)
+class Player(Participant):
     code: str = models.CharField(max_length=6)
     role: Enum = EnumField(enum=PlayerRole, max_length=1)
-
-    active: bool = models.BooleanField(default=True)
     in_oz_pool: bool = models.BooleanField(default=False)
 
     faction: Faction = models.ForeignKey(Faction, on_delete=models.PROTECT, blank=True, null=True)
     point_modifier: int = models.IntegerField(default=0)
-
-    created_at: datetime = models.DateTimeField(auto_now_add=True)
-    modified_at: datetime = models.DateTimeField(auto_now=True)
 
     objects = PlayerManager()
 
@@ -70,7 +62,7 @@ class Player(models.Model):
         Individual score of a player.
         """
         total_score = self.point_modifier
-        for tag in self.initiator_tags.filter(active=True).all():
+        for tag in self.initiator_tags.filter(active=True):
             total_score += tag.receiver.value(tag.tagged_at) + tag.point_modifier
 
         for code in self.supplycode_set.all():
@@ -97,10 +89,6 @@ class Player(models.Model):
             self.active = True
 
     @property
-    def is_spectator(self) -> bool:
-        return self.role == PlayerRole.SPECTATOR
-
-    @property
     def is_zombie(self) -> bool:
         return self.role == PlayerRole.ZOMBIE
 
@@ -111,6 +99,3 @@ class Player(models.Model):
     @property
     def has_faction(self) -> bool:
         return self.faction is not None
-
-    def __str__(self):
-        return self.user.get_full_name()

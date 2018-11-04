@@ -65,12 +65,16 @@
         </tr>
       </thead>
       <tbody>
-        {% for p in players %}
+        {% for p in participants %}
         <tr>
-          <td scope="col">{{ p.user.get_full_name() }}</td>
+          <td scope="col">{% if p.type == 'Moderator' and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
           <td scope="col">{{ p.user.email }}</td>
-          <td scope="col">{{ p.role }}</td>
-          <td scope="col">{{ p.score() }}</td>
+          <td scope="col">{% if p.type == 'Player' %}{{ p.role }}{% else %}{{ p.type }}{% endif %}</td>
+          {%- if p.user.participant(game).type == 'Player' %}
+            <td scope="col">{{ p.score() }}</td>
+          {% else %}
+            <td scope="col">N/A</td>
+          {% endif -%}
         </tr>
         {% endfor %}
       </tbody>

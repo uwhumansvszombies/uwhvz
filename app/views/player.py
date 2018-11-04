@@ -7,8 +7,8 @@ from django.views import View
 from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
-from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
-from app.util import most_recent_game, game_required, running_game_required
+from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType, Participant
+from app.util import most_recent_game, game_required, running_game_required, player_required, get_game_participants
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm
 
 
@@ -18,14 +18,13 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
 
     game = most_recent_game()
     try:
-        player = request.user.player_set.get(game=game, active=True)
+        player = request.user.participant(game)
     except ObjectDoesNotExist:
         return redirect('dashboard')
-    team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
+
     return render(request, template_name, {
         'game': game,
         'player': player,
-        'team_score': team_score,
         'report_tag_form': report_tag_form,
         'claim_supply_code_form': claim_supply_code_form,
     })
@@ -36,14 +35,14 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
 class PlayerInfoView(View):
     def get(self, request):
         game = most_recent_game()
-        if not game.is_running:
+        if not game.is_running or request.user.participant(game).type != 'Player':
             return redirect('dashboard')
         else:
             return render_player_info(request)
 
 
-@method_decorator(login_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
+@method_decorator(player_required, name='dispatch')
 class ReportTagView(View):
     def get(self, request):
         return redirect('player_info')
@@ -56,7 +55,7 @@ class ReportTagView(View):
         game = most_recent_game()
 
         try:
-            initiating_player = request.user.player(game)
+            initiating_player = request.user.participant(game)
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
@@ -94,8 +93,8 @@ class ReportTagView(View):
         return redirect('player_info')
 
 
-@method_decorator(login_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
+@method_decorator(player_required, name='dispatch')
 class ClaimSupplyCodeView(View):
     def get(self, request):
         return redirect('player_info')
@@ -108,7 +107,7 @@ class ClaimSupplyCodeView(View):
         game = most_recent_game()
 
         try:
-            player = request.user.player(game)
+            player = request.user.participant(game)
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
@@ -143,18 +142,19 @@ class PlayerListView(View):
     template_name = 'dashboard/player_list.html'
 
     def get(self, request):
-        players = Player.objects.filter(active=True).all()
         game = most_recent_game()
 
         try:
-            player = request.user.player(game)
+            participant = request.user.participant(game)
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
+        participants = get_game_participants(game).order_by('user__first_name')
+
         return render(request, self.template_name, {
             'game': game,
-            'player': player,
-            'players': players
+            'participant': participant,
+            'participants': participants
         })
 
 
@@ -167,12 +167,12 @@ class ZombieTreeView(View):
         game = most_recent_game()
 
         try:
-            player = request.user.player(game)
+            participant = request.user.participant(game)
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
-        if game.is_running and player.is_human and not \
-            (player.user.is_superuser or player.user.is_moderator or player.user.is_staff):
+        if game.is_running and participant.type == 'Player' and participant.is_human and not \
+            (participant.type == 'Moderator' or participant.type == 'Spectator' or participant.user.is_staff):
             raise PermissionDenied
 
         player_codes = {}
@@ -189,7 +189,7 @@ class ZombieTreeView(View):
             player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
 
-            if not Player.objects.filter(code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
+            if not Player.objects.filter(game=game, code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
                 ozs.add(tag.initiator)
 
         for code, name in player_codes.items():
@@ -201,7 +201,7 @@ class ZombieTreeView(View):
 
         return render(request, self.template_name, {
             'game': game,
-            'player': player,
+            'participant': participant,
             'nodes': json.dumps(nodes),
             'edges': json.dumps(edges),
         })

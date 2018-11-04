@@ -4,8 +4,8 @@ from django.test import TestCase
 from django.utils import timezone
 
 from app.models import Game, PlayerRole
-from app.tests.tag_tester import TagTester
-from app.tests.user_tester import UserTester
+from app.tests.helpers.tag_tester import TagTester
+from app.tests.helpers.user_tester import UserTester
 
 
 class TagTest(TestCase):
@@ -54,4 +54,4 @@ class TagTest(TestCase):
 
     def test_that_humans_turn_into_zombies(self):
         self.tag_tester.tag(self.zombie, self.human, timezone.now())
-        self.assertEqual(self.human_user.player(self.game).role, PlayerRole.ZOMBIE)
+        self.assertEqual(self.human_user.participant(self.game).role, PlayerRole.ZOMBIE)

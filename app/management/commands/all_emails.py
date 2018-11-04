@@ -1,12 +1,14 @@
 from django.core.management.base import BaseCommand
 
-from app.models import Player
+from app.models import most_recent_game, Player, Moderator, Spectator
+from app.util import get_game_participants
 
 
 class Command(BaseCommand):
     help = 'Prints a list of all emails'
 
     def handle(self, *args, **options):
-        players = Player.objects.filter(active=True).all()
-        player_emails = [p.user.email for p in players]
-        print(", ".join(player_emails))
+        game = most_recent_game()
+        participants = get_game_participants(game)
+        participant_emails = [p.user.email for p in participants]
+        print(", ".join(participant_emails))

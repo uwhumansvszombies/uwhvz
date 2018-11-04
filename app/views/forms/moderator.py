@@ -1,7 +1,7 @@
 from django import forms
 from enumfields import EnumField
 
-from app.models import PlayerRole, SignupLocation
+from app.models import ParticipantRole, SignupLocation
 from app.util import most_recent_game
 
 
@@ -29,11 +29,12 @@ class ModeratorSignupPlayerForm(forms.Form):
         )
     )
 
-    player_role = EnumField(PlayerRole, max_length=1).formfield(
+    participant_role = EnumField(ParticipantRole, max_length=1).formfield(
+        label="Role",
         required=False,
         help_text=
-        'Hint: If the player role is blank and the game is running, the player will NOT be able to sign up for the game. '
-        'However, if this is blank and the game is in signup mode, the player will sign up normally.',
+        "If the player role is blank and the game is running, the player will NOT be able to sign up for the game. "
+        "However, if this is blank and the game is in signup mode, the player will sign up normally.",
         widget=forms.Select(
             attrs={
                 'class': 'custom-select',
