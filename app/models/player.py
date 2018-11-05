@@ -89,12 +89,16 @@ class Player(Participant):
             self.active = True
 
     @property
-    def is_zombie(self) -> bool:
-        return self.role == PlayerRole.ZOMBIE
+    def is_player(self) -> bool:
+        return True
 
     @property
     def is_human(self) -> bool:
         return self.role == PlayerRole.HUMAN
+    
+    @property
+    def is_zombie(self) -> bool:
+        return self.role == PlayerRole.ZOMBIE
 
     @property
     def has_faction(self) -> bool:

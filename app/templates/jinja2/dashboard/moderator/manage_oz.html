@@ -3,7 +3,7 @@
 
 {% block title %}Mod Dashboard &mdash; Manage OZs{% endblock %}
 
-{% block pagetitle %}{{ game.name }} &mdash; Moderator Actions{% endblock %}
+{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
 {% block pagesubtitle %}Manage OZs{% endblock %}
 
 {% block subcontent %}
@@ -20,7 +20,7 @@
       <tbody>
         {% for p in players %}
         <tr>
-          <td scope="col">{{ p.user.get_full_name() }}</td>
+          <td scope="col">{{ p }}</td>
           <td scope="col">{{ p.user.email }}</td>
         </tr>
         {% endfor %}

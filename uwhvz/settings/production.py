@@ -3,7 +3,7 @@ from .common import *
 SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 ALLOWED_HOSTS = ['*']
-SITE_URL = 'uwhvz.uwaterloo.ca'
+SITE_URL = 'https://uwhvz.uwaterloo.ca'
 
 ADMINS = [
     ('Tristan Ohlson', 'tsohlson@gmail.com'),

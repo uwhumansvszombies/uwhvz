@@ -36,11 +36,7 @@ class SignupPlayersView(View):
         cleaned_data = volunteer_signup_player_form.cleaned_data
         location, email = cleaned_data['location'], cleaned_data['email']
 
-        if User.objects.filter(email=email).exists():
-            messages.warning(request, f"There is already an account associated with: {email}.")
-            return redirect('signup_players')
-
         signup_invite = SignupInvite.objects.create_signup_invite(game, location, email)
-        send_signup_email(request, signup_invite, game.name)
+        send_signup_email(request, signup_invite, game)
         messages.success(request, f"Sent a signup email to {email}.")
         return redirect('signup_players')

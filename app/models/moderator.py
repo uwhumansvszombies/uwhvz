@@ -20,3 +20,7 @@ class Moderator(Participant):
     character_name: str = models.CharField("Character name", max_length=180, blank=True, null=True)
 
     objects = ModeratorManager()
+
+    @property
+    def is_moderator(self):
+        return True

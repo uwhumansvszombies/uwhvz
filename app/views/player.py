@@ -37,7 +37,9 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
 class PlayerInfoView(View):
     def get(self, request):
         game = most_recent_game()
-        if not game.is_running or request.user.participant(game).type != 'Player':
+        participant = request.user.participant(game)
+
+        if not participant or (participant and not participant.is_player) or not game.is_running:
             return redirect('dashboard')
         else:
             return render_player_info(request)
@@ -173,8 +175,7 @@ class ZombieTreeView(View):
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
-        if game.is_running and participant.type == 'Player' and participant.is_human and not \
-            (participant.type == 'Moderator' or participant.type == 'Spectator' or participant.user.is_staff):
+        if game.is_running and participant.is_player and participant.is_human and not participant.user.is_staff:
             raise PermissionDenied
 
         player_codes = {}
@@ -188,6 +189,10 @@ class ZombieTreeView(View):
             if not Player.objects.filter(game=game, code=zombie.code, role=PlayerRole.HUMAN).exists():
                 ozs.add(zombie)
 
+        nodes.append({'id': 'NECROMANCER', 'label': "Necromancer"})
+        for oz in ozs:
+            edges.append({'from': 'NECROMANCER', 'to': oz.code})
+
         tags = Tag.objects.filter(initiator__game=game, receiver__game=game, initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
 
         for tag in tags:
@@ -198,10 +203,6 @@ class ZombieTreeView(View):
 
         for code, name in player_codes.items():
             nodes.append({'id': code, 'label': name})
-
-        nodes.append({'id': 'NECROMANCER', 'label': "Necromancer"})
-        for oz in ozs:
-            edges.append({'from': 'NECROMANCER', 'to': oz.code})
 
         return render(request, self.template_name, {
             'game': game,
