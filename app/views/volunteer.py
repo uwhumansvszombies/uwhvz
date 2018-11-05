@@ -16,7 +16,7 @@ class SignupPlayersView(View):
 
     def render_signup_players(self, request, volunteer_signup_player_form=VolunteerSignupPlayerForm()):
         game = most_recent_game()
-        locations = SignupLocation.objects.filter(game=game).all()
+        locations = SignupLocation.objects.filter(game=game)
 
         return render(request, self.template_name, {
             'game': game,
@@ -41,6 +41,6 @@ class SignupPlayersView(View):
             return redirect('signup_players')
 
         signup_invite = SignupInvite.objects.create_signup_invite(game, location, email)
-        send_signup_email(request, signup_invite)
+        send_signup_email(request, signup_invite, game.name)
         messages.success(request, f"Sent a signup email to {email}.")
         return redirect('signup_players')

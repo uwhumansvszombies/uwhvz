@@ -6,7 +6,7 @@ from app.util import most_recent_game
 
 
 def get_signup_locations():
-    return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()).all())
+    return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()))
 
 
 class ModeratorSignupPlayerForm(forms.Form):

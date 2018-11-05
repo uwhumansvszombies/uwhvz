@@ -31,25 +31,31 @@
     <div class="ui-section">
       {{ svg('club-logo') }}
       <div class="ui-section__content">
-        <h1 class="start">The game begins in</h1>
-        <div class="js-countdown" id="countdown">
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="days"></span>
-            <p class="js-countdown__text">Days</p>
+        {% if game.is_active %}
+          <h1 class="start">The game begins in</h1>
+          <div class="js-countdown" id="countdown">
+            <div class="js-countdown__block">
+              <span class="js-countdown__num" id="days"></span>
+              <p class="js-countdown__text">Days</p>
+            </div>
+            <div class="js-countdown__block">
+              <span class="js-countdown__num" id="hours"></span>
+              <p class="js-countdown__text">Hours</p>
+            </div>
+            <div class="js-countdown__block">
+              <span class="js-countdown__num" id="minutes"></span>
+              <p class="js-countdown__text">Minutes</p>
+            </div>
+            <div class="js-countdown__block">
+              <span class="js-countdown__num" id="seconds"></span>
+              <p class="js-countdown__text">Seconds</p>
+            </div>
           </div>
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="hours"></span>
-            <p class="js-countdown__text">Hours</p>
-          </div>
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="minutes"></span>
-            <p class="js-countdown__text">Minutes</p>
-          </div>
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="seconds"></span>
-            <p class="js-countdown__text">Seconds</p>
-          </div>
-        </div>
+        {% elif game.is_running %}
+          <h1 class="start">The game has now begun.</h1>
+        {% else %}
+          <h1 class="start">The game is now over.</h1>
+        {% endif %}
       </div>
     </div>
   </section>

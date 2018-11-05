@@ -11,6 +11,11 @@ class IndexView(MobileSupportedView):
     desktop_template = "index.html"
     mobile_template = "mobile/index.html"
 
+    def get(self, request):
+        if game_exists():
+            game = most_recent_game()
+        return self.mobile_or_desktop(request, {'game': game})
+
 
 @method_decorator(login_required, name='dispatch')
 class DashboardView(MobileSupportedView):
