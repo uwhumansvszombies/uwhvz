@@ -8,7 +8,7 @@ from app.models import *
 class PlayerAdmin(admin.ModelAdmin):
     search_fields = ('user__first_name', 'user__last_name', 'user__email', 'role', 'faction__name')
     list_display = ('get_full_name', 'game', 'code', 'role', 'faction', 'score', 'active')
-    ordering = ('-game__created_at', 'user__first_name',)
+    ordering = ('-game__created_at', 'user__first_name')
 
     def get_full_name(self, obj):
         return obj.user.get_full_name()
@@ -24,7 +24,7 @@ class PlayerAdmin(admin.ModelAdmin):
 class ModeratorAdmin(admin.ModelAdmin):
     search_fields = ('user__first_name', 'user__last_name', 'user__email')
     list_display = ('get_full_name', 'character_name', 'game', 'active')
-    ordering = ('-game__created_at', 'user__first_name',)
+    ordering = ('-game__created_at', 'user__first_name')
 
     def get_full_name(self, obj):
         return obj.user.get_full_name()
@@ -40,7 +40,7 @@ class ModeratorAdmin(admin.ModelAdmin):
 class SpectatorAdmin(admin.ModelAdmin):
     search_fields = ('user__first_name', 'user__last_name', 'user__email')
     list_display = ('get_full_name', 'game', 'active')
-    ordering = ('-game__created_at', 'user__first_name',)
+    ordering = ('-game__created_at', 'user__first_name')
 
     def get_full_name(self, obj):
         return obj.user.get_full_name()
@@ -54,6 +54,10 @@ class SpectatorAdmin(admin.ModelAdmin):
 
 @admin.register(SupplyCode)
 class SupplyCodeAdmin(admin.ModelAdmin):
+    search_fields = ('game', 'code')
+    list_display = ('code', 'game', 'active')
+    ordering = ('-game__created_at', 'code')
+
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -67,9 +71,20 @@ class GameAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     search_fields = ('initiator__user__first_name', 'initiator__user__last_name', 'receiver__user__first_name', 'receiver__user__last_name')
+    list_display = ('tagged_at', 'get_initiator_name', 'get_receiver_name', 'active')
+    ordering = ('-tagged_at',)
 
-    def get_full_name(self, obj):
-        return obj.user.get_full_name()
+    def get_initiator_name(self, obj):
+        return obj.initiator.user.get_full_name()
+
+    get_initiator_name.admin_order_field = 'initiator__user__first_name'
+    get_initiator_name.short_description = 'Initiator Name'
+
+    def get_receiver_name(self, obj):
+        return obj.receiver.user.get_full_name()
+
+    get_receiver_name.admin_order_field = 'receiver__user__first_name'
+    get_receiver_name.short_description = 'Receiver Name'
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -79,6 +94,7 @@ class TagAdmin(admin.ModelAdmin):
 class SignupLocationAdmin(admin.ModelAdmin):
     search_fields = ('name', 'game')
     list_display = ('name', 'game')
+    ordering = ('-game__created_at',)
 
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
@@ -86,7 +102,9 @@ class SignupLocationAdmin(admin.ModelAdmin):
 
 @admin.register(SignupInvite)
 class SignupInviteAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ('game', 'email', 'signup_location__name')
+    list_display = ('email', 'game', 'signup_location')
+    ordering = ('-game__created_at',)
 
 
 @admin.register(User)

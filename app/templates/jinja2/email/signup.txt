@@ -1,4 +1,4 @@
-Thank you for signing up for Humans vs Zombies Fall 2018!
+Thank you for signing up for Humans vs Zombies {{ game_name }}!
 
 Please finish signing up to our website here: https://{{ site_url }}{{ url('signup', args=[signup_invite.id]) }}
 

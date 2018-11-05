@@ -21,7 +21,7 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
         player = request.user.participant(game)
     except ObjectDoesNotExist:
         return redirect('dashboard')
-    team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
+    team_score = sum([p.score() for p in Player.objects.filter(game=game, role=player.role)])
 
     return render(request, template_name, {
         'game': game,
@@ -180,19 +180,21 @@ class ZombieTreeView(View):
         player_codes = {}
         nodes = []
         edges = []
-        # Since we don't want repeated instances of OZs, we use a set instead of a list.
         ozs = set()
+        all_zombies = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE, active=True)
+        for zombie in all_zombies:
+            # We mutate the OZs' role rather than setting inactive, so an OZ won't have
+            # an inactive human player.
+            if not Player.objects.filter(game=game, code=zombie.code, role=PlayerRole.HUMAN).exists():
+                ozs.add(zombie)
 
-        tags = Tag.objects.filter(initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
+        tags = Tag.objects.filter(initiator__game=game, receiver__game=game, initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
 
         for tag in tags:
             edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})
 
             player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
-
-            if not Player.objects.filter(game=game, code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
-                ozs.add(tag.initiator)
 
         for code, name in player_codes.items():
             nodes.append({'id': code, 'label': name})

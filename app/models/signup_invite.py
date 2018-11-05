@@ -14,8 +14,12 @@ class SignupInviteManager(models.Manager):
     def create_signup_invite(self, game: Game, signup_location: SignupLocation, email: str,
                              participant_role: ParticipantRole = None) -> 'SignupInvite':
         email = normalize_email(email)
-        signup_invite = self.model(game=game, signup_location=signup_location, email=email,
-                                   participant_role=participant_role)
+        signup_invite = self.model(
+            game=game,
+            signup_location=signup_location,
+            email=email,
+            participant_role=participant_role
+        )
         signup_invite.save()
         return signup_invite
 

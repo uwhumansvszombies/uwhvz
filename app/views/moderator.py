@@ -59,7 +59,7 @@ class ManageOZView(View):
 
     def get(self, request):
         game = most_recent_game()
-        players = Player.objects.filter(game=game, in_oz_pool=True)
+        players = Player.objects.filter(game=game, in_oz_pool=True).order_by('user__first_name')
         return render(request, self.template_name, {
             'game': game,
             'players': players
@@ -73,7 +73,7 @@ class ManagePlayersView(View):
     def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
         game = most_recent_game()
         participants = get_game_participants(game).order_by('user__first_name')
-        locations = SignupLocation.objects.filter(game=game).all()
+        locations = SignupLocation.objects.filter(game=game)
 
         return render(request, self.template_name, {
             'game': game,
@@ -100,7 +100,7 @@ class ManagePlayersView(View):
             return redirect('manage_players')
 
         signup_invite = SignupInvite.objects.create_signup_invite(game, location, email, participant_role)
-        send_signup_email(request, signup_invite)
+        send_signup_email(request, signup_invite, game.name)
         messages.success(request, f"Sent a signup email to {email}.")
         return redirect('manage_players')
 
@@ -112,7 +112,7 @@ class GenerateSupplyCodesView(View):
 
     def get(self, request):
         game = most_recent_game()
-        supply_codes = SupplyCode.objects.filter(game=game, active=True).all()
+        supply_codes = SupplyCode.objects.filter(game=game, active=True)
         return render(request, self.template_name, {
             'game': game,
             'supply_codes': supply_codes

@@ -14,4 +14,4 @@ class Command(BaseCommand):
         for token in unused_tokens:
             path = reverse('signup', args=[token.id])
             url = f'https://uwhvz.uwaterloo.ca{path}'
-            send_signup_reminder(None, token.email, url)
+            send_signup_reminder(None, token.email, url, game.name)
