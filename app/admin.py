@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.utils.translation import gettext_lazy as _
 
-from app.models import Player, SupplyCode, Game, Tag, User, SignupLocation, SignupInvite, Modifier, Faction
+from app.models import *
 
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    search_fields = ('user__first_name', 'user__last_name', 'role', 'faction__name')
+    search_fields = ('user__first_name', 'user__last_name', 'user__email', 'role', 'faction__name')
     list_display = ('get_full_name', 'game', 'code', 'role', 'faction', 'score', 'active')
+    ordering = ('-game__created_at', 'user__first_name',)
 
     def get_full_name(self, obj):
         return obj.user.get_full_name()
@@ -17,7 +17,39 @@ class PlayerAdmin(admin.ModelAdmin):
     get_full_name.short_description = 'Name'
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
+
+
+@admin.register(Moderator)
+class ModeratorAdmin(admin.ModelAdmin):
+    search_fields = ('user__first_name', 'user__last_name', 'user__email')
+    list_display = ('get_full_name', 'character_name', 'game', 'active')
+    ordering = ('-game__created_at', 'user__first_name',)
+
+    def get_full_name(self, obj):
+        return obj.user.get_full_name()
+
+    get_full_name.admin_order_field = 'user__first_name'
+    get_full_name.short_description = 'Name'
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+
+@admin.register(Spectator)
+class SpectatorAdmin(admin.ModelAdmin):
+    search_fields = ('user__first_name', 'user__last_name', 'user__email')
+    list_display = ('get_full_name', 'game', 'active')
+    ordering = ('-game__created_at', 'user__first_name',)
+
+    def get_full_name(self, obj):
+        return obj.user.get_full_name()
+
+    get_full_name.admin_order_field = 'user__first_name'
+    get_full_name.short_description = 'Name'
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
 
 
 @admin.register(SupplyCode)
@@ -45,13 +77,11 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(SignupLocation)
 class SignupLocationAdmin(admin.ModelAdmin):
-    list_display = ('get_name',)
-
-    def get_name(self, obj):
-        return f'{obj.game}: {obj.name}'
+    search_fields = ('name', 'game')
+    list_display = ('name', 'game')
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
 
 
 @admin.register(SignupInvite)
@@ -68,9 +98,9 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {

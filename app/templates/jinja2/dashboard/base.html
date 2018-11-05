@@ -17,12 +17,8 @@
     <h2 class="ui-title-bar__subtitle">{% block pagesubtitle %}{% endblock %}</h2>
   </div>
   <ul class="ui-title-bar__actions">
-    {% if user.is_authenticated %}
-      <li><a class="ui-title-bar__link" href="{{ url('logout') }}">Logout</a></li>
-    {% else %}
-      <li><a class="ui-title-bar__link" href="{{ url('login') }}">Login</a></li>
-    {% endif %}
-  </div>
+    <li><a class="ui-title-bar__link" href="{{ url('logout') }}">Logout</a></li>
+  </ul>
 </header>
 
 <aside class="ui-sidebar" id="side-nav">
@@ -43,12 +39,14 @@
         </header>
       </a>
       <ul class="ui-menu__section collapse{% if "/moderator" not in request.path %} show{% endif %}" data-parent="#side-nav" id="player-actions">
-        <li><a href="{{ url('player_info') }}">Player Dashboard</a></li>
+        {%- if user.participant(game).type == 'Player' %}
+          <li><a href="{{ url('player_info') }}">Player Dashboard</a></li>
+        {% endif -%}
         <li><a href="/dashboard/game-info/">Game Info & News</a></li>
         <li><a href="{{ url('player_list') }}">Player List</a></li>
-        {% if (player is defined and player is not none and not player.is_human) or user.is_moderator %}
-        <li><a href="{{ url('zombie_tree') }}">Zombie Tree</a></li>
-        {% endif %}
+        {%- if (player is defined and player is not none and not player.is_human) or user.participant(game).type == 'Spectator' or user.participant(game).type == 'Moderator' or user.is_staff %}
+          <li><a href="{{ url('zombie_tree') }}">Zombie Tree</a></li>
+        {% endif -%}
         <li><a href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
       </ul>
     </nav>
@@ -69,7 +67,7 @@
       </ul>
     </nav>
   {% endif %}
-  {% if user.is_moderator %}
+  {% if user.participant(game).type == 'Moderator' or user.is_staff %}
     <nav class="ui-menu">
       <a class="ui-menu__header-link" href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="false">
         <header class="ui-menu__header">
@@ -86,7 +84,9 @@
         {% if game.is_active %}
           <li><a href="{{ url('manage_oz') }}">Manage OZ Pool</a></li>
         {% endif %}
-        <li><a href="{{ url('generate_supply_codes') }}">Create Supply Codes</a></li>
+        {% if game.is_running %}
+          <li><a href="{{ url('generate_supply_codes') }}">Create Supply Codes</a></li>
+        {% endif %}
         <li><a href="/cms">Write News Posts (Wagtail)</a></li>
       </ul>
     </nav>

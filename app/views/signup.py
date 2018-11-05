@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from app.models import SignupInvite, User, Player, PlayerRole
+from app.models import SignupInvite, User, Player, PlayerRole, ParticipantRole, Moderator, Spectator
 from app.util import most_recent_game, game_required
 from .forms import UserSignupForm
 
@@ -67,12 +67,12 @@ class GameSignupView(View):
         game = most_recent_game()
 
         try:
-            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().participant_role
         except ObjectDoesNotExist:
             forced_role = None
 
-        if not game.is_finished and not request.user.player_set.filter(game=game, active=True).exists():
-            return render(request, "registration/game_signup.html", {'game': game, 'player_role': forced_role})
+        if not request.user.participant(game) and (game.is_active or (game.is_running and forced_role)):
+            return render(request, "registration/game_signup.html", {'game': game, 'participant_role': forced_role})
         else:
             messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
@@ -81,7 +81,7 @@ class GameSignupView(View):
         game = most_recent_game()
 
         try:
-            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().player_role
+            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().participant_role
         except ObjectDoesNotExist:
             forced_role = None
 
@@ -92,12 +92,18 @@ class GameSignupView(View):
             messages.warning(request, "Please sign the waiver.")
             return self.get(request)
 
-        if request.user.player_set.filter(game=game, active=True).exists():
+        if request.user.participant(game):
             messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
 
         if forced_role:
-            Player.objects.create_player(request.user, game, forced_role)
+            if forced_role == ParticipantRole.MODERATOR:
+                Moderator.objects.create_moderator(request.user, game)
+            elif forced_role == ParticipantRole.SPECTATOR:
+                Spectator.objects.create_spectator(request.user, game)
+            else:
+                equivalent_role = PlayerRole.HUMAN if forced_role == ParticipantRole.HUMAN else PlayerRole.ZOMBIE
+                Player.objects.create_player(request.user, game, equivalent_role)
         else:
             Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
 

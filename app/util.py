@@ -1,5 +1,6 @@
 from datetime import datetime
 from functools import wraps
+from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
@@ -7,13 +8,26 @@ from django.http import Http404
 from django.shortcuts import render
 from django.utils import dateformat
 from django.views import View
+from queryset_sequence import QuerySetSequence
 
-from app.models import Game
+from app.models import Game, Player, Moderator, Spectator
+
+
+def player_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    def _is_player(user):
+        game = most_recent_game()
+        return user.is_authenticated and user.participant(game).type == 'Player'
+
+    actual_decorator = user_passes_test(_is_player, login_url=login_url, redirect_field_name=redirect_field_name)
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
 
 
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_moderator(user):
-        return user.is_authenticated and user.is_moderator
+        game = most_recent_game()
+        return user.is_authenticated and (user.participant(game).type == 'Moderator' or user.is_staff)
 
     actual_decorator = user_passes_test(_is_moderator, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:
@@ -23,7 +37,7 @@ def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
 
 def volunteer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_volunteer(user):
-        return user.is_authenticated and user.is_volunteer
+        return user.is_authenticated and (user.is_volunteer or user.is_staff)
 
     actual_decorator = user_passes_test(_is_volunteer, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:
@@ -37,6 +51,14 @@ def game_exists() -> bool:
 
 def most_recent_game() -> Game:
     return Game.objects.all().order_by('-created_at').first()
+
+
+def get_game_participants(game: Game, queryset_required: bool = False):
+    players = Player.objects.filter(game=game, active=True)
+    mods = Moderator.objects.filter(game=game, active=True)
+    spectators = Spectator.objects.filter(game=game, active=True)
+
+    return QuerySetSequence(players, mods, spectators)
 
 
 def game_required(function=None):
@@ -73,20 +95,6 @@ def running_game_required(function=None):
         return function(request, *args, **kwargs)
 
     return wrap
-
-
-def normalize_email(email) -> str:
-    """
-    Normalize the email address by making the domain part of it lowercase.
-    """
-    email = email or ''
-    try:
-        email_name, domain_part = email.strip().rsplit('@', 1)
-    except ValueError:
-        pass
-    else:
-        email = email_name + '@' + domain_part.lower()
-    return email
 
 
 def format_datetime(value) -> datetime:

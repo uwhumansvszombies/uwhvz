@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from typing import Union
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.mail import send_mail
@@ -97,11 +98,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_moderator(self) -> bool:
-        return self.groups.filter(name='Moderators').exists() or self.is_superuser
+        return self.groups.filter(
+            name='Moderators').exists() or self.participant.type == 'Moderator' or self.is_superuser
 
     @property
     def is_volunteer(self) -> bool:
         return self.groups.filter(name='Volunteers').exists() or self.is_superuser
 
-    def player(self, game) -> 'Player':
-        return self.player_set.get(game=game, active=True)
+    def participant(self, game: 'Game') -> Union['Player', 'Spectator', 'Moderator', None]:
+        if self.player_set.filter(game=game, active=True).exists():
+            return self.player_set.get(game=game, active=True)
+        elif self.spectator_set.filter(game=game, active=True).exists():
+            return self.spectator_set.get(game=game, active=True)
+        elif self.moderator_set.filter(game=game, active=True).exists():
+            return self.moderator_set.get(game=game, active=True)
+        else:
+            return None

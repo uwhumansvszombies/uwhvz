@@ -14,8 +14,8 @@ jinja2 = "*"
 django-user-agents = "*"
 wagtail = "*"
 gunicorn = "*"
-django-admin-view-permission = "*"
 django-compressor = "*"
+django-querysetsequence = "*"
 
 [dev-packages]
 

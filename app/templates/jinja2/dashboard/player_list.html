@@ -20,11 +20,16 @@
     </tr>
   </thead>
   <tbody>
-    {% for p in players %}
+    {% for p in participants %}
     <tr>
-      <td scope="col">{{ p.user.get_full_name() }}</td>
+      <td scope="col">{% if p.type == 'Moderator' and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
       <td scope="col">{{ p.user.email }}</td>
-      <td scope="col">{% if player.is_human and not p.is_spectator %}Player{% else %}{{ p.role }}{% endif %}</td>
+      <td scope="col">
+        {%- if p.type == 'Player' and participant.type == 'Player' and participant.is_human %}
+          Player
+        {% else %}
+          {%- if p.type == 'Player' %}{{ p.role }}{% else %}{{ p.type }}{% endif -%}
+        {% endif -%}</td>
     </tr>
     {% endfor %}
   </tbody>

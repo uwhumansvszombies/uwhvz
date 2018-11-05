@@ -121,6 +121,6 @@ node_modules
 .env.test.local
 .env.production.local
 
-db.sqlite3
+*.sqlite3
 /static/
 /media/
