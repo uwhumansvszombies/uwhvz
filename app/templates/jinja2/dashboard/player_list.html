@@ -4,7 +4,7 @@
 {% block title %}Dashboard &mdash; Player List{% endblock %}
 
 {% block pagetitle %}
-  {% if game.is_running %}{{ game.name }} &mdash; {% endif %}Game Information
+  {% if game.is_running %}{{ game }} &mdash; {% endif %}Game Information
 {% endblock %}
 {% block pagesubtitle %}View Player List{% endblock %}
 
@@ -22,13 +22,13 @@
   <tbody>
     {% for p in participants %}
     <tr>
-      <td scope="col">{% if p.type == 'Moderator' and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
+      <td scope="col">{% if p.is_moderator and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
       <td scope="col">{{ p.user.email }}</td>
       <td scope="col">
-        {%- if p.type == 'Player' and participant.type == 'Player' and participant.is_human %}
+        {%- if p.is_player and participant.is_player and participant.is_human %}
           Player
         {% else %}
-          {%- if p.type == 'Player' %}{{ p.role }}{% else %}{{ p.type }}{% endif -%}
+          {%- if p.is_player %}{{ p.role }}{% else %}{{ p.type }}{% endif -%}
         {% endif -%}</td>
     </tr>
     {% endfor %}

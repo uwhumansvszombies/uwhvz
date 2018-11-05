@@ -16,6 +16,7 @@ urlpatterns = [
     path("dashboard/game-signup", views.GameSignupView.as_view(), name='game_signup'),
     path("dashboard/volunteer/signup-players", views.SignupPlayersView.as_view(), name='signup_players'),
     path("signup/<uuid:signup_invite>", views.signup, name='signup'),
+    path("game-signup/<uuid:signup_invite>", views.TokenRequiredGameSignupView.as_view(), name='token_game_signup'),
 
     # Default dashboard pages
     path("dashboard", views.DashboardView.as_view(), name='dashboard'),

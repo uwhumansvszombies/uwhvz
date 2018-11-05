@@ -95,12 +95,8 @@ class ManagePlayersView(View):
         location, email, participant_role = cleaned_data['location'], cleaned_data['email'], cleaned_data[
             'participant_role']
 
-        if User.objects.filter(email=email).exists():
-            messages.warning(request, f"There is already an account associated with: {email}.")
-            return redirect('manage_players')
-
         signup_invite = SignupInvite.objects.create_signup_invite(game, location, email, participant_role)
-        send_signup_email(request, signup_invite, game.name)
+        send_signup_email(request, signup_invite, game)
         messages.success(request, f"Sent a signup email to {email}.")
         return redirect('manage_players')
 

@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
@@ -16,7 +15,7 @@ from .forms import UserSignupForm
 def signup(request, signup_invite):
     invite = get_object_or_404(SignupInvite, pk=signup_invite)
     if User.objects.filter(email=invite.email).exists():
-        return redirect('game_signup')
+        return redirect('token_game_signup', signup_invite=signup_invite)
     else:
         return redirect('user_signup', signup_invite=signup_invite)
 
@@ -57,7 +56,7 @@ class UserSignupView(View):
 
         user = authenticate(username=signup_invite.email, password=password)
         login(request, user)
-        return redirect('game_signup')
+        return redirect('token_game_signup', signup_invite=signup_invite.id)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -66,24 +65,65 @@ class GameSignupView(View):
     def get(self, request):
         game = most_recent_game()
 
-        try:
-            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().participant_role
-        except ObjectDoesNotExist:
-            forced_role = None
-
-        if not request.user.participant(game) and (game.is_active or (game.is_running and forced_role)):
-            return render(request, "registration/game_signup.html", {'game': game, 'participant_role': forced_role})
-        else:
+        if request.user.participant(game):
             messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
 
+        if game.is_running:
+            messages.warning(request, "The game has already started please contact a mod.")
+            return redirect('dashboard')
+
+        if game.is_finished:
+            messages.warning(request, "The game is over.")
+            return redirect('dashboard')
+
+        return render(request, "registration/game_signup.html", {'game': game, 'participant_role': None})
+
     def post(self, request):
         game = most_recent_game()
+        in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
+        has_signed_waiver = request.POST.get('accept_waiver', 'off') == 'on'
 
-        try:
-            forced_role = SignupInvite.objects.filter(used_at__isnull=False, email=request.user.email).get().participant_role
-        except ObjectDoesNotExist:
-            forced_role = None
+        if not has_signed_waiver:
+            messages.warning(request, "Please sign the waiver.")
+            return self.get(request)
+
+        if request.user.participant(game):
+            messages.warning(request, f"You're already signed up for the {game} game.")
+            return redirect('dashboard')
+
+        Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
+
+        messages.success(request, f"You've successfully signed up for the {game} game.")
+        return redirect('dashboard')
+
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(game_required, name='dispatch')
+class TokenRequiredGameSignupView(View):
+    def get(self, request, signup_invite):
+        game = most_recent_game()
+        invite = SignupInvite.objects.get(pk=signup_invite)
+        forced_role = invite.participant_role
+
+        if request.user.participant(game):
+            messages.warning(request, "You're already signed up for the game.")
+            return redirect('dashboard')
+
+        if game.is_running and not forced_role:
+            messages.warning(request, "The game has already started please contact a mod.")
+            return redirect('dashboard')
+
+        if game.is_finished:
+            messages.warning(request, "The game is over.")
+            return redirect('dashboard')
+
+        return render(request, "registration/game_signup.html", {'game': game, 'participant_role': forced_role})
+
+    def post(self, request, signup_invite):
+        game = most_recent_game()
+        invite = SignupInvite.objects.get(pk=signup_invite)
+        forced_role = invite.participant_role
 
         in_oz_pool = request.POST.get('is_oz', 'off') == 'on'
         has_signed_waiver = request.POST.get('accept_waiver', 'off') == 'on'
@@ -93,7 +133,7 @@ class GameSignupView(View):
             return self.get(request)
 
         if request.user.participant(game):
-            messages.warning(request, "You're already signed up for the game.")
+            messages.warning(request, f"You're already signed up for the {game} game.")
             return redirect('dashboard')
 
         if forced_role:

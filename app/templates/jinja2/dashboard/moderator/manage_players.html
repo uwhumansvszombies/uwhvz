@@ -3,7 +3,7 @@
 
 {% block title %}Mod Dashboard &mdash; Manage Players{% endblock %}
 
-{% block pagetitle %}{{ game.name }} &mdash; Moderator Actions{% endblock %}
+{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
 {% block pagesubtitle %}Manage Players{% endblock %}
 
 {% block subcontent %}
@@ -67,14 +67,10 @@
       <tbody>
         {% for p in participants %}
         <tr>
-          <td scope="col">{% if p.type == 'Moderator' and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
+          <td scope="col">{% if p.is_moderator and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
           <td scope="col">{{ p.user.email }}</td>
-          <td scope="col">{% if p.type == 'Player' %}{{ p.role }}{% else %}{{ p.type }}{% endif %}</td>
-          {%- if p.type == 'Player' %}
-            <td scope="col">{{ p.score() }}</td>
-          {% else %}
-            <td scope="col">N/A</td>
-          {% endif -%}
+          <td scope="col">{% if p.is_player %}{{ p.role }}{% else %}{{ p.type }}{% endif %}</td>
+          {%- if p.is_player %}<td scope="col">{{ p.score() }}</td>{% else %}<td scope="col">N/A</td>{% endif -%}
         </tr>
         {% endfor %}
       </tbody>

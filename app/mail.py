@@ -15,25 +15,25 @@ def _send_mail_template(request, plaintext_template, html_template, subject, rec
     )
 
 
-def send_signup_email(request, signup_invite, game_name):
+def send_signup_email(request, signup_invite, game):
     _send_mail_template(
         request,
         "email/signup.txt",
         "email/signup.html",
         "Welcome to HvZ",
         signup_invite.email,
-        {'signup_invite': signup_invite, 'game_name': game_name}
+        {'signup_invite': signup_invite, 'game': game}
     )
 
 
-def send_signup_reminder(request, email, url, game_name):
+def send_signup_reminder(request, email, url, game):
     _send_mail_template(
         request,
         "email/signup_reminder.txt",
         "email/signup_reminder.html",
         "[ACTION REQUIRED] UW HvZ - Uncompleted Game Signup",
         email,
-        {'signup_url': url, 'game_name': game_name},
+        {'signup_url': url, 'game': game},
     )
 
 

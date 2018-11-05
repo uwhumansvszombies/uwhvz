@@ -65,7 +65,7 @@ class SupplyCodeAdmin(admin.ModelAdmin):
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
 
 
 @admin.register(Tag)
@@ -102,8 +102,8 @@ class SignupLocationAdmin(admin.ModelAdmin):
 
 @admin.register(SignupInvite)
 class SignupInviteAdmin(admin.ModelAdmin):
-    search_fields = ('game', 'email', 'signup_location__name')
-    list_display = ('email', 'game', 'signup_location')
+    search_fields = ('email', 'game__name', 'signup_location__name')
+    list_display = ('email', 'game', 'signup_location', 'participant_role', 'used_at')
     ordering = ('-game__created_at',)
 
 
@@ -128,7 +128,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
 
 
 @admin.register(Modifier)

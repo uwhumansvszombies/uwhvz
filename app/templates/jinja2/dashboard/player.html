@@ -4,9 +4,9 @@
 {% block title %}Dashboard &mdash; Player Info{% endblock %}
 
 {% block pagetitle %}
-  {% if game.is_running %}{{ game.name }} &mdash; {% endif %}Game Information
+  {% if game.is_running %}{{ game }} &mdash; {% endif %}Game Information
 {% endblock %}
-{% block pagesubtitle %}{{ player.user.get_full_name() }} &mdash; Player Dashboard{% endblock %}
+{% block pagesubtitle %}{{ player }} &mdash; Player Dashboard{% endblock %}
 
 {% block subcontent %}
 

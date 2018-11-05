@@ -18,3 +18,7 @@ class SpectatorManager(models.Manager):
 
 class Spectator(Participant):
     objects = SpectatorManager()
+
+    @property
+    def is_spectator(self):
+        return True

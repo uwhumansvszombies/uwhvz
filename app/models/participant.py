@@ -27,9 +27,21 @@ class Participant(models.Model):
     class Meta:
         abstract = True
 
-    def str(self):
-        return self.user.get_full_name()
+    @property
+    def is_player(self):
+        return False
+
+    @property
+    def is_spectator(self):
+        return False
+
+    @property
+    def is_moderator(self):
+        return False
 
     @property
     def type(self):
         return self.__class__.__name__
+
+    def __str__(self):
+        return self.user.get_full_name()
