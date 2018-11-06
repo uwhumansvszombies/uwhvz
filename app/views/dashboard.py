@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 
-from app.models import Participant
 from app.util import MobileSupportedView, game_exists, most_recent_game
 
 
@@ -20,8 +20,14 @@ class DashboardView(MobileSupportedView):
     def get(self, request):
         if game_exists():
             game = most_recent_game()
+            try:
+                _ = request.user.participant(game)
+                signed_up = True
+            except ObjectDoesNotExist:
+                signed_up = False
+
             if game.is_active:
-                if not request.user.participant(game):
+                if not signed_up:
                     game_signup_url = reverse('game_signup')
                     messages.warning(
                         request,
@@ -30,7 +36,7 @@ class DashboardView(MobileSupportedView):
                         f"<a href=\"{game_signup_url}\">you can finish signing up here</a>."
                     )
 
-            return self.mobile_or_desktop(request, {'game': game})
+            return self.mobile_or_desktop(request, {'game': game, 'signed_up': signed_up})
         return self.mobile_or_desktop(request)
 
 

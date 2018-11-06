@@ -97,5 +97,9 @@ class Player(Participant):
         return self.role == PlayerRole.HUMAN
 
     @property
+    def is_player(self):
+        return True
+
+    @property
     def has_faction(self) -> bool:
         return self.faction is not None

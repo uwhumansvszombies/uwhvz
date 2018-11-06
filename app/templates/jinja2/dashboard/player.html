@@ -72,6 +72,25 @@
             {% if player.faction.description %}{{ player.faction.description|safe }}{% endif %}
           {% endcall %}
         {% endif %}
+
+        {% call card("Message other players") %}
+          <form action="{{ url('message_players') }}" method="post" novalidate>
+            {{ csrf_input }}
+
+            {% for field in message_players_form %}
+              <div class="ui-form-group">
+                {{ field }}
+                {% for error in field.errors %}
+                  <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endfor %}
+
+            <div class="ui-form-group pt-2">
+              <input class="btn btn-block btn-primary" type="submit" value="Send">
+            </div>
+          </form>
+        {% endcall %}
         </div>
       {% endif %}
     </div>

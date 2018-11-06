@@ -31,5 +31,17 @@ class Participant(models.Model):
         return self.user.get_full_name()
 
     @property
+    def is_moderator(self):
+        return False
+
+    @property
+    def is_player(self):
+        return False
+
+    @property
+    def is_spectator(self):
+        return False
+
+    @property
     def type(self):
         return self.__class__.__name__

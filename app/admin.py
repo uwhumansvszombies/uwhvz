@@ -17,7 +17,7 @@ class PlayerAdmin(admin.ModelAdmin):
     get_full_name.short_description = 'Name'
 
     def has_delete_permission(self, request, obj=None):
-        return request.user.is_superuser
+        return request.user.is_staff
 
 
 @admin.register(Moderator)
@@ -33,7 +33,7 @@ class ModeratorAdmin(admin.ModelAdmin):
     get_full_name.short_description = 'Name'
 
     def has_delete_permission(self, request, obj=None):
-        return request.user.is_superuser
+        return request.user.is_staff
 
 
 @admin.register(Spectator)
@@ -49,7 +49,7 @@ class SpectatorAdmin(admin.ModelAdmin):
     get_full_name.short_description = 'Name'
 
     def has_delete_permission(self, request, obj=None):
-        return request.user.is_superuser
+        return request.user.is_staff
 
 
 @admin.register(SupplyCode)
@@ -81,7 +81,7 @@ class SignupLocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'game')
 
     def has_delete_permission(self, request, obj=None):
-        return request.user.is_superuser
+        return request.user.is_staff
 
 
 @admin.register(SignupInvite)

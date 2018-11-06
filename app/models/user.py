@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Union
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
@@ -98,12 +99,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_moderator(self) -> bool:
-        return self.groups.filter(
-            name='Moderators').exists() or self.participant.type == 'Moderator' or self.is_superuser
+        return self.participant.is_moderator or self.is_staff
 
     @property
     def is_volunteer(self) -> bool:
-        return self.groups.filter(name='Volunteers').exists() or self.is_superuser
+        return self.groups.filter(name='Volunteers').exists() or self.is_staff
 
     def participant(self, game: 'Game') -> Union['Player', 'Spectator', 'Moderator', None]:
         if self.player_set.filter(game=game, active=True).exists():

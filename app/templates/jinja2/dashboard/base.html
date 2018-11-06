@@ -39,12 +39,12 @@
         </header>
       </a>
       <ul class="ui-menu__section collapse{% if "/moderator" not in request.path %} show{% endif %}" data-parent="#side-nav" id="player-actions">
-        {%- if user.participant(game).type == 'Player' %}
+        {%- if user.participant(game).is_player %}
           <li><a href="{{ url('player_info') }}">Player Dashboard</a></li>
         {% endif -%}
         <li><a href="/dashboard/game-info/">Game Info & News</a></li>
         <li><a href="{{ url('player_list') }}">Player List</a></li>
-        {%- if (player is defined and player is not none and not player.is_human) or user.participant(game).type == 'Spectator' or user.participant(game).type == 'Moderator' or user.is_staff %}
+        {%- if (player is defined and player is not none and not player.is_human) or user.participant(game).is_spectator or user.participant(game).is_moderator or user.is_staff %}
           <li><a href="{{ url('zombie_tree') }}">Zombie Tree</a></li>
         {% endif -%}
         <li><a href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
@@ -67,7 +67,7 @@
       </ul>
     </nav>
   {% endif %}
-  {% if user.participant(game).type == 'Moderator' or user.is_staff %}
+  {% if user.participant(game).is_moderator or user.is_staff %}
     <nav class="ui-menu">
       <a class="ui-menu__header-link" href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="false">
         <header class="ui-menu__header">

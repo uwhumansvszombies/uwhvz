@@ -1,19 +1,20 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
-from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType, Participant
+from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
 from app.util import most_recent_game, game_required, running_game_required, player_required, get_game_participants
-from app.views.forms import ReportTagForm, ClaimSupplyCodeForm
+from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
 
 
-def render_player_info(request, report_tag_form=ReportTagForm(),
-                       claim_supply_code_form=ClaimSupplyCodeForm()):
+def render_player_info(request, **kwargs):
     template_name = "mobile/dashboard/player.html" if request.user_agent.is_mobile else "dashboard/player.html"
 
     game = most_recent_game()
@@ -23,12 +24,16 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
         return redirect('dashboard')
     team_score = sum([p.score() for p in Player.objects.filter(role=player.role).all()])
 
+    report_tag_form = kwargs.get('report_tag_form', ReportTagForm())
+    claim_supply_code_form = kwargs.get('claim_supply_code_form', ClaimSupplyCodeForm())
+    message_players_form = kwargs.get('message_players_form', MessagePlayersForm(player=player))
     return render(request, template_name, {
         'game': game,
         'player': player,
         'team_score': team_score,
         'report_tag_form': report_tag_form,
         'claim_supply_code_form': claim_supply_code_form,
+        'message_players_form': message_players_form,
     })
 
 
@@ -37,7 +42,7 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
 class PlayerInfoView(View):
     def get(self, request):
         game = most_recent_game()
-        if not game.is_running or request.user.participant(game).type != 'Player':
+        if not game.is_running or not request.user.participant(game).is_player:
             return redirect('dashboard')
         else:
             return render_player_info(request)
@@ -55,11 +60,7 @@ class ReportTagView(View):
             return render_player_info(request, report_tag_form=report_tag_form)
 
         game = most_recent_game()
-
-        try:
-            initiating_player = request.user.participant(game)
-        except ObjectDoesNotExist:
-            return redirect('dashboard')
+        initiating_player = request.user.participant(game)
 
         cleaned_data = report_tag_form.cleaned_data
         receiver_code = cleaned_data['player_code'].upper()
@@ -107,11 +108,7 @@ class ClaimSupplyCodeView(View):
             return render_player_info(request, claim_supply_code_form=claim_supply_code_form)
 
         game = most_recent_game()
-
-        try:
-            player = request.user.participant(game)
-        except ObjectDoesNotExist:
-            return redirect('dashboard')
+        player = request.user.participant(game)
 
         cleaned_data = claim_supply_code_form.cleaned_data
         cleaned_supply_code = cleaned_data['code'].upper()
@@ -135,6 +132,45 @@ class ClaimSupplyCodeView(View):
 
         supply_code.claim(player, supply_code_modifier_amount)
         messages.success(request, "The code has been redeemed successfully.")
+        return redirect('player_info')
+
+
+@method_decorator(player_required, name='dispatch')
+@method_decorator(running_game_required, name='dispatch')
+class MessagePlayersView(View):
+    def get(self, request):
+        return redirect('player_info')
+
+    def post(self, request):
+        game = most_recent_game()
+        player = request.user.player(game)
+
+        message_players_form = MessagePlayersForm(request.POST, player=player)
+        if not message_players_form.is_valid():
+            return render_player_info(request, message_players_form=message_players_form)
+
+        cd = message_players_form.cleaned_data
+        recipients = []
+        if cd.recipients == "All":
+            recipients = Player.objects. \
+                filter(game=game, active=True). \
+                values_list('email', flat=True)
+        elif cd.recipients == "Zombies":
+            if not player.is_zombie:
+                messages.error(request, "Only zombies can email only zombies.")
+                return redirect('player_info')
+            recipients = Player.objects. \
+                filter(game=game, active=True, role=PlayerRole.ZOMBIE). \
+                values_list('email', flat=True)
+
+        send_mail(
+            subject=f"Message from {request.user.get_full_name()}",
+            message=cd.message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=recipients
+        )
+
+        messages.success(request, "You messaged the players successfully")
         return redirect('player_info')
 
 
@@ -173,8 +209,8 @@ class ZombieTreeView(View):
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
-        if game.is_running and participant.type == 'Player' and participant.is_human and not \
-            (participant.type == 'Moderator' or participant.type == 'Spectator' or participant.user.is_staff):
+        if game.is_running and participant.is_player and participant.is_human and not \
+            (participant.is_moderator or participant.is_spectator or participant.user.is_staff):
             raise PermissionDenied
 
         player_codes = {}

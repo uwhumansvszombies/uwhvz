@@ -1,9 +1,9 @@
 from datetime import datetime
 from functools import wraps
-from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import render
 from django.utils import dateformat
@@ -16,7 +16,13 @@ from app.models import Game, Player, Moderator, Spectator
 def player_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_player(user):
         game = most_recent_game()
-        return user.is_authenticated and user.participant(game).type == 'Player'
+        if not user.is_authenticated:
+            return False
+
+        try:
+            return user.participant(game).is_player
+        except ObjectDoesNotExist:
+            return False
 
     actual_decorator = user_passes_test(_is_player, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:
@@ -27,7 +33,7 @@ def player_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, logi
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_moderator(user):
         game = most_recent_game()
-        return user.is_authenticated and (user.participant(game).type == 'Moderator' or user.is_staff)
+        return user.is_authenticated and (user.participant(game).is_moderator or user.is_staff)
 
     actual_decorator = user_passes_test(_is_moderator, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:

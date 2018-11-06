@@ -25,6 +25,7 @@ urlpatterns = [
     path("dashboard/player", views.PlayerInfoView.as_view(), name='player_info'),
     path("dashboard/claim-supply-code", views.ClaimSupplyCodeView.as_view(), name='claim_supply_code'),
     path("dashboard/report-tag", views.ReportTagView.as_view(), name='report_tag'),
+    path("dashboard/message-players", views.MessagePlayersView.as_view(), name='message_players'),
     path("dashboard/player-list", views.PlayerListView.as_view(), name='player_list'),
     path("dashboard/zombie-tree", views.ZombieTreeView.as_view(), name='zombie_tree'),
 

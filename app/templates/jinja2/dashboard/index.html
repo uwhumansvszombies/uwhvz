@@ -9,6 +9,10 @@
 {% block subcontent %}
 
 <div class="ui-grid">
+  {% if signed_up and game.is_active %}
+    you are signed up
+  {% endif %}
+
   {% call card("Welcome to the website!") %}
     <p>This website is still fairly new, and may need some tweaking here and there as we polish it. Please be patient with us while this happens.</p>
     <p>If you'd like to report some bugs or give us general feedback on the website, contact the mods at <a href="mailto:uwhumansvszombies@gmail.com">uwhumansvszombies@gmail.com</a> and let us know what you think.</p>
