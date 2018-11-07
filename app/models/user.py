@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Union
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
@@ -112,5 +111,5 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.spectator_set.get(game=game, active=True)
         elif self.moderator_set.filter(game=game, active=True).exists():
             return self.moderator_set.get(game=game, active=True)
-        
+
         return None

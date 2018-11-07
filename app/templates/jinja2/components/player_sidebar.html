@@ -15,6 +15,7 @@
       {% endif -%}
       <li><a href="/dashboard/game-info/">Game Info & News</a></li>
       <li><a href="{{ url('player_list') }}">Player List</a></li>
+      <li><a href="{{ url('message_players') }}">Message Players</a></li>
       {%- if request.user.is_staff or not (participant.is_player and participant.is_human) %}
         <li><a href="{{ url('zombie_tree') }}">Zombie Tree</a></li>
       {% endif -%}
