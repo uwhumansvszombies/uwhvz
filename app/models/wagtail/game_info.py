@@ -4,7 +4,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 
-from app.models import Player, Game
+from app.models import Game
 from app.util import most_recent_game
 
 
@@ -27,10 +27,14 @@ class GameInfoPage(Page):
         context['is_mobile'] = request.user_agent.is_mobile
         context['participant'] = participant
         context['game'] = game
-        context['announcements'] = \
-            self.get_children().type(AnnouncementPage).live().order_by('-first_published_at')
-        context['missions'] = \
-            self.get_children().type(MissionPage).live().order_by('-first_published_at')
+
+        announcements = self.get_children().type(AnnouncementPage).live().order_by('-first_published_at')
+        viewable_announcements = [a for a in announcements if a.specific.is_viewable_by(participant)]
+        context['announcements'] = viewable_announcements
+
+        missions = self.get_children().type(MissionPage).live().order_by('-first_published_at')
+        viewable_missions = [m for m in missions if m.specific.is_viewable_by(participant)]
+        context['missions'] = viewable_missions
         return context
 
 

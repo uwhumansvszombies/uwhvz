@@ -151,7 +151,7 @@ class ZombieTreeView(View):
         if not participant:
             return redirect('dashboard')
 
-        if participant.is_player and participant.is_human:
+        if not request.user.is_staff and participant.is_player and participant.is_human:
             raise PermissionDenied
 
         player_codes = {}
