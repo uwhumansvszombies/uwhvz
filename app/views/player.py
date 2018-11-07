@@ -10,7 +10,7 @@ from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
 from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
-from app.util import most_recent_game, running_game_required, player_required, get_game_participants
+from app.util import most_recent_game, running_game_required, player_required, get_game_participants, game_required
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
 
 
@@ -30,10 +30,16 @@ def render_player_info(request, report_tag_form=ReportTagForm(), claim_supply_co
     })
 
 
-@method_decorator(running_game_required, name='dispatch')
-@method_decorator(player_required, name='dispatch')
+@method_decorator(game_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class PlayerInfoView(View):
     def get(self, request):
+        # While it would be nice to use running_game_required and player_required
+        # due to the fact that we redirect here from login for all users we must
+        # account for spectators/moderators and when the game isn't running as well.
+        game = most_recent_game()
+        if not game.is_running or not request.user.participant(game).is_player:
+            return redirect('dashboard')
         return render_player_info(request)
 
 
