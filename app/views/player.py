@@ -7,7 +7,7 @@ from django.views import View
 from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
-from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType, Participant
+from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
 from app.util import most_recent_game, game_required, running_game_required, player_required, get_game_participants
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm
 
@@ -17,32 +17,23 @@ def render_player_info(request, report_tag_form=ReportTagForm(),
     template_name = "mobile/dashboard/player.html" if request.user_agent.is_mobile else "dashboard/player.html"
 
     game = most_recent_game()
-    try:
-        player = request.user.participant(game)
-    except ObjectDoesNotExist:
-        return redirect('dashboard')
-    team_score = sum([p.score() for p in Player.objects.filter(game=game, role=player.role)])
+    participant = request.user.participant(game)
+    team_score = sum([p.score() for p in Player.objects.filter(game=game, role=participant.role)])
 
     return render(request, template_name, {
         'game': game,
-        'player': player,
+        'participant': participant,
         'team_score': team_score,
         'report_tag_form': report_tag_form,
         'claim_supply_code_form': claim_supply_code_form,
     })
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(game_required, name='dispatch')
+@method_decorator(running_game_required, name='dispatch')
+@method_decorator(player_required, name='dispatch')
 class PlayerInfoView(View):
     def get(self, request):
-        game = most_recent_game()
-        participant = request.user.participant(game)
-
-        if not participant or (participant and not participant.is_player) or not game.is_running:
-            return redirect('dashboard')
-        else:
-            return render_player_info(request)
+        return render_player_info(request)
 
 
 @method_decorator(running_game_required, name='dispatch')
@@ -57,11 +48,7 @@ class ReportTagView(View):
             return render_player_info(request, report_tag_form=report_tag_form)
 
         game = most_recent_game()
-
-        try:
-            initiating_player = request.user.participant(game)
-        except ObjectDoesNotExist:
-            return redirect('dashboard')
+        initiating_player = request.user.participant(game)
 
         cleaned_data = report_tag_form.cleaned_data
         receiver_code = cleaned_data['player_code'].upper()
@@ -109,11 +96,7 @@ class ClaimSupplyCodeView(View):
             return render_player_info(request, claim_supply_code_form=claim_supply_code_form)
 
         game = most_recent_game()
-
-        try:
-            player = request.user.participant(game)
-        except ObjectDoesNotExist:
-            return redirect('dashboard')
+        player = request.user.participant(game)
 
         cleaned_data = claim_supply_code_form.cleaned_data
         cleaned_supply_code = cleaned_data['code'].upper()
@@ -140,19 +123,14 @@ class ClaimSupplyCodeView(View):
         return redirect('player_info')
 
 
-@method_decorator(login_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
+@method_decorator(player_required, name='dispatch')
 class PlayerListView(View):
     template_name = 'dashboard/player_list.html'
 
     def get(self, request):
         game = most_recent_game()
-
-        try:
-            participant = request.user.participant(game)
-        except ObjectDoesNotExist:
-            return redirect('dashboard')
-
+        participant = request.user.participant(game)
         participants = get_game_participants(game).order_by('user__first_name')
 
         return render(request, self.template_name, {
@@ -162,20 +140,18 @@ class PlayerListView(View):
         })
 
 
-@method_decorator(login_required, name='dispatch')
 @method_decorator(game_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class ZombieTreeView(View):
     template_name = 'dashboard/zombie_tree.html'
 
     def get(self, request):
         game = most_recent_game()
-
-        try:
-            participant = request.user.participant(game)
-        except ObjectDoesNotExist:
+        participant = request.user.participant(game)
+        if not participant:
             return redirect('dashboard')
 
-        if game.is_running and participant.is_player and participant.is_human and not participant.user.is_staff:
+        if participant.is_player and participant.is_human:
             raise PermissionDenied
 
         player_codes = {}
@@ -193,7 +169,13 @@ class ZombieTreeView(View):
         for oz in ozs:
             edges.append({'from': 'NECROMANCER', 'to': oz.code})
 
-        tags = Tag.objects.filter(initiator__game=game, receiver__game=game, initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
+        tags = Tag.objects.filter(
+            initiator__game=game,
+            receiver__game=game,
+            initiator__role=PlayerRole.ZOMBIE,
+            receiver__role=PlayerRole.HUMAN,
+            active=True
+        )
 
         for tag in tags:
             edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})

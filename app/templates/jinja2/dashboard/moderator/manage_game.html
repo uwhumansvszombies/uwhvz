@@ -7,7 +7,6 @@
 {% block pagesubtitle %}Manage Game{% endblock %}
 
 {% block subcontent %}
-
 <div class="ui-grid s-dashboard__player-list">
   <div class="ui-grid align-content-start">
     {% call card("Start Game") %}
@@ -36,27 +35,26 @@
   </div>
 </div>
 
-  <div class="modal fade" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title">Are you sure about killing all humans?</h2>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>All humans who do not have 5 points will become zombies. This is an <b>irreversible</b> change. Are you sure you want to continue killing all humans?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
-          <form class="mb-0" action="{{ url('kill_unsupplied_humans') }}" method="post">
-            {{ csrf_input }}
-            <input type="submit" class="btn btn-danger" value="Yes, Kill Them">
-          </form>
-        </div>
+<div class="modal fade" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure about killing all humans?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>All humans who do not have 5 points will become zombies. This is an <b>irreversible</b> change. Are you sure you want to continue killing all humans?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <form class="mb-0" action="{{ url('kill_unsupplied_humans') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-danger" value="Yes, Kill Them">
+        </form>
       </div>
     </div>
   </div>
-
+</div>
 {% endblock %}

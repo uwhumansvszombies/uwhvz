@@ -5,12 +5,12 @@ from django.views import View
 
 from app.mail import send_signup_email
 from app.models import SignupInvite, SignupLocation, User
-from app.util import volunteer_required, most_recent_game, active_game_required
+from app.util import volunteer_required, most_recent_game, signups_game_required
 from .forms import VolunteerSignupPlayerForm
 
 
 @method_decorator(volunteer_required, name='dispatch')
-@method_decorator(active_game_required, name='dispatch')
+@method_decorator(signups_game_required, name='dispatch')
 class SignupPlayersView(View):
     template_name = "dashboard/volunteer/signup_players.html"
 

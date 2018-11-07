@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.mail import send_signup_email
-from app.models import Player, SignupInvite, SignupLocation, User, SupplyCode, PlayerRole, Spectator, Moderator
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants
 from app.views.forms import ModeratorSignupPlayerForm
 
@@ -47,6 +47,7 @@ class ManageGameView(View):
 
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'all_emails': all_emails,
             'human_emails': human_emails,
             'zombie_emails': zombie_emails,
@@ -77,6 +78,7 @@ class ManagePlayersView(View):
 
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'participants': participants,
             'signup_locations': locations,
             'mod_signup_player_form': mod_signup_player_form
@@ -111,6 +113,7 @@ class GenerateSupplyCodesView(View):
         supply_codes = SupplyCode.objects.filter(game=game, active=True)
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'supply_codes': supply_codes
         })
 

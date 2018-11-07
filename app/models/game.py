@@ -17,11 +17,11 @@ class GameManager(models.Manager):
 class GameState(Enum):
     """
     The three states a game can take.
-    ACTIVE: when a game has been created but has not started yet; a game in its signup period.
+    SIGNUPS: when a game has been created but has not started yet; a game in its signup period.
     RUNNING: when a game has been created and has started; a game that's started.
     FINISHED: when a game has ended; a past/previous game.
     """
-    ACTIVE = auto()
+    SIGNUPS = auto()
     RUNNING = auto()
     FINISHED = auto()
 
@@ -57,11 +57,11 @@ class Game(models.Model):
         if self.started_on:
             return GameState.FINISHED if self.ended_on else GameState.RUNNING
         else:
-            return GameState.ACTIVE
+            return GameState.SIGNUPS
 
     @property
-    def is_active(self) -> bool:
-        return self.state() == GameState.ACTIVE
+    def is_signups(self) -> bool:
+        return self.state() == GameState.SIGNUPS
 
     @property
     def is_running(self) -> bool:

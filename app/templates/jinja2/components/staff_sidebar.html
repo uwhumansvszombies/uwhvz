@@ -1,0 +1,16 @@
+{% macro staff_sidebar() -%}
+  <nav class="ui-menu">
+    <a class="ui-menu__header-link" href="#webmaster-actions" data-target="#webmaster-actions" data-toggle="collapse" aria-expanded="false">
+      <header class="ui-menu__header">
+        <h1 class="ui-menu__title">Webmaster Actions</h1>
+        <div class="ui-menu__icon">
+          <span aria-hidden="true" class="oi oi-plus"></span>
+          <span aria-hidden="true" class="oi oi-minus"></span>
+        </div>
+      </header>
+    </a>
+    <ul class="ui-menu__section collapse" data-parent="#side-nav" id="webmaster-actions">
+      <li><a href="{{ url('admin:index') }}">Site Management (Django Admin)</a></li>
+    </ul>
+  </nav>
+{%- endmacro %}
