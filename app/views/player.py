@@ -8,7 +8,7 @@ from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
 from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
-from app.util import most_recent_game, game_required, running_game_required, player_required, get_game_participants
+from app.util import most_recent_game, running_game_required, player_required, get_game_participants
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm
 
 
@@ -140,7 +140,7 @@ class PlayerListView(View):
         })
 
 
-@method_decorator(game_required, name='dispatch')
+@method_decorator(running_game_required, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ZombieTreeView(View):
     template_name = 'dashboard/zombie_tree.html'
@@ -168,6 +168,7 @@ class ZombieTreeView(View):
         nodes.append({'id': 'NECROMANCER', 'label': "Necromancer"})
         for oz in ozs:
             edges.append({'from': 'NECROMANCER', 'to': oz.code})
+            player_codes[oz.code] = oz.user.get_full_name()
 
         tags = Tag.objects.filter(
             initiator__game=game,
