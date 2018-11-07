@@ -6,8 +6,8 @@
 {% block subcontent %}
 <div class="ui-grid">
   <div class="ui-grid s-mobile-dashboard__player-info">
-    {{ card("Code", player.code, "ui-card--display") }}
-    {{ card("My Score", player.score(), "ui-card--display") }}
+    {{ card("Code", participant.code, "ui-card--display") }}
+    {{ card("My Score", participant.score(), "ui-card--display") }}
   </div>
 
   {% if participant.is_human %}
