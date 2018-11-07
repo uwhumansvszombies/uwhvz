@@ -30,8 +30,8 @@
       {% if missions %}
         <ul>
           {% for mission in missions %}
-            {% if mission.specific.is_viewable_by(player) %}
-              <li><a href="{{ pageurl(mission) }}">{% if player.is_spectator or player.user.is_staff %}(For {{ mission.specific.get_viewable_by_display() }}) {% endif %}{{ mission.title }}</a></li>
+            {% if mission.specific.is_viewable_by(participant) %}
+              <li><a href="{{ pageurl(mission) }}">{% if participant.is_spectator or participant.is_moderator or participant.user.is_staff %}(For {{ mission.specific.get_viewable_by_display() }}) {% endif %}{{ mission.title }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>
@@ -44,8 +44,8 @@
       {% if announcements %}
         <ul>
           {% for announcement in announcements %}
-            {% if announcement.specific.is_viewable_by(player) %}
-              <li><a href="{{ pageurl(announcement) }}">{% if player.is_spectator or player.user.is_staff %}(For {{ announcement.specific.get_viewable_by_display() }}) {% endif %}{{ announcement.title }}</a></li>
+            {% if announcement.specific.is_viewable_by(participant) %}
+              <li><a href="{{ pageurl(announcement) }}">{% if participant.is_spectator or participant.is_moderator or participant.user.is_staff %}(For {{ announcement.specific.get_viewable_by_display() }}) {% endif %}{{ announcement.title }}</a></li>
             {% endif %}
           {% endfor %}
         </ul>

@@ -71,7 +71,7 @@ class GameAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     search_fields = ('initiator__user__first_name', 'initiator__user__last_name', 'receiver__user__first_name', 'receiver__user__last_name')
-    list_display = ('tagged_at', 'get_initiator_name', 'get_receiver_name', 'active')
+    list_display = ('__str__', 'get_initiator_name', 'get_receiver_name', 'tagged_at', 'game', 'active')
     ordering = ('-tagged_at',)
 
     def get_initiator_name(self, obj):
@@ -85,6 +85,12 @@ class TagAdmin(admin.ModelAdmin):
 
     get_receiver_name.admin_order_field = 'receiver__user__first_name'
     get_receiver_name.short_description = 'Receiver Name'
+    
+    def game(self, obj):
+        return obj.initiator.game
+
+    game.admin_order_field = 'initiator__game'
+    game.short_description = 'Game'
 
     def has_delete_permission(self, request, obj=None):
         return False

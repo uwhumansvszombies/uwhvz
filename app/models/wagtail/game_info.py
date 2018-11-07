@@ -23,9 +23,9 @@ class GameInfoPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(GameInfoPage, self).get_context(request)
         game = most_recent_game()
-        player = Player.objects.filter(user=request.user, game=game, active=True).first()
+        participant = request.user.participant(game)
         context['is_mobile'] = request.user_agent.is_mobile
-        context['player'] = player
+        context['participant'] = participant
         context['game'] = game
         context['announcements'] = \
             self.get_children().type(AnnouncementPage).live().order_by('-first_published_at')
@@ -45,7 +45,6 @@ class AnnouncementPage(Page):
         FieldPanel('viewable_by'),
         FieldPanel('game'),
         FieldPanel('body', classname="full"),
-
     ]
 
     parent_page_types = ['app.GameInfoPage']
@@ -57,23 +56,23 @@ class AnnouncementPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(AnnouncementPage, self).get_context(request)
         game = most_recent_game()
-        player = Player.objects.filter(user=request.user, game=game, active=True).first()
-        context['player'] = player
+        participant = request.user.participant(game)
+        context['participant'] = participant
         context['game'] = game
         return context
 
-    def is_viewable_by(self, player) -> bool:
+    def is_viewable_by(self, participant) -> bool:
         game = most_recent_game()
-        if self.game != game:
+        if self.game != game or not participant:
             return False
 
         if self.viewable_by == ViewableBy.ALL.value:
             return True
-        if self.viewable_by == ViewableBy.HUMANS.value and player.is_human:
+        if self.viewable_by == ViewableBy.HUMANS.value and participant.is_player and participant.is_human:
             return True
-        if self.viewable_by == ViewableBy.ZOMBIES.value and player.is_zombie:
+        if self.viewable_by == ViewableBy.ZOMBIES.value and participant.is_player and participant.is_zombie:
             return True
-        if player.is_spectator or player.user.is_staff:
+        if participant.is_spectator or participant.is_moderator or participant.user.is_staff:
             return True
         return False
 
@@ -100,22 +99,22 @@ class MissionPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(MissionPage, self).get_context(request)
         game = most_recent_game()
-        player = Player.objects.filter(user=request.user, game=game, active=True).first()
-        context['player'] = player
+        participant = request.user.participant(game)
+        context['participant'] = participant
         context['game'] = game
         return context
 
-    def is_viewable_by(self, player) -> bool:
+    def is_viewable_by(self, participant) -> bool:
         game = most_recent_game()
-        if self.game != game:
+        if self.game != game or not participant:
             return False
 
         if self.viewable_by == ViewableBy.ALL.value:
             return True
-        if self.viewable_by == ViewableBy.HUMANS.value and player.is_human:
+        if self.viewable_by == ViewableBy.HUMANS.value and participant.is_player and participant.is_human:
             return True
-        if self.viewable_by == ViewableBy.ZOMBIES.value and player.is_zombie:
+        if self.viewable_by == ViewableBy.ZOMBIES.value and participant.is_player and participant.is_zombie:
             return True
-        if player.is_spectator or player.user.is_staff:
+        if participant.is_spectator or participant.is_moderator or participant.user.is_staff:
             return True
         return False
