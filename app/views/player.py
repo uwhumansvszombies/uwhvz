@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -9,11 +11,10 @@ from rest_framework.utils import json
 from app.mail import send_tag_email, send_stun_email
 from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
 from app.util import most_recent_game, running_game_required, player_required, get_game_participants
-from app.views.forms import ReportTagForm, ClaimSupplyCodeForm
+from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
 
 
-def render_player_info(request, report_tag_form=ReportTagForm(),
-                       claim_supply_code_form=ClaimSupplyCodeForm()):
+def render_player_info(request, report_tag_form=ReportTagForm(), claim_supply_code_form=ClaimSupplyCodeForm()):
     template_name = "mobile/dashboard/player.html" if request.user_agent.is_mobile else "dashboard/player.html"
 
     game = most_recent_game()
@@ -138,6 +139,58 @@ class PlayerListView(View):
             'participant': participant,
             'participants': participants
         })
+
+
+@method_decorator(running_game_required, name='dispatch')
+@method_decorator(player_required, name='dispatch')
+class MessagePlayersView(View):
+    template_name = 'dashboard/message_players.html'
+
+    def get(self, request, **kwargs):
+        game = most_recent_game()
+        participant = request.user.participant(game)
+        message_players_form = kwargs.get('message_players_form', MessagePlayersForm(player=participant))
+
+        return render(request, self.template_name, {
+            'game': game,
+            'participant': participant,
+            'message_players_form': message_players_form
+        })
+
+    def post(self, request):
+        game = most_recent_game()
+        participant = request.user.participant(game)
+        message_players_form = MessagePlayersForm(request.POST, player=participant)
+        if not message_players_form.is_valid():
+            return self.get(request, message_players_form=message_players_form)
+
+        cd = message_players_form.cleaned_data
+        recipients = []
+        if cd['recipients'] == "All":
+            recipients = Player.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True)
+        elif cd['recipients'] == "Zombies":
+            if not participant.is_zombie:
+                messages.error(request, "Only zombies can email only zombies.")
+                return redirect('message_players')
+            recipients = Player.objects \
+                .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
+                .values_list('user__email', flat=True)
+
+        EmailMultiAlternatives(
+            subject=f"Message from {request.user.get_full_name()}",
+            body=cd['message'],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[],
+            bcc=recipients
+        ).send()
+
+        if cd['recipients'] == "All":
+            messages.success(request, "You've sent an email to all players.")
+        elif cd['recipients'] == "Zombies":
+            messages.success(request, "You've sent an email to all zombies.")
+        return redirect('message_players')
 
 
 @method_decorator(running_game_required, name='dispatch')

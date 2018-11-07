@@ -10,7 +10,7 @@
     {{ card("My Score", player.score(), "ui-card--display") }}
   </div>
 
-  {% if player.is_human %}
+  {% if participant.is_human %}
     {% set report_name = "Stun" %}
   {% else %}
     {% set report_name = "Tag" %}
@@ -34,25 +34,25 @@
       </div>
     </form>
   {% endcall %}
-  {% if player.is_human %}
+  {% if participant.is_human %}
     {% call card("Redeem Supply Code") %}
     <form action="{{ url('claim_supply_code') }}" method="post">
-        {{ csrf_input }}
+      {{ csrf_input }}
 
-        {% for field in claim_supply_code_form %}
-          <div class="ui-form-group">
-            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
-            {{ field }}
-            {% for error in field.errors %}
-              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
-            {% endfor %}
-          </div>
-        {% endfor %}
-        
-        <div class="ui-form-group pt-2 text-center">
-          <input class="btn btn-block btn-primary" type="submit" value="Redeem">
+      {% for field in claim_supply_code_form %}
+        <div class="ui-form-group">
+          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
         </div>
-      </form>
+      {% endfor %}
+
+      <div class="ui-form-group pt-2 text-center">
+        <input class="btn btn-block btn-primary" type="submit" value="Redeem">
+      </div>
+    </form>
     {% endcall %}
   {% endif %}
 </div>

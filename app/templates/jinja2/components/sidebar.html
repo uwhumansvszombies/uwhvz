@@ -11,16 +11,16 @@
       </ul>
     </nav>
 
+    {% if game.is_running and participant %}
+      {{ player_sidebar(request, participant) }}
+    {% endif %}
+
     {% if user.is_volunteer and game.is_signups %}
       {{ volunteer_sidebar(request) }}
     {% endif %}
 
     {% if participant.is_moderator or user.is_staff %}
       {{ moderator_sidebar(request, game) }}
-    {% endif %}
-
-    {% if game.is_running and participant %}
-      {{ player_sidebar(request, participant) }}
     {% endif %}
 
     {% if user.is_staff %}

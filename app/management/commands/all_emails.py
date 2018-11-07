@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from app.models import most_recent_game, Player, Moderator, Spectator
+from app.models import most_recent_game
 from app.util import get_game_participants
 
 
