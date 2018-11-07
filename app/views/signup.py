@@ -66,7 +66,6 @@ class GameSignupView(View):
         game = most_recent_game()
 
         if request.user.participant(game):
-            messages.warning(request, "You're already signed up for the game.")
             return redirect('dashboard')
 
         if game.is_running:
@@ -93,8 +92,6 @@ class GameSignupView(View):
             return redirect('dashboard')
 
         Player.objects.create_player(request.user, game, PlayerRole.HUMAN, in_oz_pool=in_oz_pool)
-
-        messages.success(request, f"You've successfully signed up for the {game} game.")
         return redirect('dashboard')
 
 

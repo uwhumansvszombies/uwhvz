@@ -7,6 +7,18 @@
 {% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %}
 
 {% block subcontent %}
+{% if game.is_signups %}
+  {% if not participant %}
+    <div class="alert alert-warning show">
+      You haven't signed up for the {{ game }} game.If you wish to join,
+    <a href="{{ url('game_signup') }}">you can sign up here</a>.
+    </div>
+  {% else %}
+    <div class="alert alert-success show">
+      You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}. {% endif %}
+    </div>
+  {% endif %}
+{% endif %}
 
 <div class="ui-grid s-dashboard__game-info align-content-start">
   <div class="ui-grid align-content-start">
@@ -20,10 +32,9 @@
     {% endcall %}
   </div>
   <div class="ui-grid align-content-start">
-    {% call card('') %}
+    {% call card() %}
       <a class="twitter-timeline" height="500" href="https://twitter.com/HVZAlertSystem?ref_src=twsrc%5Etfw">Tweets by HVZAlertSystem</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     {% endcall %}
   </div>
 </div>
-
 {% endblock %}

@@ -1,10 +1,7 @@
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from django.utils.decorators import method_decorator
 
-from app.models import Participant
-from app.util import MobileSupportedView, game_exists, most_recent_game
+from app.util import MobileSupportedView, most_recent_game
 
 
 class IndexView(MobileSupportedView):
@@ -12,8 +9,7 @@ class IndexView(MobileSupportedView):
     mobile_template = "mobile/index.html"
 
     def get(self, request):
-        if game_exists():
-            game = most_recent_game()
+        game = most_recent_game()
         return self.mobile_or_desktop(request, {'game': game})
 
 
@@ -23,20 +19,8 @@ class DashboardView(MobileSupportedView):
     mobile_template = "mobile/dashboard/index.html"
 
     def get(self, request):
-        if game_exists():
-            game = most_recent_game()
-            if game.is_active:
-                if not request.user.participant(game):
-                    game_signup_url = reverse('game_signup')
-                    messages.warning(
-                        request,
-                        f"You haven't finished signing up for the {game} game. "
-                        f"If you still wish to join, "
-                        f"<a href=\"{game_signup_url}\">you can finish signing up here</a>."
-                    )
-
-            return self.mobile_or_desktop(request, {'game': game})
-        return self.mobile_or_desktop(request)
+        game = most_recent_game()
+        return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game)})
 
 
 @method_decorator(login_required, name='dispatch')

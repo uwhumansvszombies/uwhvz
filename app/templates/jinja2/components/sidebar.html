@@ -1,0 +1,30 @@
+{% from "components/moderator_sidebar.html" import moderator_sidebar %}
+{% from "components/player_sidebar.html" import player_sidebar %}
+{% from "components/staff_sidebar.html" import staff_sidebar %}
+{% from "components/volunteer_sidebar.html" import volunteer_sidebar %}
+
+{% macro sidebar(request, game, participant, user) -%}
+  <aside class="ui-sidebar" id="side-nav">
+    <nav class="ui-menu">
+      <ul class="ui-menu__section">
+        <li><a href="{{ url('dashboard') }}">Home</a></li>
+      </ul>
+    </nav>
+
+    {% if user.is_volunteer and game.is_signups %}
+      {{ volunteer_sidebar(request) }}
+    {% endif %}
+
+    {% if participant.is_moderator or user.is_staff %}
+      {{ moderator_sidebar(request, game) }}
+    {% endif %}
+
+    {% if game.is_running and participant %}
+      {{ player_sidebar(request, participant) }}
+    {% endif %}
+
+    {% if user.is_staff %}
+      {{ staff_sidebar() }}
+    {% endif %}
+  </aside>
+{%- endmacro %}

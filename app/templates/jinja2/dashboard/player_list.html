@@ -4,12 +4,11 @@
 {% block title %}Dashboard &mdash; Player List{% endblock %}
 
 {% block pagetitle %}
-  {% if game.is_running %}{{ game }} &mdash; {% endif %}Game Information
+  {{ game }} &mdash; Game Information
 {% endblock %}
 {% block pagesubtitle %}View Player List{% endblock %}
 
 {% block subcontent %}
-
 {% call card("Player List") %}
 <table class="table table-striped">
   <thead>
@@ -35,5 +34,4 @@
   </tbody>
 </table>
 {% endcall %}
-
 {% endblock %}

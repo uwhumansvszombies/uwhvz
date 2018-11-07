@@ -3,11 +3,10 @@
 
 {% block title %}Signup Players{% endblock %}
 
-{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
+{% block pagetitle %}{{ game }} &mdash; Volunteer Actions{% endblock %}
 {% block pagesubtitle %}Signup Players{% endblock %}
 
 {% block subcontent %}
-
 <div class="ui-grid s-dashboard__player-list">
   <div class="ui-grid align-content-start">
     {% call card("Add Player to " + game.name, id="card--add-player") %}
@@ -52,5 +51,4 @@
     </table>
   {% endcall %}
 </div>
-
 {% endblock %}

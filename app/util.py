@@ -1,6 +1,5 @@
 from datetime import datetime
 from functools import wraps
-from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, REDIRECT_FIELD_NAME
@@ -73,10 +72,10 @@ def game_required(function=None):
     return wrap
 
 
-def active_game_required(function):
+def signups_game_required(function=None):
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        if game_exists() and most_recent_game().is_active:
+        if game_exists() and most_recent_game().is_signups:
             pass
         else:
             raise Http404()
