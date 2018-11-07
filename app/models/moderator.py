@@ -24,3 +24,6 @@ class Moderator(Participant):
     @property
     def is_moderator(self):
         return True
+
+    def __str__(self):
+        return self.character_name if self.character_name else self.user.get_full_name()

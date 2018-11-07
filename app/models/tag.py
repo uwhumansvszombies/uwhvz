@@ -8,8 +8,7 @@ from app.util import format_datetime
 
 
 class TagManager(models.Manager):
-    def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str,
-                   point_modifier: int = 0) -> 'Tag':
+    def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str, point_modifier: int = 0) -> 'Tag':
 
         if initiator.role == receiver.role:
             tag_type = "stuns" if initiator.is_human else "tags"
@@ -56,4 +55,4 @@ class Tag(models.Model):
     def __str__(self):
         initiator = self.initiator
         receiver = self.receiver
-        return f"{initiator} ({initiator.role}) --> {receiver} ({receiver.role}) at {format_datetime(self.tagged_at)}"
+        return f"{initiator} ({initiator.role}) → {receiver} ({receiver.role})"

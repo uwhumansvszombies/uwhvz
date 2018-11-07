@@ -18,7 +18,7 @@
 
 {% block subcontent %}
   {% call card(page.title, class='text-left') %}
-    {% if page.is_viewable_by(player) %}
+    {% if page.is_viewable_by(participant) %}
       {{ page.body|richtext }}
     {% else %}
       <p>You are not allowed to view this page.</p>
