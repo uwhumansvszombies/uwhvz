@@ -38,7 +38,7 @@ class PlayerInfoView(View):
         # due to the fact that we redirect here from login for all users we must
         # account for spectators/moderators and when the game isn't running as well.
         game = most_recent_game()
-        if not game.is_running or not request.user.participant(game).is_player:
+        if not game.is_running or not request.user.participant(game) or not request.user.participant(game).is_player:
             return redirect('dashboard')
         return render_player_info(request)
 
