@@ -109,6 +109,8 @@ WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/player'
 LOGOUT_REDIRECT_URL = '/'
 
+ATOMIC_REQUESTS = True
+
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
 ]

@@ -26,7 +26,7 @@ def player_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, logi
 def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_moderator(user):
         game = most_recent_game()
-        return user.is_authenticated and (user.participant(game) and user.participant(game).is_moderator or user.is_staff)
+        return user.is_authenticated and user.participant(game) and user.participant(game).is_moderator or user.is_staff
 
     actual_decorator = user_passes_test(_is_moderator, login_url=login_url, redirect_field_name=redirect_field_name)
     if function:
@@ -52,7 +52,7 @@ def most_recent_game() -> Game:
     return Game.objects.all().order_by('-created_at').first()
 
 
-def get_game_participants(game: Game, queryset_required: bool = False):
+def get_game_participants(game: Game):
     players = Player.objects.filter(game=game, active=True)
     mods = Moderator.objects.filter(game=game, active=True)
     spectators = Spectator.objects.filter(game=game, active=True)

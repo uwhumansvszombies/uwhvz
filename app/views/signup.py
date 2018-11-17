@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.db import transaction
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -49,10 +48,9 @@ class UserSignupView(View):
         first_name, last_name, password = cleaned_data['first_name'], cleaned_data['last_name'], cleaned_data[
             'password1']
 
-        with transaction.atomic():
-            User.objects.create_user(signup_invite.email, password, first_name=first_name, last_name=last_name)
-            signup_invite.used_at = timezone.now()
-            signup_invite.save()
+        User.objects.create_user(signup_invite.email, password, first_name=first_name, last_name=last_name)
+        signup_invite.used_at = timezone.now()
+        signup_invite.save()
 
         user = authenticate(username=signup_invite.email, password=password)
         login(request, user)
