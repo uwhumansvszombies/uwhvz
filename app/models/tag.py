@@ -4,7 +4,6 @@ from datetime import datetime
 from django.db import models, transaction
 
 from .player import Player
-from app.util import format_datetime
 
 
 class TagManager(models.Manager):
