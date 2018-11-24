@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from django.db import models, transaction, DatabaseError
+from django.db import models
 from django.utils import timezone
 
 from .game import Game
@@ -42,13 +42,7 @@ class SupplyCode(models.Model):
         self.claimed_by = player
         self.claimed_at = timezone.now()
         self.point_modifier = point_modifier
-        try:
-            with transaction.atomic():
-                self.save()
-        except DatabaseError:
-            self.claimed_by = None
-            self.claimed_at = None
-            self.point_modifier = 0
+        self.save()
         return self
 
     def __str__(self):

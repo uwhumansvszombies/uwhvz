@@ -1,13 +1,14 @@
 import uuid
 from datetime import datetime
 
-from django.db import models, transaction
+from django.db import models
 
 from .player import Player
 
 
 class TagManager(models.Manager):
-    def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str, point_modifier: int = 0) -> 'Tag':
+    def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str,
+                   point_modifier: int = 0) -> 'Tag':
 
         if initiator.role == receiver.role:
             tag_type = "stuns" if initiator.is_human else "tags"
@@ -15,18 +16,17 @@ class TagManager(models.Manager):
         if initiator.game != receiver.game:
             raise ValueError("A stun/tag must be between two players in the same game.")
 
-        with transaction.atomic():
-            tag = self.model(
-                initiator=initiator,
-                receiver=receiver,
-                tagged_at=tagged_at,
-                location=location,
-                description=description,
-                point_modifier=point_modifier,
-            )
-            tag.save()
-            if receiver.is_human:
-                receiver.kill()
+        tag = self.model(
+            initiator=initiator,
+            receiver=receiver,
+            tagged_at=tagged_at,
+            location=location,
+            description=description,
+            point_modifier=point_modifier,
+        )
+        tag.save()
+        if receiver.is_human:
+            receiver.kill()
         return tag
 
 

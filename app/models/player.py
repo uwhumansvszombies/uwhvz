@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from django.db import transaction, models, DatabaseError
+from django.db import models
 from enumfields import Enum, EnumField
 
 from .faction import Faction
@@ -80,13 +80,8 @@ class Player(Participant):
             raise ValueError("This player is already a zombie.")
 
         self.active = False
-        try:
-            with transaction.atomic():
-                self.save()
-                return Player.objects.create_player(
-                    self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
-        except DatabaseError:
-            self.active = True
+        self.save()
+        return Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
 
     @property
     def is_player(self) -> bool:
@@ -95,7 +90,7 @@ class Player(Participant):
     @property
     def is_human(self) -> bool:
         return self.role == PlayerRole.HUMAN
-    
+
     @property
     def is_zombie(self) -> bool:
         return self.role == PlayerRole.ZOMBIE
