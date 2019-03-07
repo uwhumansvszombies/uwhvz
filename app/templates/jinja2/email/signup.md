@@ -5,17 +5,17 @@ here.]({{ site_url }}{{ url('signup', args=[signup_invite.id]) }})
 
 Make sure to read and agree to the waiver, as well as read the rules of the game.
 
-The game will begin on **Monday, November 5th @ 12:00 AM**. If you have any
+The game will begin on **Monday, March 11th @ 12:00 AM**. If you have any
 friends who have never played before and would like to join, please send them to one of our
-signup booths before Friday, November 2nd @ 5 PM. Alternatively, they can contact us at
+signup booths before Friday, March 8th @ 5 PM. Alternatively, they can contact us at
 [uwhumansvszombies\@gmail.com](mailto:uwhumansvszombies@gmail.com) via email.
 
-At **5:00 PM on Sunday, November 4th** in STC on the UWaterloo Campus, we will
+At **7PM on Sunday, March 10th** in STC on the UWaterloo Campus, we will
 be hosting a practice mission to practice for the weeklong game. It will
 help introduce rules, have a little bit of fun and get the hang of the
 game. Please bring a bandana and any socks or blasters to use.
 
-At **11:00 PM on Sunday, November 4th**, you will receive an email whether
+At **11:00 PM on Sunday, March 10th**, you will receive an email whether
 you are a HUMAN or a ZOMBIE. If you would like to be a zombie, please
 check the box when you are signing up for the game.
 
@@ -33,6 +33,3 @@ tweets texted to you by texting "follow @HVZAlertSystem" to the number
 
 If you need to rent a blaster from the Humans vs Zombie Society, you can
 email us at uwhumansvszombies\@gmail.com for more information.
-
-[**You can find all rule changes and additions
-here.**](https://docs.google.com/document/d/1qWEV0cvqfqg9o8IvreCV2yV52SDmmdyV562-XO9Hl84/edit)
