@@ -20,6 +20,7 @@ class SignupPlayersView(View):
 
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'signup_locations': locations,
             'volunteer_signup_player_form': volunteer_signup_player_form
         })
