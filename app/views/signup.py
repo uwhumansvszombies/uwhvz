@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -8,7 +10,7 @@ from django.views import View
 
 from app.models import SignupInvite, User, Player, PlayerRole, ParticipantRole, Moderator, Spectator
 from app.util import most_recent_game, game_required
-from .forms import UserSignupForm
+from .forms import UserSignupForm, UnrestrictedUserSignupForm
 
 
 def signup(request, signup_invite):
@@ -55,6 +57,39 @@ class UserSignupView(View):
         user = authenticate(username=signup_invite.email, password=password)
         login(request, user)
         return redirect('token_game_signup', signup_invite=signup_invite.id)
+
+
+class UnrestrictedUserSignupView(View):
+    template_name = "registration/unrestricted_user_signup.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        if settings.TOKEN_RESTRICTED_SIGNUPS:
+            raise Http404()
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def render_user_signup(self, request, user_signup_form=UnrestrictedUserSignupForm()):
+        return render(request, self.template_name, {
+            'user_signup_form': user_signup_form
+        })
+
+    def get(self, request):
+        return self.render_user_signup(request)
+
+    def post(self, request):
+        user_signup_form = UnrestrictedUserSignupForm(request.POST)
+        if not user_signup_form.is_valid():
+            return self.render_user_signup(request, user_signup_form=user_signup_form)
+
+        cleaned_data = user_signup_form.cleaned_data
+        email, first_name, last_name, password = cleaned_data['email'], cleaned_data['first_name'], cleaned_data[
+            'last_name'], cleaned_data['password1']
+
+        User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
+
+        user = authenticate(username=email, password=password)
+        login(request, user)
+        return redirect('game_signup')
 
 
 @method_decorator(login_required, name='dispatch')
