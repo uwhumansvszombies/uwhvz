@@ -7,6 +7,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.debug import sensitive_post_parameters
 
 from app.models import SignupInvite, User, Player, PlayerRole, ParticipantRole, Moderator, Spectator
 from app.util import most_recent_game, game_required
@@ -41,6 +42,7 @@ class UserSignupView(View):
     def get(self, request, signup_invite: SignupInvite):
         return self.render_user_signup(request, signup_invite)
 
+    @method_decorator(sensitive_post_parameters('password1', 'password2'))
     def post(self, request, signup_invite: SignupInvite):
         user_signup_form = UserSignupForm(request.POST)
         if not user_signup_form.is_valid():
@@ -76,6 +78,7 @@ class UnrestrictedUserSignupView(View):
     def get(self, request):
         return self.render_user_signup(request)
 
+    @method_decorator(sensitive_post_parameters('password1', 'password2'))
     def post(self, request):
         user_signup_form = UnrestrictedUserSignupForm(request.POST)
         if not user_signup_form.is_valid():
