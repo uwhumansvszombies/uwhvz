@@ -3,9 +3,9 @@ from datetime import datetime
 from typing import Union
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
+from post_office import mail
 
 
 class UserManager(BaseUserManager):
@@ -94,7 +94,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.first_name
 
     def email_user(self, subject: str, message: str, from_email: str = None, **kwargs) -> None:
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+        mail.send(subject=subject,
+                  message=message,
+                  sender=from_email,
+                  recipients=[self.email],
+                  **kwargs)
 
     @property
     def is_moderator(self) -> bool:

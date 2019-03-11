@@ -26,4 +26,11 @@ CACHES = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'uwaterloohumansvszombies@gmail.com'
+EMAIL_BACKEND = 'post_office.EmailBackend'
+
+POST_OFFICE = {
+    'BACKENDS': {
+        'default': 'django.core.mail.backends.console.EmailBackend'
+    }
+}
