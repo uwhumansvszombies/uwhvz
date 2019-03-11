@@ -63,6 +63,7 @@ class ManageOZView(View):
         players = Player.objects.filter(game=game, in_oz_pool=True).order_by('user__first_name')
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'players': players
         })
 

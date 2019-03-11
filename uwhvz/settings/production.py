@@ -11,14 +11,22 @@ ADMINS = [
 
 ]
 
-SERVER_EMAIL = 'uwhumansvszombies@gmail.com'
-DEFAULT_FROM_EMAIL = 'uwhumansvszombies@gmail.com'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SERVER_EMAIL = 'uwaterloohumansvszombies@gmail.com'
+DEFAULT_FROM_EMAIL = 'uwaterloohumansvszombies@gmail.com'
+EMAIL_BACKEND = 'post_office.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'uwhumansvszombies@gmail.com'
+EMAIL_HOST_USER = 'uwaterloohumansvszombies@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
 EMAIL_PORT = 587
+
+POST_OFFICE = {
+    'BATCH_SIZE': 5,  # Max batch to send at a time
+    'LOG_LEVEL': 2,  # Log fails and successes
+    'BACKENDS': {
+        'default': 'django.core.mail.backends.smtp.EmailBackend'
+    }
+}
 
 DATABASES = {
     'default': {

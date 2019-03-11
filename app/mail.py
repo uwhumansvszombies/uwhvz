@@ -1,17 +1,17 @@
 from django.conf import settings
-from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from post_office import mail
 
 
 def _send_mail_template(request, plaintext_template, html_template, subject, recipient, context=None):
     msg_plain = render_to_string(plaintext_template, context, request)
     msg_html = render_to_string(html_template, context, request)
-    return send_mail(
+    mail.send(
+        recipients=[recipient],
+        sender=settings.DEFAULT_FROM_EMAIL,
         subject=subject,
         message=msg_plain,
-        html_message=msg_html,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[recipient]
+        html_message=msg_html
     )
 
 
@@ -22,7 +22,7 @@ def send_signup_email(request, signup_invite, game):
         "email/signup.html",
         "Welcome to HvZ",
         signup_invite.email,
-        {'signup_invite': signup_invite, 'game': game}
+        {'signup_invite': signup_invite, 'game': game, 'contact_email': settings.DEFAULT_FROM_EMAIL}
     )
 
 

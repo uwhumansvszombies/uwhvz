@@ -16,6 +16,7 @@ wagtail = "*"
 gunicorn = "*"
 django-compressor = "*"
 django-querysetsequence = "*"
+django-post-office = "*"
 
 [dev-packages]
 
