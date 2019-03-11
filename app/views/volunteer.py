@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.mail import send_signup_email
-from app.models import SignupInvite, SignupLocation, User
+from app.models import SignupInvite, SignupLocation
 from app.util import volunteer_required, most_recent_game, signups_game_required
 from .forms import VolunteerSignupPlayerForm
 
@@ -20,6 +20,7 @@ class SignupPlayersView(View):
 
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'signup_locations': locations,
             'volunteer_signup_player_form': volunteer_signup_player_form
         })
