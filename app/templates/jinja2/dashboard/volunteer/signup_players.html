@@ -43,7 +43,7 @@
       {% for location in signup_locations %}
       <tr>
         <td scope="col">{{ location.name }}</td>
-        <td scope="col">{{ location.signupinvite_set.count() }}</td>
+        <td scope="col">{{ location.signupinvite_set.values_list('email', flat=True).distinct().count() }}</td>
         <td scope="col">{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
       </tr>
       {% endfor %}

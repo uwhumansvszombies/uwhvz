@@ -12,6 +12,17 @@ from queryset_sequence import QuerySetSequence
 from app.models import Game, Player, Moderator, Spectator
 
 
+def participant_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    def _is_participant(user):
+        game = most_recent_game()
+        return user.is_authenticated and user.participant(game)
+
+    actual_decorator = user_passes_test(_is_participant, login_url=login_url, redirect_field_name=redirect_field_name)
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
 def player_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_player(user):
         game = most_recent_game()

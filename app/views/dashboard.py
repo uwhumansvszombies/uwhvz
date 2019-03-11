@@ -21,12 +21,3 @@ class DashboardView(MobileSupportedView):
     def get(self, request):
         game = most_recent_game()
         return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game)})
-
-
-@method_decorator(login_required, name='dispatch')
-class SettingsView(MobileSupportedView):
-    desktop_template = "dashboard/settings.html"
-    mobile_template = "mobile/dashboard/settings.html"
-
-    def get(self, request):
-        return self.mobile_or_desktop(request)
