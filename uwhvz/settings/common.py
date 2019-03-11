@@ -152,3 +152,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+
+# If set to True then user signups will be restricted to those who have a signup token.
+# If set to False then users will be able to signup freely without token.
+TOKEN_RESTRICTED_SIGNUPS = True
