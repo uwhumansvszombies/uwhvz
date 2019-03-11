@@ -10,7 +10,8 @@ from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
 from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
-from app.util import most_recent_game, running_game_required, player_required, get_game_participants, game_required
+from app.util import most_recent_game, running_game_required, player_required, get_game_participants, game_required, \
+    participant_required
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
 
 
@@ -136,7 +137,7 @@ class ClaimSupplyCodeView(View):
 
 
 @method_decorator(running_game_required, name='dispatch')
-@method_decorator(player_required, name='dispatch')
+@method_decorator(participant_required, name='dispatch')
 class PlayerListView(View):
     template_name = 'dashboard/player_list.html'
 
@@ -148,7 +149,7 @@ class PlayerListView(View):
         return render(request, self.template_name, {
             'game': game,
             'participant': participant,
-            'participants': participants
+            'participants': participants,
         })
 
 
@@ -165,7 +166,7 @@ class MessagePlayersView(View):
         return render(request, self.template_name, {
             'game': game,
             'participant': participant,
-            'message_players_form': message_players_form
+            'message_players_form': message_players_form,
         })
 
     def post(self, request):

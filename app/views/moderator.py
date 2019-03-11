@@ -63,7 +63,8 @@ class ManageOZView(View):
         players = Player.objects.filter(game=game, in_oz_pool=True).order_by('user__first_name')
         return render(request, self.template_name, {
             'game': game,
-            'players': players
+            'participant': request.user.participant(game),
+            'players': players,
         })
 
 
@@ -81,7 +82,7 @@ class ManagePlayersView(View):
             'participant': request.user.participant(game),
             'participants': participants,
             'signup_locations': locations,
-            'mod_signup_player_form': mod_signup_player_form
+            'mod_signup_player_form': mod_signup_player_form,
         })
 
     def get(self, request):
@@ -114,7 +115,7 @@ class GenerateSupplyCodesView(View):
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
-            'supply_codes': supply_codes
+            'supply_codes': supply_codes,
         })
 
     def post(self, request):
