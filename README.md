@@ -22,11 +22,13 @@ To make a migration after changing models, etc., use `python manage.py makemigra
 The site is currently hosted on: Computer Science Club (CSC) servers.
 
 We use a detached screen to run Gunicorn, which lets us run the site. Important commands include:
+- `screen -S gunicorn`: create a new screen to be detachable named "gunicorn"
 - `screen -ls`: should list exactly one detached screen where Gunicorn is running the site
 - `screen -r`: resumes the Gunicorn screen
 
 If no screen is found, do the following:
 ```bash
+screen -S gunicorn
 source venv/bin/activate
 gunicorn --bind 0.0.0.0:53271 uwhvz.wsgi
 ```
