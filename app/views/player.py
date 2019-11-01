@@ -79,6 +79,10 @@ class ReportTagView(View):
                               description=cleaned_data['description']).exists():
             return redirect('player_info')
 
+        if cleaned_data['datetime'] < game.started_on:
+            report_tag_form.add_error('datetime', "That date/time is before the game's start.")
+            return render_player_info(request, report_tag_form=report_tag_form)
+
         try:
             tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
                                          cleaned_data['location'], cleaned_data['description'], tag_modifier_amount)

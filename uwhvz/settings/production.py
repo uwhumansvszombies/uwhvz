@@ -6,9 +6,7 @@ ALLOWED_HOSTS = ['*']
 SITE_URL = 'https://uwhvz.uwaterloo.ca'
 
 ADMINS = [
-    ('Tristan Ohlson', 'tsohlson@gmail.com'),
     ('Tiffany Yeung', 'tiffanynwyeung@gmail.com'),
-
 ]
 
 SERVER_EMAIL = 'uwhumansvszombies@gmail.com'
