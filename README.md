@@ -48,7 +48,5 @@ The last line is for optimizing the size of our assets. **Failure to run the las
 ## Contributing
 1. If anything is wrong, make an issue on the repo. 
 2. If you are willing to take an issue/task on, do step 1 if it's not already logged, assign yourself, and make a PR!
-3. Your PR needs to be approved by [Tiffany Yeung][@tiffanynwyeung].
+3. Your PR needs to be approved by an admin.
 4. Once you're approved, you can merge and celebrate :tada:
-
-[@tiffanynwyeung]: https://github.com/tiffanynwyeung
