@@ -8,7 +8,7 @@ from .game import Game
 
 class Faction(models.Model):
     id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
+    
     game: Game = models.ForeignKey(Game, on_delete=models.PROTECT, null=True)
     name: str = models.CharField(max_length=100)
     description: str = models.TextField(blank=True)

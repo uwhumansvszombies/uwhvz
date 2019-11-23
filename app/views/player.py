@@ -190,6 +190,14 @@ class MessagePlayersView(View):
                 .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
                 .values_list('user__email', flat=True)
 
+        recipients.extend(Moderator.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True))
+        
+        recipients.extend(Spectator.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True)) 
+        
         EmailMultiAlternatives(
             subject=f"Message from {request.user.get_full_name()}",
             body=cd['message'],

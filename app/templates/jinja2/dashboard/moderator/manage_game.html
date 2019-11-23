@@ -23,13 +23,13 @@
     {% endcall %}
   </div>
   <div class="ui-grid">
-    {% call card("All Emails (Use BCC)") %}
+    {% call card("Email All Players") %}
       <textarea class="ui-input" rows="5">{{ all_emails|join(', ') }}</textarea>
     {% endcall %}
-    {% call card("Human Emails (Use BCC)") %}
+    {% call card("Email All Humans") %}
       <textarea class="ui-input" rows="5">{{ human_emails|join(', ') }}</textarea>
     {% endcall %}
-    {% call card("Zombie Emails (Use BCC)") %}
+    {% call card("Email All Zombies") %}
       <textarea class="ui-input" rows="5">{{ zombie_emails|join(', ') }}</textarea>
     {% endcall %}
   </div>

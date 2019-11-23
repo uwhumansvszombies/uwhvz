@@ -45,3 +45,39 @@ class ModeratorSignupPlayerForm(forms.Form):
     def clean_location(self):
         data = self.cleaned_data['location']
         return SignupLocation.objects.get(pk=data)
+
+class ModMessageForm(forms.Form):
+
+    recipients = forms.ChoiceField(
+        label="Recipients",
+        choices=[("All", "All"), ("Humans", "Humans"), ("Zombies", "Zombies")],
+        widget=forms.Select(
+            attrs={
+                'class': 'custom-select',
+            }
+        )
+    )
+    
+    subject = forms.CharField(
+        label="Subject",
+        required=True,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'ui-input',
+                'rows': '10',
+                'placeholder': 'Message Subject'
+            }
+        )
+    )    
+
+    message = forms.CharField(
+        label="Message",
+        required=True,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'ui-input',
+                'rows': '10',
+                'placeholder': 'Your message'
+            }
+        )
+    )

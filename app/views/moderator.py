@@ -6,7 +6,7 @@ from django.views import View
 from app.mail import send_signup_email
 from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants
-from app.views.forms import ModeratorSignupPlayerForm
+from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -32,26 +32,73 @@ class ManageGameView(View):
 
     def get(self, request):
         game = most_recent_game()
-
-        participants = get_game_participants(game)
-        spectators = Spectator.objects.filter(game=game)
-        moderators = Moderator.objects.filter(game=game)
-        humans = Player.objects.filter(game=game, active=True, role=PlayerRole.HUMAN)
-        zombies = Player.objects.filter(game=game, active=True, role=PlayerRole.ZOMBIE)
-
-        all_emails = [p.user.email for p in participants]
-        spectator_emails = [s.user.email for s in spectators]
-        moderator_emails = [m.user.email for m in moderators]
-        human_emails = [h.user.email for h in humans] + spectator_emails + moderator_emails
-        zombie_emails = [z.user.email for z in zombies] + spectator_emails + moderator_emails
-
         return render(request, self.template_name, {
             'game': game,
-            'participant': request.user.participant(game),
             'all_emails': all_emails,
             'human_emails': human_emails,
             'zombie_emails': zombie_emails,
         })
+    
+    def post(self, request):    
+        message_players_form = ModMessageForm(request.POST)
+        if not message_players_form.is_valid():
+            return self.get(request, message_players_form=message_players_form)
+
+        cd = message_players_form.cleaned_data
+        recipients = []
+        subject_set = '[hvz-all]'
+        if cd['recipients'] == "All":
+            recipients = Player.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True)
+        elif cd['recipients'] == "Zombies":
+            recipients = Player.objects \
+                .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
+                .values_list('user__email', flat=True)
+            subject_set = '[hvz-zombies]'
+        elif cd['recipients'] == "Humans":
+            recipients = Player.objects \
+                .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
+                .values_list('user__email', flat=True)    
+            subject_set = '[hvz-humans]'
+            
+        recipients.extend(Moderator.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True))
+        
+        recipients.extend(Spectator.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True))        
+
+        EmailMultiAlternatives(
+            subject=f"{subject_set} {cd['subject']}",
+            body=cd['message'],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[],
+            bcc=recipients
+        ).send()
+
+        if cd['recipients'] == "All":
+            messages.success(request, "You've sent an email to all players.")
+        elif cd['recipients'] == "Zombies":
+            messages.success(request, "You've sent an email to all zombies.")
+        elif cd['recipients'] == "Humans":
+            messages.success(request, "You've sent an email to all humans.")
+        return redirect('manage_game')        
+        
+
+        #participants = get_game_participants(game)
+        #spectators = Spectator.objects.filter(game=game)
+        #moderators = Moderator.objects.filter(game=game)
+        #humans = Player.objects.filter(game=game, active=True, role=PlayerRole.HUMAN)
+        #zombies = Player.objects.filter(game=game, active=True, role=PlayerRole.ZOMBIE)
+
+        #all_emails = [p.user.email for p in participants]
+        #spectator_emails = [s.user.email for s in spectators]
+        #moderator_emails = [m.user.email for m in moderators]
+        #human_emails = [h.user.email for h in humans] + spectator_emails + moderator_emails
+        #zombie_emails = [z.user.email for z in zombies] + spectator_emails + moderator_emails
+
 
 
 @method_decorator(moderator_required, name='dispatch')
