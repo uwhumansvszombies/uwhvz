@@ -7,7 +7,7 @@ The latest UWaterloo HvZ website. Built on Django.
 
 To create a local instance of the site for development:
 ```bash
-git clone git@github.com:uwhumansvszombies/uwhvz.git
+git clone git@github.com:uwhvz/uwhvz.git
 pipenv install
 pipenv shell
 python manage.py migrate
