@@ -62,12 +62,12 @@ class SpectatorAdmin(admin.ModelAdmin):
 
 @admin.register(SupplyCode)
 class SupplyCodeAdmin(admin.ModelAdmin):
-    search_fields = ('game', 'code')
-    list_display = ('code', 'game', 'active')
+    search_fields = ('game', 'code', 'value')
+    list_display = ('code', 'game', 'active', 'value')
     ordering = ('-game__created_at', 'code')
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
 
 @admin.register(Game)
