@@ -3,12 +3,20 @@ from django.contrib.auth.admin import UserAdmin
 
 from app.models import *
 
+def mark_oz_bulk(ModelAdmin, request, queryset):
+    queryset.update(in_oz_pool=True)
+mark_oz_bulk.short_description = "Make OZ"
+
+def remove_oz_bulk(ModelAdmin, request, queryset):
+    queryset.update(in_oz_pool=False)
+remove_oz_bulk.short_description = "Remove OZ"
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    search_fields = ('user__first_name', 'user__last_name', 'user__email', 'role', 'faction__name')
-    list_display = ('get_full_name', 'game', 'code', 'role', 'faction', 'score', 'active')
+    search_fields = ('user__first_name', 'user__last_name', 'user__email', 'role', 'faction__name', 'in_oz_pool')
+    list_display = ('get_full_name', 'game', 'code', 'role', 'faction', 'score', 'active', 'in_oz_pool')
     ordering = ('-game__created_at', 'user__first_name')
+    actions = [mark_oz_bulk,remove_oz_bulk]
 
     def get_full_name(self, obj):
         return obj.user.get_full_name()
@@ -147,4 +155,4 @@ class FactionAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.disable_action('delete_selected')
+#admin.site.disable_action('delete_selected')
