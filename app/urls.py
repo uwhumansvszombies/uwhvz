@@ -21,6 +21,7 @@ urlpatterns = [
 
     # Default dashboard pages
     path("dashboard", views.DashboardView.as_view(), name='dashboard'),
+    path("missions", views.UnrestrictedUserSignupView.as_view(), name='missions'),
 
     # Player/Game pages
     path("dashboard/player", views.PlayerInfoView.as_view(), name='player_info'),
