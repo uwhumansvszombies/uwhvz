@@ -11,7 +11,7 @@
       {% if user.is_authenticated %}
         <li class="nav-item active"><a class="nav-link" href="{{ url('player_info') }}">Player Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" href="/dashboard/game-info/">Game Info</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url('logout') }}">Logout</a></li>
       {% else %}
         <li class="nav-item"><a class="nav-link" href="{{ url('login') }}">Login</a></li>
