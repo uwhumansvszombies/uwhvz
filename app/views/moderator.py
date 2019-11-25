@@ -32,11 +32,13 @@ class ManageGameView(View):
 
     def get(self, request):
         game = most_recent_game()
+        message_players_form = kwargs.get('message_players_form', ModMessageForm())
         return render(request, self.template_name, {
             'game': game,
             'all_emails': all_emails,
             'human_emails': human_emails,
             'zombie_emails': zombie_emails,
+            'message_players_form': message_players_form,
         })
     
     def post(self, request):    
