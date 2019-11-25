@@ -21,3 +21,11 @@ class DashboardView(MobileSupportedView):
     def get(self, request):
         game = most_recent_game()
         return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game)})
+
+class MissionsView(MobileSupportedView):
+    desktop_template = "missions.html"
+    mobile_template = "missions.html"
+
+    def get(self, request):
+        game = most_recent_game()
+        return self.mobile_or_desktop(request, {'game': game})
