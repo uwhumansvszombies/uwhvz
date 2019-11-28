@@ -30,7 +30,7 @@ class KillUnsuppliedHumansView(View):
 class ManageGameView(View):
     template_name = "dashboard/moderator/manage_game.html"
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         game = most_recent_game()
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
         return render(request, self.template_name, {
