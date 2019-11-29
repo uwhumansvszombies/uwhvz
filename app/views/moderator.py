@@ -29,6 +29,19 @@ class KillUnsuppliedHumansView(View):
 @method_decorator(moderator_required, name='dispatch')
 class ManageGameView(View):
     template_name = "dashboard/moderator/manage_game.html"
+    
+    participants = get_game_participants(game)
+    spectators = Spectator.objects.filter(game=game)
+    moderators = Moderator.objects.filter(game=game)
+    humans = Player.objects.filter(game=game, active=True, role=PlayerRole.HUMAN)
+    zombies = Player.objects.filter(game=game, active=True, role=PlayerRole.ZOMBIE)
+
+    all_emails = [p.user.email for p in participants]
+    spectator_emails = [s.user.email for s in spectators]
+    moderator_emails = [m.user.email for m in moderators]
+    human_emails = [h.user.email for h in humans] + spectator_emails + moderator_emails
+    zombie_emails = [z.user.email for z in zombies] + spectator_emails + moderator_emails
+    
 
     def get(self, request, **kwargs):
         game = most_recent_game()
@@ -89,17 +102,6 @@ class ManageGameView(View):
         return redirect('manage_game')        
         
 
-        #participants = get_game_participants(game)
-        #spectators = Spectator.objects.filter(game=game)
-        #moderators = Moderator.objects.filter(game=game)
-        #humans = Player.objects.filter(game=game, active=True, role=PlayerRole.HUMAN)
-        #zombies = Player.objects.filter(game=game, active=True, role=PlayerRole.ZOMBIE)
-
-        #all_emails = [p.user.email for p in participants]
-        #spectator_emails = [s.user.email for s in spectators]
-        #moderator_emails = [m.user.email for m in moderators]
-        #human_emails = [h.user.email for h in humans] + spectator_emails + moderator_emails
-        #zombie_emails = [z.user.email for z in zombies] + spectator_emails + moderator_emails
 
 
 
