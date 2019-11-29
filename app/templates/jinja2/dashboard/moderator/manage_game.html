@@ -23,16 +23,6 @@
     {% endcall %}
   </div>
   <div class="ui-grid">
-    {% call card("Email All Players") %}
-      <textarea class="ui-input" rows="5">{{ all_emails|join(', ') }}</textarea>
-    {% endcall %}
-    {% call card("Email All Humans") %}
-      <textarea class="ui-input" rows="5">{{ human_emails|join(', ') }}</textarea>
-    {% endcall %}
-    {% call card("Email All Zombies") %}
-      <textarea class="ui-input" rows="5">{{ zombie_emails|join(', ') }}</textarea>
-    {% endcall %}
-
 
     {% call card("Message Players") %}
     <form action="{{ url('message_players') }}" method="post" novalidate>
@@ -49,6 +39,7 @@
         <input class="btn btn-block btn-primary" type="submit" value="Send">
       </div>
     </form>
+    {% endcall %}
   </div>
 </div>
 
