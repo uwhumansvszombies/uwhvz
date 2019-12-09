@@ -16,6 +16,8 @@ class SupplyCodeManager(models.Manager):
             # For set of all supply codes, each code must be unique
             while self.filter(code=code):
                 code = generate_code(6)
+        if value.isdigit():
+            value = int(value)
         if not type(value) is int:
             value = 5
 
