@@ -32,9 +32,11 @@ class ManageGameView(View):
 
     def get(self, request, **kwargs):
         game = most_recent_game()
+        participant = request.user.participant(game)
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
         return render(request, self.template_name, {
             'game': game,
+            'participant':participant,
             'message_players_form': message_players_form,
         })
     
