@@ -35,9 +35,6 @@ class ManageGameView(View):
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
         return render(request, self.template_name, {
             'game': game,
-            'all_emails': all_emails,
-            'human_emails': human_emails,
-            'zombie_emails': zombie_emails,
             'message_players_form': message_players_form,
         })
     
@@ -60,7 +57,7 @@ class ManageGameView(View):
             subject_set = '[hvz-zombies]'
         elif cd['recipients'] == "Humans":
             recipients = Player.objects \
-                .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
+                .filter(game=game, active=True, role=PlayerRole.HUMAN) \
                 .values_list('user__email', flat=True)    
             subject_set = '[hvz-humans]'
             
