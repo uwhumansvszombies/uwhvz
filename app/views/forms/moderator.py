@@ -64,8 +64,8 @@ class ModMessageForm(forms.Form):
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
-                'rows': '10',
-                'placeholder': 'Message Subject'
+                'rows': '1',
+                'placeholder': 'Message subject'
             }
         )
     )    
