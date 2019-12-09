@@ -31,7 +31,7 @@
 <br>
 <br>
 <br>
-<main class="ui-layout ui-layout--missions">
+<main class="ui-layout" id="landing">
 
 <div class="container">
     <p>Below are listed some common missions that players will experience in Humans vs Zombies. While missions will vary slightly in the weeklong, these are some generic rules that help provide a basic level of understanding. Mods may choose to vary their missions from the rules here.</p>
@@ -64,7 +64,8 @@
     </div>
     </div>
 <div class="container">
-<h2>Mission Types</h2>
+<h2><u>Mission Types</u></h2>
+<br>
 <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -248,7 +249,7 @@ starteffect()
 
   
   <footer>
-    <p>&copy; UWaterloo Humans vs Zombies Society <time>2017</time> &ndash; <time>2018</time>.</p>
+    <p>&copy; UWaterloo Humans vs Zombies Society <time>2017</time> &ndash; <time><script>document.write(new Date().getFullYear())</script></time>.</p>
   </footer>
 </main>
 {% endblock %}
