@@ -13,7 +13,7 @@
   <a href="/" class="sitelogo">{{ svg('site-logo-dark') }}</a>
   <nav>
     <ul>
-      <li><a class="text-light" href="#signup-schedule">Signup Schedule</a></li>
+      <li><a class="text-light" href="/#signup-schedule">Signup Schedule</a></li>
       <li><a class="text-light" href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>
       <li><a class="text-light" href="{{ static('files/Weeklong 101 & FAQs v1.0') }}">New Player Guide</a></li>
       <li><a class="text-light" href="{{ url('missions') }}">Common Mission Types</a></li>
@@ -28,19 +28,20 @@
   {% endif %}
   </div>
 </header>
-<br>
-<br>
-<br>
-<main class="ui-layout" id="landing">
 
+<main class="ui-layout" id="landing">
+<br>
+<br>
+<br>
+<br>
 <div class="container">
     <p>Below are listed some common missions that players will experience in Humans vs Zombies. While missions will vary slightly in the weeklong, these are some generic rules that help provide a basic level of understanding. Mods may choose to vary their missions from the rules here.</p>
   <p>During the weeklong, mini-missions will last 30-60 minutes and main missions will last 1.5-3 hours.</p>
-  <div class="panel-group" id="accordion">
+  <div class="panel-group" id="accordion1">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse0">Note on Boss Mods</a>
+          <a data-toggle="collapse" data-parent="#accordion1" href="#collapse0">Note on Boss Mods</a>
         </h4>
       </div>
       <div id="collapse0" class="panel-collapse collapse">
@@ -64,13 +65,13 @@
     </div>
     </div>
 <div class="container">
-<h2><u>Mission Types</u></h2>
 <br>
+<h3>Mission Types</h3>
 <div class="panel-group" id="accordion">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Point Capture</a>
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">Point Capture</a>
         </h4>
       </div>
       <div id="collapse1" class="panel-collapse collapse in">
