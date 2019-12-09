@@ -179,24 +179,24 @@ class MessagePlayersView(View):
         cd = message_players_form.cleaned_data
         recipients = []
         if cd['recipients'] == "All":
-            recipients = Player.objects \
+            recipients = list(Player.objects \
                 .filter(game=game, active=True) \
-                .values_list('user__email', flat=True)
+                .values_list('user__email', flat=True))
         elif cd['recipients'] == "Zombies":
             if not participant.is_zombie:
                 messages.error(request, "Only zombies can email only zombies.")
                 return redirect('message_players')
-            recipients = Player.objects \
+            recipients = list(Player.objects \
                 .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
-                .values_list('user__email', flat=True)
-
-        recipients.extend(Moderator.objects \
-                .filter(game=game, active=True) \
                 .values_list('user__email', flat=True))
-        
-        recipients.extend(Spectator.objects \
+
+        recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
-                .values_list('user__email', flat=True)) 
+                .values_list('user__email', flat=True)))
+        
+        recipients.extend(list(Spectator.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True)))
         
         EmailMultiAlternatives(
             subject=f"Message from {request.user.get_full_name()}",

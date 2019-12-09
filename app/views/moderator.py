@@ -51,27 +51,27 @@ class ManageGameView(View):
         recipients = []
         subject_set = '[hvz-all]'
         if cd['recipients'] == "All":
-            recipients = Player.objects \
-                .filter(game=game, active=True) \
-                .values_list('user__email', flat=True)
-        elif cd['recipients'] == "Zombies":
-            recipients = Player.objects \
-                .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
-                .values_list('user__email', flat=True)
-            subject_set = '[hvz-zombies]'
-        elif cd['recipients'] == "Humans":
-            recipients = Player.objects \
-                .filter(game=game, active=True, role=PlayerRole.HUMAN) \
-                .values_list('user__email', flat=True)    
-            subject_set = '[hvz-humans]'
-            
-        recipients.extend(Moderator.objects \
+            recipients = list(Player.objects \
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True))
-        
-        recipients.extend(Spectator.objects \
+        elif cd['recipients'] == "Zombies":
+            recipients = list(Player.objects \
+                .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
+                .values_list('user__email', flat=True))
+            subject_set = '[hvz-zombies]'
+        elif cd['recipients'] == "Humans":
+            recipients = list(Player.objects \
+                .filter(game=game, active=True, role=PlayerRole.HUMAN) \
+                .values_list('user__email', flat=True))    
+            subject_set = '[hvz-humans]'
+            
+        recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
-                .values_list('user__email', flat=True))        
+                .values_list('user__email', flat=True)))
+        
+        recipients.extend(list(Spectator.objects \
+                .filter(game=game, active=True) \
+                .values_list('user__email', flat=True)))        
 
         EmailMultiAlternatives(
             subject=f"{subject_set} {cd['subject']}",
