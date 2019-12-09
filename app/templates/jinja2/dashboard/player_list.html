@@ -14,7 +14,9 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
+      {%- if participant.is_moderator %}
       <th scope="col">Email</th>
+      {% endif -%}
       <th scope="col">Role</th>
     </tr>
   </thead>
@@ -22,7 +24,9 @@
     {% for p in participants %}
     <tr>
       <td scope="col">{% if p.is_moderator and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
+      {%- if participant.is_moderator %}
       <td scope="col">{{ p.user.email }}</td>
+      {% endif -%}
       <td scope="col">
         {%- if p.is_player and participant.is_player and participant.is_human %}
           Player
