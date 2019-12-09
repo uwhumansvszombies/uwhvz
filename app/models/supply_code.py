@@ -25,7 +25,7 @@ class SupplyCodeManager(models.Manager):
 
 
 class SupplyCode(models.Model):
-    id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
+    id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
 
     game: Game = models.ForeignKey(Game, on_delete=models.CASCADE)
     code: str = models.CharField(max_length=6, unique=True)
