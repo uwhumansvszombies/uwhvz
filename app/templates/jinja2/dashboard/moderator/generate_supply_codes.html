@@ -35,6 +35,8 @@
   <div class="ui-grid">
     {% call card("Unclaimed Codes") %}
       <table class="table table-striped">
+      <tr><td>Code ID</td><td>Value</td></tr>
+      
         {% for code in supply_codes %}
           {% if code.claimed_by is none %}
             <tr>

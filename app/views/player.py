@@ -9,7 +9,7 @@ from django.views import View
 from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
-from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType
+from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType, Spectator, Moderator
 from app.util import most_recent_game, running_game_required, player_required, get_game_participants, game_required, \
     participant_required
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
