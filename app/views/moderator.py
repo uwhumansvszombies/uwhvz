@@ -41,7 +41,8 @@ class ManageGameView(View):
             'message_players_form': message_players_form,
         })
     
-    def post(self, request):    
+    def post(self, request):   
+        game = most_recent_game()
         message_players_form = ModMessageForm(request.POST)
         if not message_players_form.is_valid():
             return self.get(request, message_players_form=message_players_form)
