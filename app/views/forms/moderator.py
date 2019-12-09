@@ -87,10 +87,11 @@ class GenerateSupplyCodeForm(forms.Form):
         label="Supply Code ID",
         min_length=6,
         max_length=6,
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
-                'placeholder': 'e.g. A1B2C3'
+                'placeholder': 'Leave blank to auto-gen'
             }
         )
     )

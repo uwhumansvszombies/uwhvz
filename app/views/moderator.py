@@ -175,6 +175,6 @@ class GenerateSupplyCodesView(View):
         cd = make_codes_form.cleaned_data
         
         game = most_recent_game()
-        supply_code = SupplyCode.objects.create_supply_code(game, cd['value'], cd['supplycode'])
+        supply_code = SupplyCode.objects.create_supply_code(game, cd['value'], cd['code'])
         messages.success(request, f"Generated new supply code \"{supply_code}\".")
         return redirect('generate_supply_codes')
