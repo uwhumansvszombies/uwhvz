@@ -39,6 +39,7 @@
           {% if code.claimed_by is none %}
             <tr>
               <td>{{ code.code }}</td>
+              <td>{{ code.value }}</td>
             </tr>
           {% endif %}
         {% endfor %}

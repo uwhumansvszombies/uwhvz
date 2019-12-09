@@ -11,7 +11,7 @@ from .util import generate_code
 
 class SupplyCodeManager(models.Manager):
     def create_supply_code(self, game: Game, value: 5, code: None) -> 'SupplyCode':
-        if code is None or self.filter(code=code):
+        if code is None or code == '' or self.filter(code=code):
             code = generate_code(6)
             # For set of all supply codes, each code must be unique
             while self.filter(code=code):
