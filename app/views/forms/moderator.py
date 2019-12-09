@@ -81,3 +81,26 @@ class ModMessageForm(forms.Form):
             }
         )
     )
+
+class GenerateSupplyCodeForm(forms.Form):
+    code = forms.CharField(
+        label="SupplyCode",
+        min_length=6,
+        max_length=6,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. A1B2C3'
+            }
+        )
+    )
+    value = forms.CharField(
+        label="Value",
+        initial=5,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'input_type':'number'
+            }
+        )
+    )    

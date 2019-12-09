@@ -10,11 +10,14 @@ from .util import generate_code
 
 
 class SupplyCodeManager(models.Manager):
-    def create_supply_code(self, game: Game, value: int = 5) -> 'SupplyCode':
-        code = generate_code(6)
-        # For set of all supply codes, each code must be unique
-        while self.filter(code=code):
+    def create_supply_code(self, game: Game, value: Value, code: Code) -> 'SupplyCode':
+        if code is None or self.filter(code=code):
             code = generate_code(6)
+            # For set of all supply codes, each code must be unique
+            while self.filter(code=code):
+                code = generate_code(6)
+        if not type(value) is int:
+            value = 5
 
         supply_code = self.model(code=code, game=game, value=value)
         supply_code.save()
@@ -22,7 +25,7 @@ class SupplyCodeManager(models.Manager):
 
 
 class SupplyCode(models.Model):
-    id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
 
     game: Game = models.ForeignKey(Game, on_delete=models.CASCADE)
     code: str = models.CharField(max_length=6, unique=True)

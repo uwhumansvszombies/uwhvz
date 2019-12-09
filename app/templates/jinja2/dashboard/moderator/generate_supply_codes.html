@@ -11,6 +11,14 @@
     {% call card("Generate Supply Codes", class="text-center") %}
       <form method="post">
         {{ csrf_input }}
+        {% for field in make_codes_form %}
+        <div class="ui-form-group">
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
         <div class="ui-form-group pt-2">
           <input type="submit" value="Generate Supply Codes" class="btn btn-block btn-primary">
         </div>

@@ -6,7 +6,7 @@ from django.views import View
 from app.mail import send_signup_email
 from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants
-from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm
+from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -156,9 +156,10 @@ class ManagePlayersView(View):
 class GenerateSupplyCodesView(View):
     template_name = "dashboard/moderator/generate_supply_codes.html"
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         game = most_recent_game()
         supply_codes = SupplyCode.objects.filter(game=game, active=True)
+        make_codes_form = kwargs.get('make_codes_form', GenerateSupplyCodeForm())
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
@@ -166,7 +167,12 @@ class GenerateSupplyCodesView(View):
         })
 
     def post(self, request):
+        make_codes_form = GenerateSupplyCodeForm(request.POST)
+        if not make_codes_form.is_valid():
+            return self.get(request, make_codes_form=make_codes_form)        
+        cd = make_codes_form.cleaned_data
+        
         game = most_recent_game()
-        supply_code = SupplyCode.objects.create_supply_code(game)
+        supply_code = SupplyCode.objects.create_supply_code(game, cd['value'], cd['supplycode'])
         messages.success(request, f"Generated new supply code \"{supply_code}\".")
         return redirect('generate_supply_codes')
