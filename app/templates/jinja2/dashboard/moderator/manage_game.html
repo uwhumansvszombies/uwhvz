@@ -25,7 +25,7 @@
   <div class="ui-grid">
 
     {% call card("Message Players") %}
-    <form action="{{ url('message_players') }}" method="post" novalidate>
+    <form action="{{ url('manage_game') }}" method="post" novalidate>
       {{ csrf_input }}
        {% for field in message_players_form %}
         <div class="ui-form-group">

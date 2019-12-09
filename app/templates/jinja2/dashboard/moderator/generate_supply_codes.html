@@ -9,7 +9,7 @@
 <div class="ui-grid s-dashboard__generate-supply">
   <div class="ui-grid align-content-start">
     {% call card("Generate Supply Codes", class="text-center") %}
-      <form method="post">
+      <form action="{{ url('generate_supply_codes') }}" method="post" novalidate>
         {{ csrf_input }}
         
         {% for field in make_codes_form %}
