@@ -157,13 +157,15 @@ class ManagePlayersView(View):
 class GenerateSupplyCodesView(View):
     template_name = "dashboard/moderator/generate_supply_codes.html"
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         game = most_recent_game()
         supply_codes = SupplyCode.objects.filter(game=game, active=True)
+        make_codes_form = kwargs.get('make_codes_form', GenerateSupplyCodeForm())
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
             'supply_codes': supply_codes,
+            'make_codes_form': make_codes_form,
         })
 
     def post(self, request):

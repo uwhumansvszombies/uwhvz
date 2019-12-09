@@ -84,7 +84,7 @@ class ModMessageForm(forms.Form):
 
 class GenerateSupplyCodeForm(forms.Form):
     code = forms.CharField(
-        label="SupplyCode",
+        label="Supply Code ID",
         min_length=6,
         max_length=6,
         widget=forms.TextInput(
