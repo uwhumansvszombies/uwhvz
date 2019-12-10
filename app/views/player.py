@@ -178,6 +178,7 @@ class MessagePlayersView(View):
 
         cd = message_players_form.cleaned_data
         recipients = []
+        subject_set = '[hvz-all]'
         if cd['recipients'] == "All":
             recipients = list(Player.objects \
                 .filter(game=game, active=True) \
@@ -186,6 +187,7 @@ class MessagePlayersView(View):
             if not participant.is_zombie:
                 messages.error(request, "Only zombies can email only zombies.")
                 return redirect('message_players')
+            subject_set = '[hvz-zombies]'
             recipients = list(Player.objects \
                 .filter(game=game, active=True, role=PlayerRole.ZOMBIE) \
                 .values_list('user__email', flat=True))
@@ -199,7 +201,7 @@ class MessagePlayersView(View):
                 .values_list('user__email', flat=True)))
         
         EmailMultiAlternatives(
-            subject=f"Message from {request.user.get_full_name()}",
+            subject=f"{subject_set} Message from {request.user.get_full_name()}",
             body=cd['message'],
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[],
