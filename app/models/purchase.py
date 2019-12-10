@@ -8,8 +8,8 @@ from .player import Player
 
 
 class PurchaseManager(models.Manager):
-    def create_purchase(self, cost: int, game: Game) -> 'Purchase':
-        purchase = self.model(cost=cost, game=game)
+    def create_purchase(self, buyer: Player, cost: int, game: Game) -> 'Purchase':
+        purchase = self.model(buyer=buyer, cost=cost, game=game)
         purchase.save()
         return signup_location
 
@@ -23,6 +23,7 @@ class Purchase(models.Model):
     
     active: bool = models.BooleanField(default=True)
 
+    time: datetime = models.DateTimeField(auto_now_add=True)
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     modified_at: datetime = models.DateTimeField(auto_now=True)
 

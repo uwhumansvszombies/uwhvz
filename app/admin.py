@@ -74,7 +74,16 @@ class SupplyCodeAdmin(admin.ModelAdmin):
 class GameAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
+    
 
+@admin.register(Purchase)
+class PurchaseAdmin(admin.ModelAdmin):
+    search_fields = ('game', 'buyer', 'time','cost')
+    list_display = ('buyer', 'game', 'time', 'active', 'cost')
+    ordering = ('-game__created_at', 'time')
+
+    def has_delete_permission(self, request, obj=None):
+        return True
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
