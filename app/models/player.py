@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from enumfields import Enum, EnumField
 
 from .faction import Faction
