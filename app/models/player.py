@@ -83,7 +83,7 @@ class Player(Participant):
         for purchase in self.buyer_name.filter(active=True):
             points_used += purchase.cost
             
-        return self.score - points_used
+        return self.score() - points_used
         
 
     def kill(self) -> 'Player':

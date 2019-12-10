@@ -4,6 +4,7 @@ from .moderator import Moderator
 from .modifier import Modifier, ModifierType
 from .participant import Participant, ParticipantRole
 from .player import Player, PlayerRole
+from .purchase import Purchase
 from .signup_invite import SignupInvite
 from .signup_location import SignupLocation
 from .spectator import Spectator
