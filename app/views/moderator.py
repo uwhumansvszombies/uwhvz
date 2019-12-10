@@ -6,9 +6,9 @@ from django.views import View
 from django.core.mail import EmailMultiAlternatives
 
 from app.mail import send_signup_email
-from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants
-from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm
+from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm, ShopForm
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -180,3 +180,30 @@ class GenerateSupplyCodesView(View):
         supply_code = SupplyCode.objects.create_supply_code(game, cd['value'], cd['code'])
         messages.success(request, f"Generated new supply code \"{supply_code}\".")
         return redirect('generate_supply_codes')
+
+@method_decorator(moderator_required, name='dispatch')
+@method_decorator(running_game_required, name='dispatch')
+class ManageShopView(View):
+    template_name = "dashboard/moderator/manage_shop.html"
+
+    def get(self, request, **kwargs):
+        game = most_recent_game()
+        all_sales = Purchase.objects.filter(game=game, active=True)
+        make_sale_form = kwargs.get('make_sale_form', ShopForm())
+        return render(request, self.template_name, {
+            'game': game,
+            'participant': request.user.participant(game),
+            'all_sales': all_sales,
+            'make_codes_form': make_codes_form,
+        })
+
+    def post(self, request):
+        make_sale_form = ShopForm(request.POST)
+        if not make_sale_form.is_valid():
+            return self.get(request, make_sale_form=make_sale_form)        
+        cd = make_sale_form.cleaned_data
+        
+        game = most_recent_game()
+        supply_code = Purchase.objects.create_purchase(cd['buyer'], cd['cost'], game)
+        messages.success(request, f"Succesfully sold to\"{buyer}\".")
+        return redirect('manage_shop')

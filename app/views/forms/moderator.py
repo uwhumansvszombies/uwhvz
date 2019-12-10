@@ -8,6 +8,9 @@ from app.util import most_recent_game
 def get_signup_locations():
     return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()))
 
+def get_players():
+    return 
+
 
 class ModeratorSignupPlayerForm(forms.Form):
     email = forms.EmailField(
@@ -104,4 +107,36 @@ class GenerateSupplyCodeForm(forms.Form):
                 'input_type':'number'
             }
         )
-    )    
+    )   
+    
+class ShopForm(forms.Form):
+    buyer = forms.ChoiceField(
+        label="Buyer",
+        choices=get_players,
+        widget=forms.Select(
+            attrs={
+                'class': 'custom-select',
+            }
+        )
+    )
+    
+    purchase = forms.CharField(
+        label="Purchase Info",
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'Leave a note about what is being bought!'
+            }
+        )
+    )
+    cost = forms.CharField(
+        label="Cost",
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'input_type':'number'
+            }
+        )
+    )
+     
