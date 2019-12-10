@@ -34,17 +34,16 @@
     {% call card("Signup Locations") %}
     <form action="{{ url('add_signup') }}" method="post" novalidate>
       {{ csrf_input }}
-       {% for field in signup_form %}
-        <div class="ui-form-group">
+      <table><thead><tr>
+       {% for field in signup_loc_form %}
+        <td scope="col">
           {{ field }}
-          {% for error in field.errors %}
-            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
-          {% endfor %}
-        </div>
+        </td>
       {% endfor %}
-       <div class="ui-form-group pt-2">
+       <td scope="col"><div class="ui-form-group pt-2">
         <input class="btn btn-block btn-primary" type="submit" value="Add Location">
-      </div>
+      </div></td>
+      </table></thead></tr>
     </form>
     
     <table class="table table-striped">

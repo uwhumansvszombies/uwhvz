@@ -27,29 +27,6 @@ class KillUnsuppliedHumansView(View):
 
         return redirect('manage_game')
     
-@method_decorator(moderator_required, name='dispatch')
-class AddSignupView(View):
-    def get(self, request):
-        return redirect('manage_game')
-
-    def post(self, request):
-        game = most_recent_game()
-        signup_form = AddSignupForm(request.POST)
-        if not signup_form.is_valid():
-            return self.get(request, signup_form=signup_form)
-        
-        cd = signup_form.cleaned_data
-        loc = cd['location']
-        if loc in list(SignupLocation.objects).values_list('name', flat=True):
-            messages.success(request, "That location already exists")
-            return redirect('manage_game')
-        
-        SignupLocation.objects.create_signup_location(loc, game)
-        
-        messages.success(request, f"Added signup location {loc}")
-        
-        return redirect('manage_game')
-
 
 @method_decorator(moderator_required, name='dispatch')
 class ManageGameView(View):
@@ -59,12 +36,10 @@ class ManageGameView(View):
         game = most_recent_game()
         participant = request.user.participant(game)
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
-        signup_form = kwargs.get('signup_form', AddSignupForm())
         return render(request, self.template_name, {
             'game': game,
             'participant':participant,
             'message_players_form': message_players_form,
-            'signup_form': signup_form,
         })
     
     def post(self, request):   
@@ -142,6 +117,29 @@ class ManageOZView(View):
             'players': players,
         })
 
+@method_decorator(moderator_required, name='dispatch')
+class AddSignupView(View):
+    def get(self, request):
+        return redirect('manage_players')
+
+    def post(self, request):
+        game = most_recent_game()
+        signup_loc_form = AddSignupForm(request.POST)
+        if not signup_loc_form.is_valid():
+            return redirect('manage_players')
+        
+        cd = signup_loc_form.cleaned_data
+        loc = cd['location']
+        if loc in list(SignupLocation.objects).values_list('name', flat=True):
+            messages.success(request, "That location already exists")
+            return redirect('manage_players')
+        
+        SignupLocation.objects.create_signup_location(loc, game)
+        
+        messages.success(request, f"Added signup location {loc}")
+        
+        return redirect('manage_players')
+
 
 @method_decorator(moderator_required, name='dispatch')
 class ManagePlayersView(View):
@@ -158,12 +156,14 @@ class ManagePlayersView(View):
             'participants': participants,
             'signup_locations': locations,
             'mod_signup_player_form': mod_signup_player_form,
+            'signup_loc_form': signup_loc_form,
         })
 
     def get(self, request):
         return self.render_manage_players(request)
 
-    def post(self, request):
+    def post(self, request, **kwargs):
+        signup_loc_form = kwargs.get('signup_loc_form', AddSignupForm())
         mod_signup_player_form = ModeratorSignupPlayerForm(request.POST)
         if not mod_signup_player_form.is_valid():
             return self.render_manage_players(request, mod_signup_player_form=mod_signup_player_form)
@@ -229,6 +229,6 @@ class ManageShopView(View):
         cd = make_sale_form.cleaned_data
         
         game = most_recent_game()
-        supply_code = Purchase.objects.create_purchase(Player.objects[cd['buyer']], cd['cost'], game)
+        supply_code = Purchase.objects.create_purchase(Player.objects.get(code=cd['buyer'].id), int(cd['cost']), game)
         messages.success(request, f"Succesfully sold to\"{buyer}\".")
         return redirect('manage_shop')
