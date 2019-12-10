@@ -194,7 +194,7 @@ class ManageShopView(View):
             'game': game,
             'participant': request.user.participant(game),
             'all_sales': all_sales,
-            'make_codes_form': make_codes_form,
+            'make_sale_form': make_sale_form,
         })
 
     def post(self, request):
