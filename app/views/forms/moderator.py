@@ -107,7 +107,18 @@ class GenerateSupplyCodeForm(forms.Form):
                 'input_type':'number'
             }
         )
-    )   
+    )  
+    
+class AddSignupForm(forms.Form):
+    location = forms.CharField(
+        label="Location",
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. MC'
+            }
+        )
+    ) 
     
 class ShopForm(forms.Form):
     buyer = forms.ChoiceField(
@@ -126,7 +137,7 @@ class ShopForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
-                'placeholder': 'Leave a note about what is being bought!'
+                'placeholder': 'Leave a note of what was bought!'
             }
         )
     )

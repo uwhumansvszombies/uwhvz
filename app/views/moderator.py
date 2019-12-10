@@ -8,7 +8,7 @@ from django.core.mail import EmailMultiAlternatives
 from app.mail import send_signup_email
 from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants
-from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm, ShopForm
+from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm, ShopForm, AddSignupForm
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -26,6 +26,29 @@ class KillUnsuppliedHumansView(View):
                 human.kill()
 
         return redirect('manage_game')
+    
+@method_decorator(moderator_required, name='dispatch')
+class AddSignupView(View):
+    def get(self, request):
+        return redirect('manage_game')
+
+    def post(self, request):
+        game = most_recent_game()
+        signup_form = AddSignupForm(request.POST)
+        if not signup_form.is_valid():
+            return self.get(request, signup_form=signup_form)
+        
+        cd = signup_form.cleaned_data
+        loc = cd['location']
+        if loc in list(SignupLocation.objects).values_list('name', flat=True):
+            messages.success(request, "That location already exists")
+            return redirect('manage_game')
+        
+        SignupLocation.objects.create_signup_location(loc, game)
+        
+        messages.success(request, f"Added signup location {loc}")
+        
+        return redirect('manage_game')
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -36,10 +59,12 @@ class ManageGameView(View):
         game = most_recent_game()
         participant = request.user.participant(game)
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
+        signup_form = kwargs.get('signup_form', AddSignupForm())
         return render(request, self.template_name, {
             'game': game,
             'participant':participant,
             'message_players_form': message_players_form,
+            'signup_form': signup_form,
         })
     
     def post(self, request):   
@@ -204,6 +229,6 @@ class ManageShopView(View):
         cd = make_sale_form.cleaned_data
         
         game = most_recent_game()
-        supply_code = Purchase.objects.create_purchase(cd['buyer'], cd['cost'], game)
+        supply_code = Purchase.objects.create_purchase(Player.objects[cd['buyer']], cd['cost'], game)
         messages.success(request, f"Succesfully sold to\"{buyer}\".")
         return redirect('manage_shop')

@@ -37,6 +37,8 @@ urlpatterns = [
     path("dashboard/moderator/manage-game", views.ManageGameView.as_view(), name='manage_game'),
     path("dashboard/moderator/kill-unsupplied-humans", views.KillUnsuppliedHumansView.as_view(),
          name='kill_unsupplied_humans'),
+    path("dashboard/moderator/add-signup", views.AddSignupView.as_view(),
+         name='add_signup'),    
     path("dashboard/moderator/manage-oz", views.ManageOZView.as_view(), name='manage_oz'),
     path("dashboard/moderator/manage-players", views.ManagePlayersView.as_view(), name='manage_players'),
     path("dashboard/moderator/manage-shop", views.ManageShopView.as_view(), name='manage_shop'),
