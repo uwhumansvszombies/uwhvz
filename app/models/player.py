@@ -7,7 +7,6 @@ from .faction import Faction
 from .game import Game
 from .modifier import Modifier, ModifierType
 from .participant import Participant
-from .purchase import Purchase
 from .user import User
 from .util import generate_code
 
