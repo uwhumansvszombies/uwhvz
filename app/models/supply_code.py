@@ -21,7 +21,7 @@ class SupplyCodeManager(models.Manager):
         if not type(value) is int:
             value = 5
 
-        supply_code = self.model(code=code, game=game, value=value)
+        supply_code = self.model(code=code.upper(), game=game, value=value)
         supply_code.save()
         return supply_code
 

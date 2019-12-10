@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from enumfields import Enum, EnumField
 
 from .faction import Faction
 from .game import Game
 from .modifier import Modifier, ModifierType
 from .participant import Participant
+from .purchase import Purchase
 from .user import User
 from .util import generate_code
 
@@ -74,6 +76,17 @@ class Player(Participant):
             total_score += faction_point_modifier.modifier_amount
 
         return total_score
+    
+    def shop_score(self) -> int:
+        '''
+        Points a player has left to use in purchases.
+        '''
+        points_used = 0
+        for purchase in self.buyer_name.filter(active=True):
+            points_used += purchase.cost
+            
+        return self.score - points_used
+        
 
     def kill(self) -> 'Player':
         if self.is_zombie:
