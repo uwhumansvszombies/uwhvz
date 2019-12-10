@@ -1,7 +1,7 @@
 from django import forms
 from enumfields import EnumField
 
-from app.models import ParticipantRole, SignupLocation
+from app.models import ParticipantRole, SignupLocation, Player
 from app.util import most_recent_game
 
 
@@ -9,7 +9,7 @@ def get_signup_locations():
     return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()))
 
 def get_players():
-    return 
+    return ((x.id, x) for x in Player.objects.filter(game=most_recent_game()))
 
 
 class ModeratorSignupPlayerForm(forms.Form):
