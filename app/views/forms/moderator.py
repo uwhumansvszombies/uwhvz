@@ -9,7 +9,7 @@ def get_signup_locations():
     return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()))
 
 def get_players():
-    return ((x.id, x) for x in Player.objects.filter(game=most_recent_game()))
+    return ((x.id, f'{str(x)} - {x.shop_score()}') for x in Player.objects.filter(game=most_recent_game()))
 
 
 class ModeratorSignupPlayerForm(forms.Form):
