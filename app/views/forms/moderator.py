@@ -3,7 +3,10 @@ from enumfields import EnumField
 
 from app.models import ParticipantRole, SignupLocation, Player
 from app.util import most_recent_game
+<<<<<<< HEAD
 from app.widgets import BootstrapDateTimePickerInput
+=======
+>>>>>>> parent of 347e531... Added bootstrap date picker
 
 from datetime import datetime
 
@@ -136,9 +139,27 @@ class GameStartForm(forms.Form):
     
     start_time = forms.DateTimeField(
         label="Date/Time to Start",
+<<<<<<< HEAD
+<<<<<<< HEAD
         help_text=f"Note the time difference between the server and you. Current server time is {datetime.now()}.",
         widget=BootstrapDateTimePickerInput()
         )    
+=======
+        help_text=f"The time that you want the game to start. Note the time difference between the server and you. Current server time is {datetime.now()}.",
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. Fall 3100 HvZ'
+=======
+        help_text=f"The time that you want the game to start. Note the time difference between the server and you. Current server time is {datetime.now()}.",
+        widget=forms.DateTimeInput(
+            attrs={
+                'class': 'ui-input',
+>>>>>>> parent of 347e531... Added bootstrap date picker
+            }
+        )
+    )    
+>>>>>>> parent of 2629360... Update moderator.py
     
 class ShopForm(forms.Form):
     buyer = forms.ChoiceField(

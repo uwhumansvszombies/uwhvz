@@ -1,8 +1,9 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
+<<<<<<< HEAD
 {% if game.is_finished %}
-{{ load crispy_forms_filters static }}
+{{ load crispy_forms_filters }}
 {% block scripts %}
   <!-- Moment.js -->
   <script src="{{ static('vendor/moment.js-2.23.0/moment.min.js') }}"></script>
@@ -14,6 +15,8 @@
 {% endif %}
 
 
+=======
+>>>>>>> parent of 347e531... Added bootstrap date picker
 {% block title %}Mod Dashboard &mdash; Manage Game{% endblock %}
 
 {% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
@@ -32,9 +35,10 @@
         <div class="ui-form-group">
          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {% if field.name == "Date/Time to Start" %}
-            {{ form|crispy }}
+            {{ field|crispy }}
           {% else %}
             {{ field }}
+          {% endif %}
             
           {% if field.help_text %}
               <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
