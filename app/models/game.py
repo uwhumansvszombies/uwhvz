@@ -55,6 +55,8 @@ class Game(models.Model):
     objects = GameManager()
 
     def state(self) -> Enum:
+        if self.started_on is None:
+            return GameState.SIGNUPS
         if self.started_on < utc.localize(datetime.now()):
             return GameState.FINISHED if self.ended_on else GameState.RUNNING
         else:

@@ -87,6 +87,7 @@
   </div>
 </div>
 
+{% if game.is_running() %}
 <div class="modal fade" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -132,4 +133,5 @@
     </div>
   </div>
 </div>
+{% endif %}
 {% endblock %}
