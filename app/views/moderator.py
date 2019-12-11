@@ -88,10 +88,10 @@ class ManageGameView(View):
         game = most_recent_game()
         participant = request.user.participant(game)
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
+        time_to_start = game.started_on - utc.localize(datetime.now())
         return render(request, self.template_name, {
             'game': game,
-            'game_start': game.started_on,
-            'curr_time': datetime.now(),
+            'time_to_start':time_to_start,
             'participant':participant,
             'message_players_form': message_players_form,
             'game_start_form': game_start_form,
