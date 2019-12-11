@@ -138,9 +138,7 @@ class GameStartForm(forms.Form):
         label="Date/Time to Start",
         help_text=f"The time that you want the game to start. Note the time difference between the server and you. Current server time is {datetime.now()}.",
         widget=BootstrapDateTimePickerInput()
-            }
-        )
-    )    
+        )    
     
 class ShopForm(forms.Form):
     buyer = forms.ChoiceField(
