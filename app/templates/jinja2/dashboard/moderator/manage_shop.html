@@ -35,11 +35,12 @@
   <div class="ui-grid">
     {% call card("Purchases") %}
       <table class="table table-striped">
-      <tr><td>Buyer</td><td>Cost</td><td>Time</td></tr>
+      <tr><td>Buyer</td><td>Purchase</td<td>Cost</td><td>Day</td></tr>
       
         {% for sale in all_sales %}
           {% if sale.active %}
             <tr>
+              <td>{{ sale.buyer }}</td>
               <td>{{ sale.buyer }}</td>
               <td>{{ sale.cost }}</td>
               <td>{{ sale.time.date() }}</td>

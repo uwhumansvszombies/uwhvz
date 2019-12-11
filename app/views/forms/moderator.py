@@ -134,6 +134,7 @@ class ShopForm(forms.Form):
     purchase = forms.CharField(
         label="Purchase Info",
         required=False,
+        max_length=50,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',

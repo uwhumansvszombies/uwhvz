@@ -130,7 +130,7 @@ class AddSignupView(View):
         
         cd = signup_loc_form.cleaned_data
         loc = cd['location']
-        if loc in list(SignupLocation.objects).values_list('name', flat=True):
+        if loc in list(SignupLocation.objects.values_list('name', flat=True)):
             messages.success(request, "That location already exists")
             return redirect('manage_players')
         
@@ -229,6 +229,12 @@ class ManageShopView(View):
         cd = make_sale_form.cleaned_data
         
         game = most_recent_game()
-        supply_code = Purchase.objects.create_purchase(Player.objects.get(id=cd['buyer'],game=game), int(cd['cost']), game)
+        buyer = Player.objects.get(id=cd['buyer'],game=game)
+        
+        if buyer.shop_score() < int(cd['cost']):
+            messages.error(request, f"{buyer} does not have enough points for this purchase!")
+            return redirect('manage_shop')
+        
+        supply_code = Purchase.objects.create_purchase(buyer, int(cd['cost'], cd['purchase']), game)
         messages.success(request, f"Succesfully sold to\"{buyer}\".")
         return redirect('manage_shop')

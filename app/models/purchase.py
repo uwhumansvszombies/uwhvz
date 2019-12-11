@@ -8,16 +8,17 @@ from .player import Player
 
 
 class PurchaseManager(models.Manager):
-    def create_purchase(self, buyer: Player, cost: int, game: Game) -> 'Purchase':
-        purchase = self.model(buyer=buyer, cost=cost, game=game)
+    def create_purchase(self, buyer: Player, cost: int, game: Game, details: str) -> 'Purchase':
+        purchase = self.model(buyer=buyer, cost=cost, game=game, details=details)
         purchase.save()
-        return signup_location
+        return purchase
 
 
 class Purchase(models.Model):
     id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     game: Game = models.ForeignKey(Game, on_delete=models.CASCADE)
     cost: int = models.IntegerField()
+    details: str = models.CharField(max_length=50)
     
     buyer: Player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True, related_name='buyer_name')
     
