@@ -3,6 +3,7 @@ from enumfields import EnumField
 
 from app.models import ParticipantRole, SignupLocation, Player
 from app.util import most_recent_game
+from .widgets import BootstrapDateTimePickerInput
 
 from datetime import datetime
 
@@ -136,9 +137,7 @@ class GameStartForm(forms.Form):
     start_time = forms.DateTimeField(
         label="Date/Time to Start",
         help_text=f"The time that you want the game to start. Note the time difference between the server and you. Current server time is {datetime.now()}.",
-        widget=forms.DateTimeInput(
-            attrs={
-                'class': 'ui-input',
+        widget=BootstrapDateTimePickerInput()
             }
         )
     )    

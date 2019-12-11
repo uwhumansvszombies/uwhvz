@@ -1,6 +1,20 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
+
+{% if game.is_finished %}
+{% load crispy_forms_filters static %}
+{% block extra_head %}
+  <!-- Moment.js -->
+  <script src="{% static 'vendor/moment.js-2.23.0/moment.min.js' %}"></script>
+
+  <!-- Bootstrap DateTimePicker -->
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-4-5.1.2/css/tempusdominus-bootstrap-4.min.css' %}">
+  <script src="{% static 'vendor/bootstrap-4-5.1.2/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+{% endblock %}
+{% endif %}
+
+
 {% block title %}Mod Dashboard &mdash; Manage Game{% endblock %}
 
 {% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
