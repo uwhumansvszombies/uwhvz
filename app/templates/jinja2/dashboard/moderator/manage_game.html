@@ -1,16 +1,15 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
-
 {% if game.is_finished %}
-{% load crispy_forms_filters static %}
-{% block extra_head %}
+{{ load crispy_forms_filters static }}
+{% block scripts %}
   <!-- Moment.js -->
-  <script src="{% static 'vendor/moment.js-2.23.0/moment.min.js' %}"></script>
+  <script src="{{ static('vendor/moment.js-2.23.0/moment.min.js') }}"></script>
 
   <!-- Bootstrap DateTimePicker -->
-  <link rel="stylesheet" href="{% static 'vendor/bootstrap-4-5.1.2/css/tempusdominus-bootstrap-4.min.css' %}">
-  <script src="{% static 'vendor/bootstrap-4-5.1.2/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+  <link rel="stylesheet" href="{{ static('vendor/bootstrap-4-5.1.2/css/tempusdominus-bootstrap-4.min.css') }}">
+  <script src="{{ static('vendor/bootstrap-4-5.1.2/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 {% endblock %}
 {% endif %}
 
@@ -32,7 +31,11 @@
           {% for field in game_start_form %}
         <div class="ui-form-group">
          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
-          {{ field }}
+          {% if field.name == "Date/Time to Start" %}
+            {{ form|crispy }}
+          {% else %}
+            {{ field }}
+            
           {% if field.help_text %}
               <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
             {% endif %}
