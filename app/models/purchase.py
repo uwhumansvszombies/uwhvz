@@ -18,7 +18,7 @@ class Purchase(models.Model):
     id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     game: Game = models.ForeignKey(Game, on_delete=models.CASCADE)
     cost: int = models.IntegerField()
-    details: str = models.CharField(max_length=50)
+    details: str = models.CharField(blank=True,max_length=50)
     
     buyer: Player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True, related_name='buyer_name')
     
