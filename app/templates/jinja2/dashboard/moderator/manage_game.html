@@ -37,7 +37,7 @@
   
   {% if game.is_signups() %}
     {% call card("Force Start Game") %}
-      <p>The game will automatically start at {{ game_start }}. The current time is {% curr_time %}. This will send all game start emails to players, set OZs as zombies, and start the game immediately.</p>
+      <p>The game will automatically start at {{ game_start }}. The current time is {{ curr_time }}. This will send all game start emails to players, set OZs as zombies, and start the game immediately.</p>
       <div class="ui-form-group">
         <form class="mb-0" action="{{ game.started_on = curr_time }}" method="post">
           {{ csrf_input }}
