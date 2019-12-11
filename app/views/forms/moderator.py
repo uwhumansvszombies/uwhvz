@@ -98,7 +98,7 @@ class GenerateSupplyCodeForm(forms.Form):
             }
         )
     )
-    value = forms.CharField(
+    value = forms.IntegerField(
         label="Value",
         initial=5,
         widget=forms.TextInput(
@@ -142,8 +142,9 @@ class ShopForm(forms.Form):
             }
         )
     )
-    cost = forms.CharField(
+    cost = forms.IntegerField(
         label="Cost",
+        min_value=0,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',

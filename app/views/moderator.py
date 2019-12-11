@@ -130,8 +130,8 @@ class AddSignupView(View):
         
         cd = signup_loc_form.cleaned_data
         loc = cd['location']
-        if loc in list(SignupLocation.objects.values_list('name', flat=True)):
-            messages.success(request, "That location already exists")
+        if loc in list(SignupLocation.objects.values_list('name', game=game, flat=True)):
+            messages.error(request, "That location already exists")
             return redirect('manage_players')
         
         SignupLocation.objects.create_signup_location(loc, game)

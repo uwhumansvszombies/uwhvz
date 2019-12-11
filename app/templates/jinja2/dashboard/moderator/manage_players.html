@@ -26,7 +26,7 @@
             </div>
           {% endfor %}
         
-        <div class="ui-form-group pt-2 text-center">
+        <div class="ui-form-group pt text-center">
           <input type="submit" value="Signup" class="btn btn-block btn-primary">
         </div>
       </form>
@@ -34,14 +34,14 @@
     {% call card("Signup Locations") %}
     <form action="{{ url('add_signup') }}" method="post" novalidate>
       {{ csrf_input }}
-      <table><thead><tr>
+      <table><thead><tr><td scope="col">Add location: </td>
        {% for field in signup_loc_form %}
         <td scope="col">
           {{ field }}
         </td>
       {% endfor %}
        <td scope="col"><div class="ui-form-group pt-2">
-        <input class="btn btn-block btn-primary" type="submit" value="Add Location">
+        <input class="btn btn-block btn-primary" type="submit" value="Add">
       </div></td>
       </table></thead></tr>
     </form>
