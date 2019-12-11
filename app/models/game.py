@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from pytz.utc import localize
+from pytz import utc
 from enum import Enum, auto
 
 from django.db import models
@@ -55,7 +55,7 @@ class Game(models.Model):
     objects = GameManager()
 
     def state(self) -> Enum:
-        if self.started_on < localize(datetime.now()):
+        if self.started_on < utc.localize(datetime.now()):
             return GameState.FINISHED if self.ended_on else GameState.RUNNING
         else:
             return GameState.SIGNUPS
