@@ -13,6 +13,7 @@ if not os.path.exists(MEDIA_DIR):
 
 INSTALLED_APPS = [
     'app',
+    'bootstrap3_datetime',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
