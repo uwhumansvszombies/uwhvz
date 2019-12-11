@@ -4,6 +4,8 @@ from enumfields import EnumField
 from app.models import ParticipantRole, SignupLocation, Player
 from app.util import most_recent_game
 
+from datetime import datetime
+
 
 def get_signup_locations():
     return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()))
@@ -118,7 +120,29 @@ class AddSignupForm(forms.Form):
                 'placeholder': 'e.g. MC'
             }
         )
-    ) 
+    )
+    
+class GameStartForm(forms.Form):
+    name = forms.CharField(
+        label="Name",
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. Fall 3100 HvZ'
+            }
+        )
+    )
+    
+    start_time = forms.DateTimeField(
+        label="Date/Time to Start",
+        help_text=f"The time that you want the game to start. Note the time difference between the server and you. Current server time is {datetime.now()}.",
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. Fall 3100 HvZ'
+            }
+        )
+    )    
     
 class ShopForm(forms.Form):
     buyer = forms.ChoiceField(

@@ -9,18 +9,62 @@
 {% block subcontent %}
 <div class="ui-grid s-dashboard__player-list">
   <div class="ui-grid align-content-start">
+  {% if game.is_finished() %}
     {% call card("Start Game") %}
-      <p>This will send all game start emails to players, set OZs as zombies, and start the game.</p>
+      <p>Use this to start a new game at the time indicated.</p>
       <div class="ui-form-group">
-        <button class="btn btn-block btn-primary"{% if game.is_running %}disabled title="The game has already started."{% endif %}>Start Game</button>
+        <form class="mb-0" action="{{ url('game_start') }}" method="post">
+          {{ csrf_input }}
+          {% for field in game_start_form %}
+        <div class="ui-form-group">
+         <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input type="submit" class="btn btn-primary" value="Start Game">
+      </div>
+        </form>
       </div>
     {% endcall %}
+  {% endif %}
+  
+  {% if game.is_signups() %}
+    {% call card("Force Start Game") %}
+      <p>The game will automatically start at {% game_start %}. The current time is {% curr_time %}. This will send all game start emails to players, set OZs as zombies, and start the game immediately.</p>
+      <div class="ui-form-group">
+        <form class="mb-0" action="{{ game.started_on = curr_time }}" method="post">
+          {{ csrf_input }}
+       <div class="ui-form-group pt-2">
+        <input type="submit" class="btn btn-danger" value="Start Game Immediately">
+      </div>
+      </div>
+    {% endcall %}
+    {% endif %}
+    
+  {% if game.is_running() %}
+    {% call card("End Game") %}
+      <p>This will immediately end the game. Do not accidentally press this if you don't actually want the game to end.</p>
+       <div class="ui-form-group">
+       <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#EndGameModal">End Game</button>
+      </div>
+      </div>
+    {% endcall %}
+    
     {% call card("Kill All Unsupplied Humans") %}
       <p>This will turn all human players who did not attain 5 or more points during the week into zombies.</p>
       <div class="ui-form-group">
         <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal">Kill All Unsupplied</button>
       </div>
     {% endcall %}
+    {% endif %} 
+    
   </div>
   <div class="ui-grid">
 
@@ -60,6 +104,29 @@
         <form class="mb-0" action="{{ url('kill_unsupplied_humans') }}" method="post">
           {{ csrf_input }}
           <input type="submit" class="btn btn-danger" value="Yes, Kill Them">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="EndGameModal" tabindex="-1" role="dialog" aria-labelledby="EndGameModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure about killing all humans?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The game will immediately stop. This is an <b>irreversible</b> change. Are you sure you want to end it?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <form class="mb-0" action="{{ game.ended_on = curr_time }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-danger" value="Yes, End The Game">
         </form>
       </div>
     </div>

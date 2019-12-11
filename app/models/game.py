@@ -54,7 +54,7 @@ class Game(models.Model):
     objects = GameManager()
 
     def state(self) -> Enum:
-        if self.started_on:
+        if self.started_on < datetime.now():
             return GameState.FINISHED if self.ended_on else GameState.RUNNING
         else:
             return GameState.SIGNUPS

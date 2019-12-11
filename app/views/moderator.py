@@ -1,14 +1,16 @@
 from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.core.mail import EmailMultiAlternatives
 
 from app.mail import send_signup_email
-from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants
-from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm, ShopForm, AddSignupForm
+from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm, ShopForm, AddSignupForm, GameStartForm
+
+from datetime import datetime
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -27,19 +29,39 @@ class KillUnsuppliedHumansView(View):
 
         return redirect('manage_game')
     
+@method_decorator(moderator_required, name='dispatch')
+class GameStartView(View):
+    def get(self, request):
+        return redirect('manage_game')
+
+    def post(self, request):
+        game_start_form = GameStartForm(request.POST)
+        if not game_start_form.is_valid():
+            messages.error(request, "There was an error with your request")
+            return redirect('manage_game')
+        
+        cd = game_start_form.cleaned_data
+        game_title = cd['name']
+        Game.objects.create_game(name=game_title, started_on=cd['start_time'], started_by=request.user)
+        messages.success(request, f"The Game \"{game_title}\" is open for signups.")
+        return redirect('manage_game')
+    
 
 @method_decorator(moderator_required, name='dispatch')
 class ManageGameView(View):
     template_name = "dashboard/moderator/manage_game.html"
 
-    def get(self, request, **kwargs):
+    def get(self, request, game_start_form = GameStartForm(), **kwargs):
         game = most_recent_game()
         participant = request.user.participant(game)
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
         return render(request, self.template_name, {
             'game': game,
+            'game_start': game.started_on,
+            'curr_time': datetime.now(),
             'participant':participant,
             'message_players_form': message_players_form,
+            'game_start_form': game_start_form,
         })
     
     def post(self, request):   
@@ -236,5 +258,5 @@ class ManageShopView(View):
             return redirect('manage_shop')
         
         supply_code = Purchase.objects.create_purchase(buyer=buyer, cost=int(cd['cost']), details=cd['purchase'], game=game)
-        messages.success(request, f"Succesfully sold to\"{buyer}\".")
+        messages.success(request, f"Succesfully sold {cd['purchase']} to {buyer}.")
         return redirect('manage_shop')
