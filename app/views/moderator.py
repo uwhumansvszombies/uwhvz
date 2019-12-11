@@ -145,7 +145,7 @@ class AddSignupView(View):
 class ManagePlayersView(View):
     template_name = "dashboard/moderator/manage_players.html"
 
-    def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm()):
+    def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm(), signup_loc_form=AddSignupForm()):
         game = most_recent_game()
         participants = get_game_participants(game).order_by('user__first_name')
         locations = SignupLocation.objects.filter(game=game)
@@ -229,6 +229,6 @@ class ManageShopView(View):
         cd = make_sale_form.cleaned_data
         
         game = most_recent_game()
-        supply_code = Purchase.objects.create_purchase(Player.objects.get(user__id=cd['buyer'],game=game), int(cd['cost']), game)
+        supply_code = Purchase.objects.create_purchase(Player.objects.get(id=cd['buyer'],game=game), int(cd['cost']), game)
         messages.success(request, f"Succesfully sold to\"{buyer}\".")
         return redirect('manage_shop')
