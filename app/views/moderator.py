@@ -229,6 +229,6 @@ class ManageShopView(View):
         cd = make_sale_form.cleaned_data
         
         game = most_recent_game()
-        supply_code = Purchase.objects.create_purchase(Player.objects.get(code=cd['buyer'].id), int(cd['cost']), game)
+        supply_code = Purchase.objects.create_purchase(Player.objects.get(user__id=cd['buyer'],game=game), int(cd['cost']), game)
         messages.success(request, f"Succesfully sold to\"{buyer}\".")
         return redirect('manage_shop')
