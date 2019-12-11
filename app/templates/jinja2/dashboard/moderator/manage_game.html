@@ -39,7 +39,7 @@
     {% call card("Force Start Game") %}
       <p>The game will automatically start at {{ game_start }}. The current time is {{ curr_time }}. This will send all game start emails to players, set OZs as zombies, and start the game immediately.</p>
       <div class="ui-form-group">
-        <form class="mb-0" action="{{ game.started_on = curr_time }}" method="post">
+        <form class="mb-0" action="{{ url('game_set') }}" method="post">
           {{ csrf_input }}
        <div class="ui-form-group pt-2">
         <input type="submit" class="btn btn-danger" value="Start Game Immediately">
@@ -125,7 +125,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
-        <form class="mb-0" action="{{ game.ended_on = curr_time }}" method="post">
+        <form class="mb-0" action="{{ url('game_end') }}" method="post">
           {{ csrf_input }}
           <input type="submit" class="btn btn-danger" value="Yes, End The Game">
         </form>

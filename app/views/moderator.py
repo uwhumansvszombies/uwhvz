@@ -11,6 +11,7 @@ from app.util import moderator_required, most_recent_game, running_game_required
 from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm, ShopForm, AddSignupForm, GameStartForm
 
 from datetime import datetime
+from pytz import utc
 
 
 @method_decorator(moderator_required, name='dispatch')
@@ -45,6 +46,38 @@ class GameStartView(View):
         Game.objects.create_game(name=game_title, started_on=cd['start_time'], started_by=request.user)
         messages.success(request, f"The Game \"{game_title}\" is open for signups.")
         return redirect('manage_game')
+    
+@method_decorator(moderator_required, name='dispatch')
+class GameSetView(View):
+    def get(self, request):
+        return redirect('manage_game')
+
+    def post(self, request):
+        game = most_recent_game()
+        try:
+            game.started_on = utc.localize(datetime.now())
+        
+            messages.success(request, f"The Game \"{game.name}\" has started.")
+            return redirect('manage_game')
+        except:
+            messages.error(request, f"There was an error with the starting of the game \"{game.name}\"")
+            return redirect('manage_game')
+        
+@method_decorator(moderator_required, name='dispatch')
+class GameEndView(View):
+    def get(self, request):
+        return redirect('manage_game')
+
+    def post(self, request):
+        game = most_recent_game()
+        try:
+            game.ended_on = utc.localize(datetime.now())
+            game.ended_by = request.user
+            messages.success(request, f"The Game \"{game.name}\" has ended.")
+            return redirect('manage_game')
+        except:
+            messages.error(request, f"There was an error with the ending of the game \"{game.name}\"")
+            return redirect('manage_game')  
     
 
 @method_decorator(moderator_required, name='dispatch')

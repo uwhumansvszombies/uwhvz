@@ -36,6 +36,8 @@ urlpatterns = [
          name='generate_supply_codes'),
     path("dashboard/moderator/manage-game", views.ManageGameView.as_view(), name='manage_game'),
     path("dashboard/moderator/game-start", views.GameStartView.as_view(), name='game_start'),
+    path("dashboard/moderator/game-set", views.GameSetView.as_view(), name='game_set'),
+    path("dashboard/moderator/game-end", views.GameEndView.as_view(), name='game_end'),
     path("dashboard/moderator/kill-unsupplied-humans", views.KillUnsuppliedHumansView.as_view(),
          name='kill_unsupplied_humans'),
     path("dashboard/moderator/add-signup", views.AddSignupView.as_view(),
