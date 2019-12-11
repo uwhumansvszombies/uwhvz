@@ -3,7 +3,7 @@ from enumfields import EnumField
 
 from app.models import ParticipantRole, SignupLocation, Player
 from app.util import most_recent_game
-from .widgets import BootstrapDateTimePickerInput
+from app.widgets import BootstrapDateTimePickerInput
 
 from datetime import datetime
 
