@@ -136,10 +136,9 @@ class GameStartForm(forms.Form):
     start_time = forms.DateTimeField(
         label="Date/Time to Start",
         help_text=f"The time that you want the game to start. Note the time difference between the server and you. Current server time is {datetime.now()}.",
-        widget=forms.TextInput(
+        widget=forms.DateTimeInput(
             attrs={
                 'class': 'ui-input',
-                'placeholder': 'e.g. Fall 3100 HvZ'
             }
         )
     )    
