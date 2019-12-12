@@ -47,5 +47,5 @@ urlpatterns = [
     path("dashboard/moderator/manage-shop", views.ManageShopView.as_view(), name='manage_shop'),
     
     # Impersonation
-    re_path(r'^impersonate/', include('impersonate.urls')),
+    re_path(r'^su/', include('django_su.urls')),
 ]

@@ -14,6 +14,7 @@ if not os.path.exists(MEDIA_DIR):
 INSTALLED_APPS = [
     'app',
     'bootstrap3_datetime',
+    'django_su',  # must be before ``django.contrib.admin``    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +52,6 @@ MIDDLEWARE = [
     'django_user_agents.middleware.UserAgentMiddleware',
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-    'impersonate.middleware.ImpersonateMiddleware',
 ]
 
 ROOT_URLCONF = 'uwhvz.urls'
@@ -105,8 +105,11 @@ AUTH_PASSWORD_VALIDATORS = []
 AUTH_USER_MODEL = 'app.User'
 
 AUTHENTICATION_BACKENDS = (
+    'django_su.backends.SuBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+AJAX_LOOKUP_CHANNELS = {'django_su':  dict(model='auth.user', search_field='username')}
 
 WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/player'
