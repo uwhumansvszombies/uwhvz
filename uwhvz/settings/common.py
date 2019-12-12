@@ -13,6 +13,7 @@ if not os.path.exists(MEDIA_DIR):
 
 INSTALLED_APPS = [
     'app',
+    'ajax_select',
     'bootstrap3_datetime',
     'django_su',  # must be before ``django.contrib.admin``    
     'django.contrib.admin',
