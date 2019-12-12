@@ -13,8 +13,6 @@ if not os.path.exists(MEDIA_DIR):
 
 INSTALLED_APPS = [
     'app',
-    'ajax_select',
-    'ajax_lookup',
     'bootstrap3_datetime',
     'django_su',  # must be before ``django.contrib.admin``    
     'django.contrib.admin',
@@ -109,8 +107,6 @@ AUTHENTICATION_BACKENDS = (
     'django_su.backends.SuBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-AJAX_LOOKUP_CHANNELS = {'django_su':  dict(model='auth.user', search_field='username')}
 
 WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/player'
