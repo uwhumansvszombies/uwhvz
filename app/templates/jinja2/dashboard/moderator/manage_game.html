@@ -52,7 +52,7 @@
   {% call card("Impersonate User") %}
       <p>Have at it.</p>
        <div class="ui-form-group">
-        <form class="mb-0" action="{{ url('su_login') }}" method="post">
+        <form class="mb-0" action="{{ url('su_login') }}" method="get">
           {{ csrf_input }}
           <input type="submit" class="btn btn-primary" value="Impersonate!">
         </form>
