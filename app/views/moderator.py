@@ -44,6 +44,12 @@ class GameStartView(View):
         cd = game_start_form.cleaned_data
         game_title = cd['name']
         Game.objects.create_game(name=game_title, started_on=cd['start_time'], started_by=request.user)
+        
+        game=most_recent_game()
+        
+        if not 'Online' in list(SignupLocation.objects.filter(game=game).values_list('name', flat=True)):
+            SignupLocation.objects.create_signup_location('Online', game)
+            
         messages.success(request, f"The Game \"{game_title}\" is open for signups.")
         return redirect('manage_game')
     

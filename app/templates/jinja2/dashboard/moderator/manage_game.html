@@ -11,7 +11,7 @@
   <div class="ui-grid align-content-start">
   {% if game.is_finished %}
     {% call card("Start Game") %}
-      <p>Use this to start a new game at the time indicated.</p>
+      <p>Use this to set up a new game at the time indicated.</p>
       <div class="ui-form-group">
         <form class="mb-0" action="{{ url('game_start') }}" method="post">
           {{ csrf_input }}
@@ -52,21 +52,22 @@
     {% call card("End Game") %}
       <p>This will immediately end the game. Do not accidentally press this if you don't actually want the game to end.</p>
        <div class="ui-form-group">
-       <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#EndGameModal">End Game</button>
+       <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#EndGameModal" {% if not participant.user.is_staff %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>End Game{% endif %}</button>
       </div>
     {% endcall %}
     
     {% call card("Kill All Unsupplied Humans") %}
       <p>This will turn all human players who did not attain 5 or more points during the week into zombies.</p>
       <div class="ui-form-group">
-        <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal">Kill All Unsupplied</button>
+        <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal" {% if not participant.user.is_staff %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>Kill All Unsupplied{% endif %}</button>
       </div>
     {% endcall %}
     {% endif %} 
     
   </div>
+  
+  {% if not game.is_finished %}
   <div class="ui-grid">
-
     {% call card("Message Players") %}
     <form action="{{ url('manage_game') }}" method="post" novalidate>
       {{ csrf_input }}
@@ -84,7 +85,9 @@
     </form>
     {% endcall %}
   </div>
+  {% endif %}
 </div>
+
 
 {% if game.is_running %}
 <div class="modal fade" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
