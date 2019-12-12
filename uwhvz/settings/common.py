@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'impersonate',
     'sass_processor',
     'compressor',
     'svg',
