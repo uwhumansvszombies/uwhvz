@@ -1,5 +1,5 @@
 from django.contrib.auth import views as auth_views
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 from . import views
 
@@ -47,5 +47,5 @@ urlpatterns = [
     path("dashboard/moderator/manage-shop", views.ManageShopView.as_view(), name='manage_shop'),
     
     # Impersonation
-    url(r'^hijack/', include('hijack.urls', namespace='hijack')),
+    re_path(r'^impersonate/', include('impersonate.urls')),
 ]

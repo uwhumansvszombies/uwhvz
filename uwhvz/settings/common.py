@@ -14,14 +14,13 @@ if not os.path.exists(MEDIA_DIR):
 INSTALLED_APPS = [
     'app',
     'bootstrap3_datetime',
-    'compat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'hijack',
+    'impersonate',
     'sass_processor',
     'compressor',
     'svg',
@@ -52,6 +51,7 @@ MIDDLEWARE = [
     'django_user_agents.middleware.UserAgentMiddleware',
     'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware',
 ]
 
 ROOT_URLCONF = 'uwhvz.urls'
@@ -111,10 +111,6 @@ AUTHENTICATION_BACKENDS = (
 WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/player'
 LOGOUT_REDIRECT_URL = '/'
-
-HIJACK_LOGIN_REDIRECT_URL = '/dashboard/player'  # Where admins are redirected to after hijacking a user
-HIJACK_LOGOUT_REDIRECT_URL = '/admin/app/user'  # Where admins are redirected to after releasing a user
-HIJACK_USE_BOOTSTRAP = True
 
 
 ATOMIC_REQUESTS = True
