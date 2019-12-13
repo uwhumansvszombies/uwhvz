@@ -2,7 +2,9 @@
 {% extends "dashboard/base.html" %}
 
 {% block extrahead %}
-{{ form.media }}
+<link href={% sass_src 'bootstrap3_datetime/css/bootstrap-datetimepicker.min.css' %} type="text/css" media="all" rel="stylesheet">
+<script type="text/javascript" src={% sass_src 'bootstrap3_datetime/js/moment.min.js'%}></script>
+<script type="text/javascript" src={% sass_src 'bootstrap3_datetime/js/bootstrap-datetimepicker.min.js'  %}></script>
         <style>
             body {
                 margin: 40px auto;
