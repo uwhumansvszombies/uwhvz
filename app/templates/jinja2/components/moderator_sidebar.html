@@ -1,4 +1,4 @@
-{% macro moderator_sidebar(request, game, participant) -%}
+{% macro moderator_sidebar(request, game, user) -%}
   <nav class="ui-menu">
     <a class="ui-menu__header-link" href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="false">
       <header class="ui-menu__header">
@@ -19,7 +19,7 @@
         <li><a href="{{ url('generate_supply_codes') }}">Create Supply Codes</a></li>
         <li><a href="{{ url('manage_shop') }}">Manage Shop</a></li>
       {% endif %}
-      {% if participant.user.is_superuser %}
+      {% if user.is_superuser %}
         <li><a href="{{ url('manage_staff') }}">Mods/Volunteers</a></li>
       {% endif %}
       <li><a href="/cms">Write News Posts (Wagtail)</a></li>
