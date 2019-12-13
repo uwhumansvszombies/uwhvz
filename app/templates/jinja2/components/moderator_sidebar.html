@@ -20,7 +20,7 @@
         <li><a href="{{ url('manage_shop') }}">Manage Shop</a></li>
       {% endif %}
       {% if participant.user.is_superuser %}
-        <li><a href="{{ url('manage_staff') }}">Mods/Volunteers/Legacy Status</a></li>
+        <li><a href="{{ url('manage_staff') }}">Mods/Volunteers</a></li>
       {% endif %}
       <li><a href="/cms">Write News Posts (Wagtail)</a></li>
     </ul>
