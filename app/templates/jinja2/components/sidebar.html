@@ -20,7 +20,7 @@
     {% endif %}
 
     {% if participant.is_moderator or user.is_staff %}
-      {{ moderator_sidebar(request, game) }}
+      {{ moderator_sidebar(request, game, participant) }}
     {% endif %}
 
     {% if user.is_staff %}
