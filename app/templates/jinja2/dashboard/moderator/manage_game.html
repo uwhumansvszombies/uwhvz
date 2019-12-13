@@ -64,14 +64,14 @@
     {% call card("End Game") %}
       <p>This will immediately end the game. Do not accidentally press this if you don't actually want the game to end.</p>
        <div class="ui-form-group">
-       <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#EndGameModal" {% if not participant.user.is_staff %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>End Game{% endif %}</button>
+       <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#EndGameModal" {% if not user.is_superuser %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>End Game{% endif %}</button>
       </div>
     {% endcall %}
     
     {% call card("Kill All Unsupplied Humans") %}
       <p>This will turn all human players who did not attain 5 or more points during the week into zombies.</p>
       <div class="ui-form-group">
-        <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal" {% if not participant.user.is_staff %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>Kill All Unsupplied{% endif %}</button>
+        <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal" {% if not user.is_superuser %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>Kill All Unsupplied{% endif %}</button>
       </div>
     {% endcall %}
     {% endif %} 
