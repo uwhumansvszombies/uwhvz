@@ -47,7 +47,6 @@ class GameStartView(View):
         
         try:
             start_day = datetime(cd['year'], cd['month'],cd['day'])
-            continue
         except:
             messages.error(request, "That's not a valid day!")
             return redirect('manage_game')            
