@@ -2,7 +2,7 @@ from django import forms
 from bootstrap3_datetime.widgets import DateTimePicker
 from enumfields import EnumField
 
-from app.models import ParticipantRole, SignupLocation, Player
+from app.models import ParticipantRole, SignupLocation, Player, User
 from app.util import most_recent_game
 
 from datetime import datetime
@@ -13,6 +13,9 @@ def get_signup_locations():
 
 def get_players():
     return ((x.id, f'{str(x)} - {x.shop_score()}') for x in Player.objects.filter(game=most_recent_game()))
+
+def get_users():
+    return ((x.id, x.get_full_name()) for x in User.objects)
 
 
 class ModeratorSignupPlayerForm(forms.Form):
@@ -56,7 +59,7 @@ class ModMessageForm(forms.Form):
 
     recipients = forms.ChoiceField(
         label="Recipients",
-        choices=[("All", "All"), ("Humans", "Humans"), ("Zombies", "Zombies")],
+        choices=[("All", "All"), ("Humans", "Humans"), ("Zombies", "Zombies"), ("Volunteers", "Volunteers")],
         widget=forms.Select(
             attrs={
                 'class': 'custom-select',
@@ -138,7 +141,10 @@ class GameStartForm(forms.Form):
         label="Date/Time to Start",
         help_text=f"Note the time difference between the server and you. Current server time is {datetime.now()}.",
          widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
-                                       "pickSeconds": False}))   
+                                       "pickSeconds": False},
+                               attrs={
+                                   'class': 'ui-input',
+                                   'placeholder': "YYYY-MM-DD HH:mm"}))
     
 class ShopForm(forms.Form):
     buyer = forms.ChoiceField(
@@ -172,4 +178,25 @@ class ShopForm(forms.Form):
             }
         )
     )
-     
+
+class AddModForm(forms.Form):
+    mod = forms.ChoiceField(
+        label="User To Become A Mod",
+        choices=get_users,
+        widget=forms.Select(
+            attrs={
+                'class': 'custom-select',
+            }
+        )
+    )
+    
+class AddVolunteerForm(forms.Form):
+    volunteer = forms.ChoiceField(
+        label="User To Become A Volunteer",
+        choices=get_users,
+        widget=forms.Select(
+            attrs={
+                'class': 'custom-select',
+            }
+        )
+    )

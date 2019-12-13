@@ -4,11 +4,12 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.models import Group
 
 from app.mail import send_signup_email
-from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game
-from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants
-from app.views.forms import ModeratorSignupPlayerForm, ModMessageForm, GenerateSupplyCodeForm, ShopForm, AddSignupForm, GameStartForm
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User
+from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants, necromancer_required
+from app.views.forms import *
 
 from datetime import datetime
 from pytz import utc
@@ -62,6 +63,7 @@ class GameSetView(View):
         game = most_recent_game()
         try:
             game.started_on = utc.localize(datetime.now())
+            game.save()
         
             messages.success(request, f"The Game \"{game.name}\" has started.")
             return redirect('manage_game')
@@ -79,6 +81,7 @@ class GameEndView(View):
         try:
             game.ended_on = utc.localize(datetime.now())
             game.ended_by = request.user
+            game.save()
             messages.success(request, f"The Game \"{game.name}\" has ended.")
             return redirect('manage_game')
         except:
@@ -126,6 +129,12 @@ class ManageGameView(View):
                 .filter(game=game, active=True, role=PlayerRole.HUMAN) \
                 .values_list('user__email', flat=True))    
             subject_set = '[hvz-humans]'
+            
+        elif cd['recipients'] == "Volunteers":
+            recipients = list(User.objects \
+                .filter(game=game, active=True, is_volunteer=True) \
+                .values_list('user__email', flat=True))    
+            subject_set = '[hvz-volunteers]'        
             
         recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
@@ -202,6 +211,96 @@ class AddSignupView(View):
         return redirect('manage_players')
 
 
+
+@method_decorator(necromancer_required, name='dispatch')
+class ManageStaffView(View):
+    template_name = "dashboard/moderator/manage_staff.html"
+
+    def render_manage_staff(self, request, add_mod_form=AddModForm(), add_volunteer_form=AddVolunteerForm()):
+        game = most_recent_game()
+        all_mods = Moderator.objects.filter(game=game)
+        all_volunteers = User.objects.filter(is_volunteer=True)
+
+        return render(request, self.template_name, {
+            'game': game,
+            'all_mods':all_mods,
+            'all_volunteers':all_volunteers,
+            'add_mod_form': add_mod_form,
+            'add_volunteer_form': add_volunteer_form,
+             })
+        
+    def get(self, request):
+        return self.render_manage_staff(request)
+       
+
+    def post(self, request):
+        #legacy_form = LegacyForm(request.POST)
+        #if not legacy_form.is_valid():
+            #return self.render_manage_players(request, legacy_form=LegacyForm())
+
+        #game = most_recent_game()
+        #cleaned_data = legacy_form.cleaned_data
+        #legacy_points, legacy_user, legacy_details = cleaned_data['legacy_points'],\
+            #cleaned_data['legacy_user'], cleaned_data['legacy_details']
+        
+        ## This will be used to implement the legacy object
+        #messages.success(request, f"Succesfully gave {legacy_points} legacy points to {legacy_user}.")
+        return redirect('manage_staff')
+
+@method_decorator(necromancer_required, name='dispatch')    
+class ManageModsView(View):
+    def get(self, request):
+        return redirect('manage_staff')
+
+    def post(self, request):
+        game = most_recent_game()
+        add_mod_form = AddModForm(request.POST)
+        if not add_mod_form.is_valid():
+            return redirect('manage_staff')
+        
+        cd = add_mod_form.cleaned_data
+        mod_id = cd['mod']
+        if mod_id in list(Moderator.objects.filter(game=game).values_list('id', flat=True)):
+            messages.error(request, "That mod already exists in this game")
+            return redirect('manage_staff')
+        
+        mod = User.objects.get(id=mod_id,game=game)
+        
+        Moderator.objects.create_moderator(user=mod, game=game)
+        
+        messages.success(request, f"Added mod {mod.get_full_name()}")
+        
+        return redirect('manage_staff')
+
+@method_decorator(necromancer_required, name='dispatch')    
+class ManageVolunteersView(View):
+    def get(self, request):
+        return redirect('manage_staff')
+
+    def post(self, request):
+        game = most_recent_game()
+        add_volunteer_form=AddVolunteerForm(request.POST)
+        if not add_volunteer_form.is_valid():
+            return redirect('manage_staff')
+        
+        cd = add_volunteer_form.cleaned_data
+        vol_id = cd['volunteer']
+        if vol_id in list(User.objects.filter(game=game,is_volunteer=True).values_list('id', flat=True)):
+            messages.error(request, "That volunteer already exists")
+            return redirect('manage_staff')
+        
+        volunteer = User.objects.get(id=vol_id, game=game)
+        vol_group = Group.objects.get(name='Volunteer')
+        vol_group.user_set.add(volunteer)
+        vol_group.save()
+        
+        messages.success(request, f"Added signup location {volunteer.get_full_name}")
+        
+        return redirect('manage_staff')
+
+
+
+
 @method_decorator(moderator_required, name='dispatch')
 class ManagePlayersView(View):
     template_name = "dashboard/moderator/manage_players.html"
@@ -213,7 +312,6 @@ class ManagePlayersView(View):
 
         return render(request, self.template_name, {
             'game': game,
-            'participant': request.user.participant(game),
             'participants': participants,
             'signup_locations': locations,
             'mod_signup_player_form': mod_signup_player_form,

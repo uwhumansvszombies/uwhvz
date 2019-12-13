@@ -19,6 +19,9 @@
         <li><a href="{{ url('generate_supply_codes') }}">Create Supply Codes</a></li>
         <li><a href="{{ url('manage_shop') }}">Manage Shop</a></li>
       {% endif %}
+      {% if participant.user.is_superuser %}
+        <li><a href="{{ url('manage_staff') }}">Mods/Volunteers/Legacy Status</a></li>
+      {% endif %}
       <li><a href="/cms">Write News Posts (Wagtail)</a></li>
     </ul>
   </nav>
