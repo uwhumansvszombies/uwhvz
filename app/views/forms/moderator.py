@@ -1,11 +1,10 @@
 from django import forms
-from bootstrap3_datetime.widgets import DateTimePicker
 from enumfields import EnumField
 
 from app.models import ParticipantRole, SignupLocation, Player, User
 from app.util import most_recent_game
 
-from datetime import datetime
+from datetime import datetime, date
 
 
 def get_signup_locations():
@@ -16,6 +15,9 @@ def get_players():
 
 def get_users():
     return ((x.id, f'{x.get_full_name()} - {x.email}') for x in User.objects.filter(is_active=True))
+
+def get_months():
+    return ((i, date(2008, i, 1).strftime('%B')) for i in range(1,13))
 
 
 class ModeratorSignupPlayerForm(forms.Form):
@@ -137,14 +139,41 @@ class GameStartForm(forms.Form):
         )
     )
     
-    start_time = forms.DateTimeField(
-        label="Date/Time to Start",
-        help_text=f"Note the time difference between the server and you. Current server time is {datetime.now()}.",
-         widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
-                                       "pickSeconds": False},
-                               attrs={
-                                   'class': 'ui-input',
-                                   'placeholder': "YYYY-MM-DD HH:mm"}))
+    day = IntegerField(
+        label="Day",
+        min_value=0,
+        max_value=31,
+        help_text=
+        "Please don't try to be smart and enter a day that doesn't exist.",        
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'input_type':'number'
+            }
+        )
+    )
+    
+    month = forms.ChoiceField(
+        label="Month",
+        choices=get_months,
+        widget=forms.Select(
+            attrs={
+                'class': 'custom-select',
+            }
+        )
+    )    
+    
+    year = IntegerField(
+        label="Day",
+        min_value=1,
+        max_value=9999,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'input_type':'number'
+            }
+        )
+    )    
     
 class ShopForm(forms.Form):
     buyer = forms.ChoiceField(

@@ -39,12 +39,19 @@ class GameStartView(View):
     def post(self, request):
         game_start_form = GameStartForm(request.POST)
         if not game_start_form.is_valid():
-            messages.error(request, "There was an error with your request")
+            messages.error(request, "There was an error with your request. Check your inputs again!")
             return redirect('manage_game')
         
         cd = form.cleaned_data
         game_title = cd['name']
-        Game.objects.create_game(name=game_title, started_on=cd['start_time'], started_by=request.user)
+        
+        try:
+            start_day = datetime(cd['year'], cd['month'],cd['day'])
+            continue
+        except:
+            messages.error(request, "That's not a valid day!")
+            return redirect('manage_game')            
+        Game.objects.create_game(name=game_title, started_on=start_day, started_by=request.user)
         
         game=most_recent_game()
         

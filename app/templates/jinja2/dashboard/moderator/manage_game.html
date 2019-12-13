@@ -1,19 +1,6 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
-{% block extrahead %}
-<link href={% sass_src 'bootstrap3_datetime/css/bootstrap-datetimepicker.min.css' %} type="text/css" media="all" rel="stylesheet">
-<script type="text/javascript" src={% sass_src 'bootstrap3_datetime/js/moment.min.js'%}></script>
-<script type="text/javascript" src={% sass_src 'bootstrap3_datetime/js/bootstrap-datetimepicker.min.js'  %}></script>
-        <style>
-            form {
-                margin: 40px auto;
-                min-width: 200px;
-                max-width: 500px;
-            }
-        </style>
-{% endblock %}
-
 {% block title %}Mod Dashboard &mdash; Manage Game{% endblock %}
 
 {% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
@@ -24,12 +11,15 @@
   <div class="ui-grid align-content-start">
   {% if game.is_finished %}
     {% call card("Start Game") %}
+    <p>Choose a game name and select the day you want the game to start at. The game will always start at midnight.</p>
       <div class="ui-form-group">
         <form class="mb-0" action="{{ url('game_start') }}" method="post" role="form">
           {{ csrf_input }}
-          {% for field in game_start_form %}
-        <div class="ui-form-group">
-         <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          
+          <table><thead><tr><td scope="col">Add location: </td>
+       {% for field in game_start_form %}
+        <td scope="col">
+          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
           {% if field.help_text %}
               <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
@@ -37,9 +27,11 @@
           {% for error in field.errors %}
             <span class="ui-form__text ui-form__text--error">{{ error }}</span>
           {% endfor %}
-        </div>
-      {% endfor %}
-      
+        </td>
+        {% endfor %}
+        
+        </table></thead></tr>
+        
        <div class="ui-form-group pt-2">
         <input type="submit" class="btn btn-primary" value="Start Game">
       </div>
