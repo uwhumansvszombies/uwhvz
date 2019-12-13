@@ -32,7 +32,7 @@
       <div class="ui-form-group">
         <form class="mb-0" action="{{ url('game_start') }}" method="post" role="form">
           {{ csrf_input }}
-          {% for field in form.visible_fields %}
+          {% for field in form %}
         <div class="ui-form-group">
          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
@@ -42,9 +42,6 @@
           {% for error in field.errors %}
             <span class="ui-form__text ui-form__text--error">{{ error }}</span>
           {% endfor %}
-          {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
         </div>
       {% endfor %}
        <div class="ui-form-group pt-2">
