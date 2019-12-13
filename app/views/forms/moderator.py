@@ -139,7 +139,7 @@ class GameStartForm(forms.Form):
         )
     )
     
-    day = IntegerField(
+    day = forms.IntegerField(
         label="Day",
         min_value=0,
         max_value=31,
@@ -163,7 +163,7 @@ class GameStartForm(forms.Form):
         )
     )    
     
-    year = IntegerField(
+    year = forms.IntegerField(
         label="Day",
         min_value=1,
         max_value=9999,
