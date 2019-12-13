@@ -16,10 +16,9 @@
         <form class="mb-0" action="{{ url('game_start') }}" method="post" role="form">
           {{ csrf_input }}
           
-          <table><thead><tr><td scope="col">Add location: </td>
-       {% for field in game_start_form %}
-        <td scope="col">
-          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          {% for field in game_start_form %}
+        <div class="ui-form-group">
+         <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
           {% if field.help_text %}
               <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
@@ -27,11 +26,9 @@
           {% for error in field.errors %}
             <span class="ui-form__text ui-form__text--error">{{ error }}</span>
           {% endfor %}
-        </td>
-        {% endfor %}
-        
-        </table></thead></tr>
-        
+        </div>
+      {% endfor %}
+      
        <div class="ui-form-group pt-2">
         <input type="submit" class="btn btn-primary" value="Start Game">
       </div>

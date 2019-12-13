@@ -164,7 +164,7 @@ class GameStartForm(forms.Form):
     )    
     
     year = forms.IntegerField(
-        label="Day",
+        label="Year",
         min_value=1,
         max_value=9999,
         widget=forms.TextInput(
