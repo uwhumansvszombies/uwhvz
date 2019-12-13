@@ -1,6 +1,21 @@
 {% from "components/card.html" import card %}
 {% extends "dashboard/base.html" %}
 
+{% block additional_styles %}
+{{ form.media }}
+        <style>
+            body {
+                margin: 40px auto;
+                width: 90%;
+            }
+            form {
+                margin: 40px auto;
+                min-width: 200px;
+                max-width: 500px;
+            }
+        </style>
+{% endblock %}
+
 {% block title %}Mod Dashboard &mdash; Manage Game{% endblock %}
 
 {% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}

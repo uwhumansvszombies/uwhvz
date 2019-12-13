@@ -15,7 +15,7 @@ def get_players():
     return ((x.id, f'{str(x)} - {x.shop_score()}') for x in Player.objects.filter(game=most_recent_game()))
 
 def get_users():
-    return ((x.id, x.get_full_name()) for x in User.objects.filter(is_active=True))
+    return ((x.id, f'{x.get_full_name()} - {x.email}') for x in User.objects.filter(is_active=True))
 
 
 class ModeratorSignupPlayerForm(forms.Form):
