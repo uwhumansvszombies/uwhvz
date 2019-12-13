@@ -39,7 +39,7 @@
   
   {% if game.is_signups %}
     {% call card("Force Start Game") %}
-      <p>The game will automatically start in {{ time_to_start.hours+time_to_start.days*24 }} hours and {{ time_to_start.minutes }} minutes. This button will send all game start emails to players, set OZs as zombies, and start the game immediately.</p>
+      <p>The game will automatically start in {{ time_to_start.seconds//3600+time_to_start.days*24 }} hours and {{ (time_to_start.seconds//60)%60 }} minutes. This button will send all game start emails to players, set OZs as zombies, and start the game immediately.</p>
       <div class="ui-form-group">
         <form class="mb-0" action="{{ url('game_set') }}" method="post">
           {{ csrf_input }}
