@@ -215,43 +215,30 @@ class MessagePlayersView(View):
         return redirect('message_players')
 
 
-@method_decorator(running_game_required, name='dispatch')
+# Zombie Tree Re-Written by Tristan Ohlson :)
 @method_decorator(login_required, name='dispatch')
+@method_decorator(game_required, name='dispatch')
 class ZombieTreeView(View):
     template_name = 'dashboard/zombie_tree.html'
 
     def get(self, request):
         game = most_recent_game()
-        participant = request.user.participant(game)
-        if not participant:
+
+        try:
+            player = request.user.player(game)
+        except ObjectDoesNotExist:
             return redirect('dashboard')
 
-        if not request.user.is_staff and participant.is_player and participant.is_human:
+        if game.is_running and player.is_human and not player.user.is_moderator:
             raise PermissionDenied
 
         player_codes = {}
-        nodes = []
+        nodes = {}
         edges = []
+        # Since we don't want repeated instances of OZs, we use a set instead of a list.
         ozs = set()
-        all_zombies = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE, active=True)
-        for zombie in all_zombies:
-            # We mutate the OZs' role rather than setting inactive, so an OZ won't have
-            # an inactive human player.
-            if not Player.objects.filter(game=game, code=zombie.code, role=PlayerRole.HUMAN).exists():
-                ozs.add(zombie)
 
-        nodes.append({'id': 'NECROMANCER', 'label': "Necromancer"})
-        for oz in ozs:
-            edges.append({'from': 'NECROMANCER', 'to': oz.code})
-            player_codes[oz.code] = oz.user.get_full_name()
-
-        tags = Tag.objects.filter(
-            initiator__game=game,
-            receiver__game=game,
-            initiator__role=PlayerRole.ZOMBIE,
-            receiver__role=PlayerRole.HUMAN,
-            active=True
-        )
+        tags = Tag.objects.filter(initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
 
         for tag in tags:
             edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})
@@ -259,12 +246,42 @@ class ZombieTreeView(View):
             player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
 
+            if not Player.objects.filter(code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
+                ozs.add(tag.initiator)
+
         for code, name in player_codes.items():
-            nodes.append({'id': code, 'label': name})
+            nodes[code] = {'label': name}
+
+        nodes['NECROMANCER'] = {'label': "Necromancer"}
+        for oz in ozs:
+            edges.append({'from': 'NECROMANCER', 'to': oz.code})
+
+        # BFS on the edge list so that we can put each node into a group based on
+        # its level in the tree.
+        queue = ['NECROMANCER']
+        level = 0
+        while queue:
+            popped = []
+            while queue:
+                node_id = queue.pop(0)
+                popped.append(node_id)
+                nodes[node_id]['group'] = level
+
+            children = []
+            while popped:
+                node_id = popped.pop(0)
+                children.extend([n['to'] for n in edges if n['from'] == node_id])
+
+            queue.extend(children)
+            level += 1
+
+        node_list = []
+        for key, value in nodes.items():
+            node_list.append({'id': key, **value})
 
         return render(request, self.template_name, {
             'game': game,
-            'participant': participant,
-            'nodes': json.dumps(nodes),
+            'player': player,
+            'nodes': json.dumps(node_list),
             'edges': json.dumps(edges),
         })

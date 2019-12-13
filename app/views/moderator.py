@@ -219,7 +219,7 @@ class ManageStaffView(View):
     def render_manage_staff(self, request, add_mod_form=AddModForm(), add_volunteer_form=AddVolunteerForm()):
         game = most_recent_game()
         all_mods = Moderator.objects.filter(game=game)
-        all_volunteers = User.objects.filter(groups__name="Volunteer")
+        all_volunteers = User.objects.filter(groups__name="Volunteers")
 
         return render(request, self.template_name, {
             'game': game,
@@ -265,7 +265,7 @@ class ManageModsView(View):
             messages.error(request, "That mod already exists in this game")
             return redirect('manage_staff')
         
-        mod = User.objects.get(id=mod_id,game=game)
+        mod = User.objects.get(id=mod_id)
         
         Moderator.objects.create_moderator(user=mod, game=game)
         
@@ -286,7 +286,7 @@ class ManageVolunteersView(View):
         
         cd = add_volunteer_form.cleaned_data
         vol_id = cd['volunteer']
-        if vol_id in list(User.objects.filter(game=game,groups__name="Volunteer").values_list('id', flat=True)):
+        if vol_id in list(User.objects.filter(groups__name="Volunteers").values_list('id', flat=True)):
             messages.error(request, "That volunteer already exists")
             return redirect('manage_staff')
         
