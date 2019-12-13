@@ -32,7 +32,7 @@
       <div class="ui-form-group">
         <form class="mb-0" action="{{ url('game_start') }}" method="post" role="form">
           {{ csrf_input }}
-          {% for field in form %}
+          {% for field in game_start_form %}
         <div class="ui-form-group">
          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
