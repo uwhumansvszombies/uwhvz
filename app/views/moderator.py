@@ -42,7 +42,7 @@ class GameStartView(View):
             messages.error(request, "There was an error with your request. Check your inputs again!")
             return redirect('manage_game')
         
-        cd = form.cleaned_data
+        cd = game_start_form.cleaned_data
         game_title = cd['name']
         
         try:
