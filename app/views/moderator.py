@@ -46,7 +46,7 @@ class GameStartView(View):
         game_title = cd['name']
         
         try:
-            start_day = datetime(int(cd['year']), int(cd['month']),int(cd['day']))
+            start_day = utc.localize(datetime(int(cd['year']), int(cd['month']),int(cd['day'])))
         except:
             messages.error(request, "That's not a valid day!")
             return redirect('manage_game')            
