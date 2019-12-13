@@ -6,10 +6,6 @@
 <script type="text/javascript" src={% sass_src 'bootstrap3_datetime/js/moment.min.js'%}></script>
 <script type="text/javascript" src={% sass_src 'bootstrap3_datetime/js/bootstrap-datetimepicker.min.js'  %}></script>
         <style>
-            body {
-                margin: 40px auto;
-                width: 90%;
-            }
             form {
                 margin: 40px auto;
                 min-width: 200px;
@@ -28,11 +24,10 @@
   <div class="ui-grid align-content-start">
   {% if game.is_finished %}
     {% call card("Start Game") %}
-      <p>Use this to set up a new game at the time indicated.</p>
       <div class="ui-form-group">
         <form class="mb-0" action="{{ url('game_start') }}" method="post" role="form">
           {{ csrf_input }}
-          {% for field in game_start_form %}
+          {% for field in game_start_form.visible_fields %}
         <div class="ui-form-group">
          <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
@@ -44,6 +39,10 @@
           {% endfor %}
         </div>
       {% endfor %}
+      {% for hidden in game_start_form.hidden_fields %}
+                {{ hidden }}
+      {% endfor %}
+      
        <div class="ui-form-group pt-2">
         <input type="submit" class="btn btn-primary" value="Start Game">
       </div>
