@@ -37,12 +37,12 @@ class GameStartView(View):
         return redirect('manage_game')
 
     def post(self, request):
-        game_start_form = GameStartForm(request.POST)
-        if not game_start_form.is_valid():
+        form = GameStartForm(request.POST)
+        if not form.is_valid():
             messages.error(request, "There was an error with your request")
             return redirect('manage_game')
         
-        cd = game_start_form.cleaned_data
+        cd = form.cleaned_data
         game_title = cd['name']
         Game.objects.create_game(name=game_title, started_on=cd['start_time'], started_by=request.user)
         
@@ -93,7 +93,7 @@ class GameEndView(View):
 class ManageGameView(View):
     template_name = "dashboard/moderator/manage_game.html"
 
-    def get(self, request, game_start_form = GameStartForm(), **kwargs):
+    def get(self, request, form = GameStartForm(), **kwargs):
         game = most_recent_game()
         participant = request.user.participant(game)
         message_players_form = kwargs.get('message_players_form', ModMessageForm())
@@ -103,7 +103,7 @@ class ManageGameView(View):
             'time_to_start':time_to_start,
             'participant':participant,
             'message_players_form': message_players_form,
-            'game_start_form': game_start_form,
+            'form': form,
         })
     
     def post(self, request):   
