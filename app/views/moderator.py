@@ -223,6 +223,7 @@ class ManageStaffView(View):
 
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'all_mods':all_mods,
             'all_volunteers':all_volunteers,
             'add_mod_form': add_mod_form,
@@ -312,6 +313,7 @@ class ManagePlayersView(View):
 
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'participants': participants,
             'signup_locations': locations,
             'mod_signup_player_form': mod_signup_player_form,
