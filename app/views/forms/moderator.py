@@ -257,7 +257,7 @@ class SignupEmailForm(forms.Form):
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
         label="Reminder Email - HTML",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','r'),
+        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html',
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
@@ -267,7 +267,7 @@ class ReminderEmailForm(forms.Form):
     
     reminder_email_txt = forms.CharField(
         label="Reminder Email - txt",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt','r'),
+        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
@@ -278,7 +278,7 @@ class ReminderEmailForm(forms.Form):
 class StartEmailForm(forms.Form):
     start_email_html = forms.CharField(
         label="Game Start Email - HTML",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','r'),
+        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
@@ -288,7 +288,7 @@ class StartEmailForm(forms.Form):
     
     start_email_txt = forms.CharField(
         label="Game Start Email - txt",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt','r'),
+        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
