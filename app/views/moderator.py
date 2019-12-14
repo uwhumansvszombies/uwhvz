@@ -418,7 +418,7 @@ class EmailTemplatesView(View):
         game = most_recent_game()
         
         signup_email_form.fields['signup_email_html'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html')
-        signup_email_form.fields['signup_email_txt'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html')
+        signup_email_form.fields['signup_email_txt'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')
         reminder_email_form.fields['reminder_email_html'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html')
         reminder_email_form.fields['reminder_email_txt'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt')
         start_email_form.fields['start_email_html'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html')
@@ -488,7 +488,7 @@ class EmailTemplatesView(View):
             
             if not start_email_form.is_valid():
                 return self.render_email_templates(request, start_email_form=start_email_form) 
-            cd = signup_email_form.cleaned_data
+            cd = start_email_form.cleaned_data
             
             try:
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','w')
