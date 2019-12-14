@@ -417,6 +417,8 @@ class EmailTemplatesView(View):
     def render_email_templates(self, request, signup_email_form=SignupEmailForm(), reminder_email_form=ReminderEmailForm(), start_email_form=StartEmailForm()):
         game = most_recent_game()
         
+        messages.success(request, get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt'))
+        
         signup_email_form.fields['signup_email_html'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html')
         signup_email_form.fields['signup_email_txt'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')
         reminder_email_form.fields['reminder_email_html'].initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html')
