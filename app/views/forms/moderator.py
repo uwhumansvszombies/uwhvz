@@ -257,7 +257,7 @@ class SignupEmailForm(forms.Form):
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
         label="Reminder Email - HTML",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html',
+        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
