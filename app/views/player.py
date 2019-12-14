@@ -282,6 +282,7 @@ class ZombieTreeView(View):
         return render(request, self.template_name, {
             'game': game,
             'player': player,
+            'participant': request.user.participant(game),
             'nodes': json.dumps(node_list),
             'edges': json.dumps(edges),
         })
