@@ -238,7 +238,7 @@ class ZombieTreeView(View):
         # Since we don't want repeated instances of OZs, we use a set instead of a list.
         ozs = set()
 
-        tags = Tag.objects.filter(game=game,initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
+        tags = Tag.objects.filter(initiator.game=game,initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
 
         for tag in tags:
             edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})
