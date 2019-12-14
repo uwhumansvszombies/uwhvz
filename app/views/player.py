@@ -229,7 +229,7 @@ class ZombieTreeView(View):
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
-        if game.is_running and player.is_human and not player.user.is_moderator:
+        if game.is_running and player.is_human and not player.is_moderator:
             raise PermissionDenied
 
         player_codes = {}
