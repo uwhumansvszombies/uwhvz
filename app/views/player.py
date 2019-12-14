@@ -238,7 +238,12 @@ class ZombieTreeView(View):
         # Since we don't want repeated instances of OZs, we use a set instead of a list.
         ozs = set()
 
-        tags = Tag.objects.filter(initiator.game=game,initiator__role=PlayerRole.ZOMBIE, receiver__role=PlayerRole.HUMAN, active=True)
+        tags = Tag.objects.filter(
+            initiator__game=game,
+            receiver__game=game,
+            initiator__role=PlayerRole.ZOMBIE,
+            receiver__role=PlayerRole.HUMAN,
+            active=True)
 
         for tag in tags:
             edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})
@@ -258,6 +263,7 @@ class ZombieTreeView(View):
                 ozs.add(oz)
         for oz in ozs:
             edges.append({'from': 'NECROMANCER', 'to': oz.code})
+            player_codes[oz.code] = oz.user.get_full_name()
 
         # BFS on the edge list so that we can put each node into a group based on
         # its level in the tree.
