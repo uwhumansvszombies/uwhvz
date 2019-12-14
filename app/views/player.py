@@ -254,9 +254,6 @@ class ZombieTreeView(View):
             if not Player.objects.filter(game=game,code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
                 ozs.add(tag.initiator)
 
-        for code, name in player_codes.items():
-            nodes[code] = {'label': name}
-
         nodes['NECROMANCER'] = {'label': "Necromancer"}
         for oz in Player.objects.filter(game=game,in_oz_pool=True):
             if oz not in ozs:
@@ -265,6 +262,9 @@ class ZombieTreeView(View):
             edges.append({'from': 'NECROMANCER', 'to': oz.code})
             player_codes[oz.code] = oz.user.get_full_name()
 
+        for code, name in player_codes.items():
+            nodes[code] = {'label': name}
+            
         # BFS on the edge list so that we can put each node into a group based on
         # its level in the tree.
         queue = ['NECROMANCER']
