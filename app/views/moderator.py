@@ -438,9 +438,11 @@ class EmailTemplatesView(View):
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html','w')
                 f.write(cd['signup_email_html'])
                 f.close()
+                signup_email_form.fields['signup_email_html'].initial=cd['signup_email_html']
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt','w')
                 f.write(cd['signup_email_txt'])
                 f.close()
+                signup_email_form.fields['signup_email_txt'].initial=cd['signup_email_html']
             except:
                 messages.error(request, "There was an error updating the signup email.")
                 return redirect('email_templates')            
@@ -459,9 +461,11 @@ class EmailTemplatesView(View):
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','w')
                 f.write(cd['reminder_email_html'])
                 f.close()
+                reminder_email_form.fields['reminder_email_html'].initial=cd['reminder_email_html']
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt','w')
                 f.write(cd['reminder_email_txt'])
                 f.close()
+                reminder_email_form.fields['reminder_email_txt'].initial=cd['reminder_email_txt']
             except:
                 messages.error(request, "There was an error updating the reminder email.")
                 return redirect('email_templates')            
@@ -480,9 +484,11 @@ class EmailTemplatesView(View):
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','w')
                 f.write(cd['start_email_html'])
                 f.close()
+                start_email_form.fields['start_email_html'].initial=cd['start_email_html']
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt','w')
                 f.write(cd['start_email_txt'])
                 f.close()
+                start_email_form.fields['start_email_txt'].initial=cd['start_email_txt']
             except:
                 messages.error(request, "There was an error updating the game start email.")
                 return redirect('email_templates')            
