@@ -13,6 +13,7 @@
       {{ csrf_input }}
        {% for field in signup_email_form %}
         <div class="ui-form-group">
+        <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
           {% for error in field.errors %}
             <span class="ui-form__text ui-form__text--error">{{ error }}</span>
@@ -30,6 +31,7 @@
       {{ csrf_input }}
        {% for field in reminder_email_form %}
         <div class="ui-form-group">
+        <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
           {% for error in field.errors %}
             <span class="ui-form__text ui-form__text--error">{{ error }}</span>
@@ -47,6 +49,7 @@
       {{ csrf_input }}
        {% for field in start_email_form %}
         <div class="ui-form-group">
+        <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
           {{ field }}
           {% for error in field.errors %}
             <span class="ui-form__text ui-form__text--error">{{ error }}</span>
