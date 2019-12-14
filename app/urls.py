@@ -35,9 +35,6 @@ urlpatterns = [
     path("dashboard/moderator/generate-supply-codes", views.GenerateSupplyCodesView.as_view(),
          name='generate_supply_codes'),
     path("dashboard/moderator/manage-game", views.ManageGameView.as_view(), name='manage_game'),
-    path("dashboard/moderator/manage-staff", views.ManageStaffView.as_view(), name='manage_staff'),
-    path("dashboard/moderator/manage-mods", views.ManageModsView.as_view(), name='manage_mods'),
-    path("dashboard/moderator/manage-volunteers", views.ManageVolunteersView.as_view(), name='manage_volunteers'),
     
     path("dashboard/moderator/game-start", views.GameStartView.as_view(), name='game_start'),
     path("dashboard/moderator/game-set", views.GameSetView.as_view(), name='game_set'),
@@ -50,6 +47,14 @@ urlpatterns = [
     path("dashboard/moderator/manage-oz", views.ManageOZView.as_view(), name='manage_oz'),
     path("dashboard/moderator/manage-players", views.ManagePlayersView.as_view(), name='manage_players'),
     path("dashboard/moderator/manage-shop", views.ManageShopView.as_view(), name='manage_shop'),
+    
+    # Necromancer pages
+    path("dashboard/moderator/manage-staff", views.ManageStaffView.as_view(), name='manage_staff'),
+    path("dashboard/moderator/manage-mods", views.ManageModsView.as_view(), name='manage_mods'),
+    path("dashboard/moderator/manage-volunteers", views.ManageVolunteersView.as_view(), name='manage_volunteers'),    
+    path("dashboard/moderator/email-templates", views.EmailTemplatesView.as_view(), name='email_templates'),
+    path("dashboard/moderator/reminder-template", views.ReminderTemplateView.as_view(), name='reminder_template'),
+    path("dashboard/moderator/game-start-template", views.GameStartTemplateView.as_view(), name='game_start_template'),
     
     # Impersonation
     re_path(r'^su/', include('django_su.urls')),

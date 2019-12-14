@@ -1,0 +1,4 @@
+You are a {{ 'human' if (participant.is_player and participant.is_human) else 'zombie' }}! Welcome to the game!
+
+Sincerely, 
+The UW HvZ Website

@@ -21,6 +21,7 @@
       {% endif %}
       {% if user.is_superuser %}
         <li><a href="{{ url('manage_staff') }}">Mods/Volunteers</a></li>
+        <li><a href="{{ url('email_templates') }}">Game Emails</a></li>
       {% endif %}
       <li><a href="/cms">Write News Posts (Wagtail)</a></li>
     </ul>

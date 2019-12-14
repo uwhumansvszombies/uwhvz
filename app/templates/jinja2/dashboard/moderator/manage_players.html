@@ -73,6 +73,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Email</th>
+          <th scope="col">Code</th>
           <th scope="col">Role</th>
           <th scope="col">Shop Score</th>
           <th scope="col">True Score</th>
@@ -83,6 +84,7 @@
         <tr>
           <td scope="col">{% if p.is_moderator and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
           <td scope="col">{{ p.user.email }}</td>
+          <td scope="col">{% if p.is_player %}{{ p.code }}{% else %}N/A{% endif %}</td>
           <td scope="col">{% if p.is_player %}{{ p.role }}{% else %}{{ p.type }}{% endif %}</td>
           {%- if p.is_player %}<td scope="col">{{ p.shop_score() }}</td><td scope="col">{{ p.score() }}</td>{% else %}<td scope="col">N/A</td><td scope="col">N/A</td>{% endif -%}
         </tr>

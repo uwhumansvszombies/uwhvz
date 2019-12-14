@@ -1,0 +1,64 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Necro Dashboard &mdash; Email Template Modification{% endblock %}
+{% block pagetitle %}{{ game }} &mdash; Necro Actions{% endblock %}
+{% block pagesubtitle %}Email Template Modification{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid s-dashboard__game-info align-content-start">
+  <div class="ui-grid align-content-start">
+    {% call card("Signup Email") %}
+    <form action="{{ url('email_templates') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in signup_email_form %}
+        <div class="ui-form-group">
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Save">
+      </div>
+    </form>
+    {% endcall %}
+    
+    {% call card("Reminder Email") %}
+      <form action="{{ url('reminder_template') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in reminder_email_form %}
+        <div class="ui-form-group">
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Save">
+      </div>
+    </form>
+    {% endcall %}
+    
+    {% call card("Game Start Email") %}
+      <form action="{{ url('game_start_template') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in start_email_form %}
+        <div class="ui-form-group">
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Save">
+      </div>
+    </form>
+    {% endcall %}
+    
+  </div>
+</div>
+{% endblock %}
