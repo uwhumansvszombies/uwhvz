@@ -29,7 +29,7 @@
     {% endcall %}
     
     {% call card("Reminder Email") %}
-      <form action="{{ url('reminder_template') }}" method="post" novalidate>
+      <form action="{{ url('email_templates') }}" method="post" novalidate>
       {{ csrf_input }}
        {% for field in reminder_email_form %}
         <div class="ui-form-group">
@@ -47,7 +47,7 @@
     {% endcall %}
     
     {% call card("Game Start Email") %}
-      <form action="{{ url('game_start_template') }}" method="post" novalidate>
+      <form action="{{ url('email_templates') }}" method="post" novalidate>
       {{ csrf_input }}
        {% for field in start_email_form %}
         <div class="ui-form-group">
