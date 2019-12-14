@@ -434,10 +434,10 @@ class EmailTemplatesView(View):
         cd = signup_email_form.cleaned_data
         
         try:
-            f = open('email/signup.html','w')
+            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html','w')
             f.write(cd['signup_email_html'])
             f.close()
-            f = open('email/signup.txt','w')
+            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt','w')
             f.write(cd['signup_email_txt'])
             f.close()
         except:
@@ -460,10 +460,10 @@ class ReminderTemplateView(View):
         cd = signup_email_form.cleaned_data
         
         try:
-            f = open('email/signup_reminder.html','w')
+            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','w')
             f.write(cd['reminder_email_html'])
             f.close()
-            f = open('email/signup_reminder.txt','w')
+            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt','w')
             f.write(cd['reminder_email_txt'])
             f.close()
         except:
@@ -486,10 +486,10 @@ class GameStartTemplateView(View):
         cd = signup_email_form.cleaned_data
         
         try:
-            f = open('email/game_start.html','w')
+            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','w')
             f.write(cd['start_email_html'])
             f.close()
-            f = open('email/game_start.txt','w')
+            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt','w')
             f.write(cd['start_email_txt'])
             f.close()
         except:

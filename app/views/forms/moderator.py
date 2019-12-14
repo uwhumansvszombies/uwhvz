@@ -234,7 +234,7 @@ class AddVolunteerForm(forms.Form):
 class SignupEmailForm(forms.Form):
     signup_email_html = forms.CharField(
         label="Signup Email - HTML",
-        initial=''.join(open('email/signup.html','r')),
+        initial=''.join(open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html','r')),
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -244,7 +244,7 @@ class SignupEmailForm(forms.Form):
     
     signup_email_txt = forms.CharField(
         label="Signup Email - txt",
-        initial=''.join(open('email/signup.txt','r')),
+        initial=''.join(open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt','r')),
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -255,7 +255,7 @@ class SignupEmailForm(forms.Form):
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
         label="Reminder Email - HTML",
-        initial=''.join(open('email/signup_reminder.html','r')),
+        initial=''.join(open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','r')),
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -265,7 +265,7 @@ class ReminderEmailForm(forms.Form):
     
     reminder_email_txt = forms.CharField(
         label="Reminder Email - txt",
-        initial=''.join(open('email/signup_reminder.txt','r')),
+        initial=''.join(open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt','r')),
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -276,7 +276,7 @@ class ReminderEmailForm(forms.Form):
 class StartEmailForm(forms.Form):
     start_email_html = forms.CharField(
         label="Game Start Email - HTML",
-        initial=''.join(open('email/game_start.html','r')),
+        initial=''.join(open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','r')),
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -286,7 +286,7 @@ class StartEmailForm(forms.Form):
     
     start_email_txt = forms.CharField(
         label="Game Start Email - txt",
-        initial=''.join(open('email/game_start.txt','r')),
+        initial=''.join(open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt','r')),
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
