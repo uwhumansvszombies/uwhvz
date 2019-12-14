@@ -225,7 +225,7 @@ class ZombieTreeView(View):
         game = most_recent_game()
 
         try:
-            player = request.user.participant(game).player
+            player = request.user.participant(game)
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
