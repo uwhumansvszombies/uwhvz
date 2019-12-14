@@ -427,74 +427,65 @@ class EmailTemplatesView(View):
        
 
     def post(self, request):
-        signup_email_form = SignupEmailForm(request.POST)
+        if "change_signup" in request.POST:
+            signup_email_form = SignupEmailForm(request.POST)
+            
+            if not signup_email_form.is_valid():
+                return self.render_email_templates(request, signup_email_form=signup_email_form)        
+            cd = signup_email_form.cleaned_data
+            
+            try:
+                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html','w')
+                f.write(cd['signup_email_html'])
+                f.close()
+                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt','w')
+                f.write(cd['signup_email_txt'])
+                f.close()
+            except:
+                messages.error(request, "There was an error updating the signup email.")
+                return redirect('email_templates')            
+            
+            messages.success(request, "Succesfully updated signup email.")
+            return self.render_email_templates(request, signup_email_form=signup_email_form)
         
-        if not signup_email_form.is_valid():
-            return self.render_email_templates(request, signup_email_form=signup_email_form)        
-        cd = signup_email_form.cleaned_data
+        if "change_reminder" in request.POST:
+            reminder_email_form=ReminderEmailForm(request.POST)
+            
+            if not reminder_email_form.is_valid():
+                return self.render_email_templates(request, reminder_email_form=reminder_email_form)       
+            cd = signup_email_form.cleaned_data
+            
+            try:
+                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','w')
+                f.write(cd['reminder_email_html'])
+                f.close()
+                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt','w')
+                f.write(cd['reminder_email_txt'])
+                f.close()
+            except:
+                messages.error(request, "There was an error updating the reminder email.")
+                return redirect('email_templates')            
+            
+            messages.success(request, "Succesfully updated reminder email.")
+            return self.render_email_templates(request, reminder_email_form=reminder_email_form) 
         
-        try:
-            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html','w')
-            f.write(cd['signup_email_html'])
-            f.close()
-            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt','w')
-            f.write(cd['signup_email_txt'])
-            f.close()
-        except:
-            messages.error(request, "There was an error updating the signup email.")
-            return redirect('email_templates')            
-        
-        messages.success(request, "Succesfully updated signup email.")
-        return redirect('email_templates')
-    
-@method_decorator(necromancer_required, name='dispatch')    
-class ReminderTemplateView(View):
-    def get(self, request):
-        return redirect('email_templates') 
-
-    def post(self, request):
-        reminder_email_form=ReminderEmailForm(request.POST)
-        
-        if not reminder_email_form.is_valid():
-            return redirect('email_templates')        
-        cd = signup_email_form.cleaned_data
-        
-        try:
-            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','w')
-            f.write(cd['reminder_email_html'])
-            f.close()
-            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt','w')
-            f.write(cd['reminder_email_txt'])
-            f.close()
-        except:
-            messages.error(request, "There was an error updating the reminder email.")
-            return redirect('email_templates')            
-        
-        messages.success(request, "Succesfully updated reminder email.")
-        return redirect('email_templates')
-    
-@method_decorator(necromancer_required, name='dispatch')    
-class GameStartTemplateView(View):
-    def get(self, request):
-        return redirect('email_templates') 
-
-    def post(self, request):
-        start_email_form=StartEmailForm(request.POST)
-        
-        if not start_email_form.is_valid():
-            return redirect('email_templates')      
-        cd = signup_email_form.cleaned_data
-        
-        try:
-            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','w')
-            f.write(cd['start_email_html'])
-            f.close()
-            f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt','w')
-            f.write(cd['start_email_txt'])
-            f.close()
-        except:
-            messages.error(request, "There was an error updating the game start email.")
-            return redirect('email_templates')            
-        
-        messages.success(request, "Succesfully updated game start email.")
-        return redirect('email_templates')
+        if "change_start" in request.POST:
+            start_email_form=StartEmailForm(request.POST)
+            
+            if not start_email_form.is_valid():
+                return self.render_email_templates(request, start_email_form=start_email_form) 
+            cd = signup_email_form.cleaned_data
+            
+            try:
+                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','w')
+                f.write(cd['start_email_html'])
+                f.close()
+                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt','w')
+                f.write(cd['start_email_txt'])
+                f.close()
+            except:
+                messages.error(request, "There was an error updating the game start email.")
+                return redirect('email_templates')            
+            
+            messages.success(request, "Succesfully updated game start email.")
+            return self.render_email_templates(request, start_email_form=start_email_form)            

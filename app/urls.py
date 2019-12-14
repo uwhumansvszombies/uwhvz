@@ -53,8 +53,6 @@ urlpatterns = [
     path("dashboard/moderator/manage-mods", views.ManageModsView.as_view(), name='manage_mods'),
     path("dashboard/moderator/manage-volunteers", views.ManageVolunteersView.as_view(), name='manage_volunteers'),    
     path("dashboard/moderator/email-templates", views.EmailTemplatesView.as_view(), name='email_templates'),
-    path("dashboard/moderator/reminder-template", views.ReminderTemplateView.as_view(), name='reminder_template'),
-    path("dashboard/moderator/game-start-template", views.GameStartTemplateView.as_view(), name='game_start_template'),
     
     # Impersonation
     re_path(r'^su/', include('django_su.urls')),
