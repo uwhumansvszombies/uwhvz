@@ -3,6 +3,8 @@ from django.utils.decorators import method_decorator
 
 from app.util import MobileSupportedView, most_recent_game
 from app.models import Game
+from datetime import datetime
+from pytz import utc
 
 
 class IndexView(MobileSupportedView):
@@ -100,12 +102,12 @@ class PrevGamesView(MobileSupportedView):
         })
 
     def get(self, request):
-        prev_games = Game.objects.filter(include_summary=True)
+        prev_games = Game.objects.filter(game.ended_on > utc.localize(datetime.now()))
         
         return self.render_zombie_tree(request,prev_games,prev_games.order_by('-created_at').first())
     
     def post(self, request):
-        prev_games = Game.objects.filter(include_summary=True)
+        prev_games = Game.objects.filter(game.ended_on > utc.localize(datetime.now()))
         game_selection = prev_games.order_by('-created_at').first()
         for game in prev_games:
             if game.name in request.POST:
