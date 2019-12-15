@@ -51,6 +51,8 @@ class Game(models.Model):
 
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     modified_at: datetime = models.DateTimeField(auto_now=True)
+    
+    include_summary: bool = models.BooleanField(default=False)
 
     objects = GameManager()
 
