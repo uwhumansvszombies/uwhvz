@@ -187,13 +187,13 @@ class ManageOZView(View):
         })
     
     def post(self, request):
+        game = most_recent_game()
         if 'set_oz' in request.POST:
             for oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
                 oz.role=PlayerRole.ZOMBIE
                 oz.save()
             return redirect('manage_oz')
         
-        game = most_recent_game()
         oz_shuffle_form = OZShuffleForm(request.POST)
         if not oz_shuffle_form.is_valid():
             return self.get(request, oz_shuffle_form=oz_shuffle_form)
