@@ -7,7 +7,7 @@
 {% block pagesubtitle %}Manage OZs{% endblock %}
 
 {% block subcontent %}
-<div class="ui-grid s-dashboard__manage-oz">
+<div class="ui-grid">
   {% call card("OZ List") %}
     <table class="table table-striped">
       <thead>
@@ -36,7 +36,7 @@
     </table>
   {% endcall %}
 </div>
-<div class="ui-grid">
+<div class="ui-grid s-dashboard__manage-oz">
     {% call card("Change OZs") %}
     <p>This will randomly select the given number of OZs from anyone in the OZ pool. Those chosen will be listed with the locked OZs above, but replace any non-locked OZs. For example: if there are 4 locked OZs and you select 5 random OZs, hitting "shuffle" will give you 9 OZs.</p>
     <p>Note: Locked OZs can be removed by the Necro going in to their player settings and manually removing their "zombie" function. BUT legacy players can force their role to be zombies, so don't remove a locked OZ once you set them unless you're certain they didn't set it themselves!</p>
