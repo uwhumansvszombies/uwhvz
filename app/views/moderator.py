@@ -170,50 +170,50 @@ class ManageGameView(View):
             messages.success(request, "You've sent an email to all humans.")
         return redirect('manage_game')
 
-@method_decorator(moderator_required, name='dispatch')
-class ManageOZView(View):
-    template_name = "dashboard/moderator/manage_oz.html"
+#@method_decorator(moderator_required, name='dispatch')
+#class ManageOZView(View):
+    #template_name = "dashboard/moderator/manage_oz.html"
 
-    def get(self, request, oz_shuffle_form=OZShuffleForm()):
-        game = most_recent_game()
-        players = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
-        forced_oz = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE).order_by('user__first_name')
-        return render(request, self.template_name, {
-            'game': game,
-            'participant': request.user.participant(game),
-            'players': players,
-            'forced_oz':forced_oz,
-            'oz_shuffle_form':oz_shuffle_form,
-        })
+    #def get(self, request, oz_shuffle_form=OZShuffleForm()):
+        #game = most_recent_game()
+        #players = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
+        #forced_oz = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE).order_by('user__first_name')
+        #return render(request, self.template_name, {
+            #'game': game,
+            #'participant': request.user.participant(game),
+            #'players': players,
+            #'forced_oz':forced_oz,
+            #'oz_shuffle_form':oz_shuffle_form,
+        #})
     
-    def post(self, request):
-        if 'set_oz' in request.POST:
-            for oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
-                oz.role=PlayerRole.ZOMBIE
-                oz.save()
-            return redirect('manage_oz')
+    #def post(self, request):
+        #if 'set_oz' in request.POST:
+            #for oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
+                #oz.role=PlayerRole.ZOMBIE
+                #oz.save()
+            #return redirect('manage_oz')
         
-        game = most_recent_game()
-        oz_shuffle_form = OZShuffleForm(request.POST)
-        if not oz_shuffle_form.is_valid():
-            return self.get(request, oz_shuffle_form=oz_shuffle_form)
+        #game = most_recent_game()
+        #oz_shuffle_form = OZShuffleForm(request.POST)
+        #if not oz_shuffle_form.is_valid():
+            #return self.get(request, oz_shuffle_form=oz_shuffle_form)
         
-        players = Player.objects.filter(game=game, in_oz_pool=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
-        cd = oz_shuffle_form.cleaned_data
+        #players = Player.objects.filter(game=game, in_oz_pool=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
+        #cd = oz_shuffle_form.cleaned_data
         
-        to_make_ozs = sample(players,cd['amount'])
+        #to_make_ozs = sample(players,cd['amount'])
         
-        for old_oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
-            old_oz.is_oz=False
-            old_oz.save()
+        #for old_oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
+            #old_oz.is_oz=False
+            #old_oz.save()
             
-        for oz in to_make_ozs:
-            oz.is_oz=True
-            oz.save()
+        #for oz in to_make_ozs:
+            #oz.is_oz=True
+            #oz.save()
         
-        messages.success(request, "Succesfully updated OZ list.")
+        #messages.success(request, "Succesfully updated OZ list.")
         
-        return redirect('manage_oz')
+        #return redirect('manage_oz')
 
 @method_decorator(moderator_required, name='dispatch')
 class AddSignupView(View):
