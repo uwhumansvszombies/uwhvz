@@ -22,7 +22,7 @@ urlpatterns = [
     # Default dashboard pages
     path("dashboard", views.DashboardView.as_view(), name='dashboard'),
     path("missions", views.MissionsView.as_view(), name='missions'),
-    #path("previous-games", views.PrevGamesView.as_view(), name='previous_games'),
+    path("previous-games", views.PrevGamesView.as_view(), name='previous_games'),
 
     # Player/Game pages
     path("dashboard/player", views.PlayerInfoView.as_view(), name='player_info'),
@@ -45,7 +45,7 @@ urlpatterns = [
     
     path("dashboard/moderator/add-signup", views.AddSignupView.as_view(),
          name='add_signup'),    
-    #path("dashboard/moderator/manage-oz", views.ManageOZView.as_view(), name='manage_oz'),
+    path("dashboard/moderator/manage-oz", views.ManageOZView.as_view(), name='manage_oz'),
     path("dashboard/moderator/manage-players", views.ManagePlayersView.as_view(), name='manage_players'),
     path("dashboard/moderator/manage-shop", views.ManageShopView.as_view(), name='manage_shop'),
     

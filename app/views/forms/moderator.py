@@ -131,19 +131,19 @@ class AddSignupForm(forms.Form):
         )
     )
     
-#class OZShuffleForm(forms.Form):
-    #amount = forms.IntegerField(
-        #label="Number of Random OZs",
-        #initial=Player.objects.filter(game=most_recent_game()).distinct().count()//10,
-        #min_value=0,
-        #max_value=Player.objects.filter(game=most_recent_game()).exclude(role=PlayerRole.ZOMBIE).distinct().count(),
-        #widget=forms.TextInput(
-            #attrs={
-                #'class': 'ui-input',
-                #'input_type':'number'
-            #}
-        #)
-    #)
+class OZShuffleForm(forms.Form):
+    amount = forms.IntegerField(
+        label="Number of Random OZs",
+        initial=Player.objects.filter(game=most_recent_game()).distinct().count()//10,
+        min_value=0,
+        max_value=Player.objects.filter(game=most_recent_game()).exclude(role=PlayerRole.ZOMBIE).distinct().count(),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'input_type':'number'
+            }
+        )
+    )
     
 class GameStartForm(forms.Form):
     name = forms.CharField(
