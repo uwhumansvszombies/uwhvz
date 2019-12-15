@@ -13,6 +13,7 @@ from app.views.forms import *
 
 from datetime import datetime
 from pytz import utc
+from random import sample
 
 def get_text(file):
     return ''.join(open(file,'r'))
@@ -167,34 +168,52 @@ class ManageGameView(View):
             messages.success(request, "You've sent an email to all zombies.")
         elif cd['recipients'] == "Humans":
             messages.success(request, "You've sent an email to all humans.")
-        return redirect('manage_game')        
-    
-    #participants = get_game_participants(game)
-    #spectators = Spectator.objects.filter(game=game)
-    #moderators = Moderator.objects.filter(game=game)
-    #humans = Player.objects.filter(game=game, active=True, role=PlayerRole.HUMAN)
-    #zombies = Player.objects.filter(game=game, active=True, role=PlayerRole.ZOMBIE)
-
-    #all_emails = [p.user.email for p in participants]
-    #spectator_emails = [s.user.email for s in spectators]
-    #moderator_emails = [m.user.email for m in moderators]
-    #human_emails = [h.user.email for h in humans] + spectator_emails + moderator_emails
-    #zombie_emails = [z.user.email for z in zombies] + spectator_emails + moderator_emails    
-
-
+        return redirect('manage_game')
 
 @method_decorator(moderator_required, name='dispatch')
 class ManageOZView(View):
     template_name = "dashboard/moderator/manage_oz.html"
 
-    def get(self, request):
+    def get(self, request, oz_shuffle_form=OZShuffleForm()):
         game = most_recent_game()
-        players = Player.objects.filter(game=game, in_oz_pool=True).order_by('user__first_name')
+        players = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
+        forced_oz = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE).order_by('user__first_name')
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
             'players': players,
+            'forced_oz':forced_oz,
+            'oz_shuffle_form':oz_shuffle_form,
         })
+    
+    def post(self, request):
+        if 'set_oz' in request.POST:
+            for oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
+                oz.role=PlayerRole.ZOMBIE
+                oz.save()
+            return redirect('manage_oz')
+        
+        game = most_recent_game()
+        oz_shuffle_form = OZShuffleForm(request.POST)
+        if not oz_shuffle_form.is_valid():
+            return self.get(request, oz_shuffle_form=oz_shuffle_form)
+        
+        players = Player.objects.filter(game=game, in_oz_pool=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
+        cd = oz_shuffle_form.cleaned_data
+        
+        to_make_ozs = sample(players,cd['amount'])
+        
+        for old_oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
+            old_oz.is_oz=False
+            old_oz.save()
+            
+        for oz in to_make_ozs:
+            oz.is_oz=True
+            oz.save()
+        
+        messages.success(request, "Succesfully updated OZ list.")
+        
+        return redirect('manage_oz')
 
 @method_decorator(moderator_required, name='dispatch')
 class AddSignupView(View):

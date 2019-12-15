@@ -1,7 +1,7 @@
 from django import forms
 from enumfields import EnumField
 
-from app.models import ParticipantRole, SignupLocation, Player, User
+from app.models import ParticipantRole, SignupLocation, Player, User, PlayerRole
 from app.util import most_recent_game
 
 from datetime import datetime, date
@@ -127,6 +127,20 @@ class AddSignupForm(forms.Form):
             attrs={
                 'class': 'ui-input',
                 'placeholder': 'e.g. MC'
+            }
+        )
+    )
+    
+class OZShuffleForm(forms.Form):
+    amount = forms.IntegerField(
+        label="Number of Random OZs",
+        initial=Player.objects.filter(game=most_recent_game()).distinct().count()//10,
+        min_value=0,
+        max_value=Player.objects.filter(game=most_recent_game()).exclude(role=PlayerRole.ZOMBIE).distinct().count(),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'input_type':'number'
             }
         )
     )

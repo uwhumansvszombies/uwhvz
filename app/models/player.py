@@ -39,6 +39,7 @@ class Player(Participant):
     code: str = models.CharField(max_length=6)
     role: Enum = EnumField(enum=PlayerRole, max_length=1)
     in_oz_pool: bool = models.BooleanField(default=False)
+    is_oz: bool = models.BooleanField(default=False)
 
     faction: Faction = models.ForeignKey(Faction, on_delete=models.PROTECT, blank=True, null=True)
     point_modifier: int = models.IntegerField(default=0)
