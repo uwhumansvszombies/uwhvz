@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
 from django.views import View
+from rest_framework.utils import json
 
 from app.util import MobileSupportedView, most_recent_game
 from app.models import Game, Tag, Player, PlayerRole
