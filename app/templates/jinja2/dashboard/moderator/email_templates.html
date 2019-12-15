@@ -6,6 +6,7 @@
 {% block pagesubtitle %}Email Template Modification{% endblock %}
 
 {% block subcontent %}
+<div class="ui-grid">
   {% call card("Warning on altering emails") %}
   <p>Anything in double curly brackets is code that will be evaluated when the emails are sent. Do not try to change the code or add new parts with curly brackets unless you're certain you know what you're doing. You have been warned. It's recommended you only change the &lt;body&gt; of the html code.</p>
   <p>Also, a brief note on html code if you don't know how it works: use the &lt;p&gt; to start a paragraph, and &lt;/p&gt; to end a paragraph. Using &lt;b&gt; and &lt;i&gt; will bold or italicize text, respectively. Hitting enter won't start a new paragraph - only &lt;p&gt; will. If you need a space in the email for some reason, insert a break with &lt;br&gt;. It's recommended you plug html code into a viewer just to be sure you know what it'll look like before you use it.</p>
@@ -63,5 +64,6 @@
       </div>
     </form>
     {% endcall %}
+</div>
     
 {% endblock %}
