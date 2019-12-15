@@ -3,7 +3,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app.util import MobileSupportedView, most_recent_game
-from app.models import Game, Tag, Player
+from app.models import Game, Tag, Player, PlayerRole
 
 
 class IndexView(MobileSupportedView):
