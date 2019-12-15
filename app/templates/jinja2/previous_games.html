@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 
+{% block title %}UW HvZ &mdash; Game Archives{% endblock %}
+
 {% block styles %}
   {% compress css %}
-    <link href="{% sass_src 'stylesheets/dashboard.scss' %}" rel="stylesheet" type="text/css">
+    <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
   {% endcompress %}
-  {% block additional_styles %}{% endblock %}
 {% endblock %}
-
-{% block title pagetitle %}UW HvZ &mdash; Game Archives{% endblock %}
 
 {% block content %}
 <header id="landing-nav">
   <a href="/" class="sitelogo">{{ svg('site-logo-dark') }}</a>
   <nav>
     <ul>
-      <li><a class="text-light" href="#signup-schedule">Signup Schedule</a></li>
+      <li><a class="text-light" href="/#signup-schedule">Signup Schedule</a></li>
       <li><a class="text-light" href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>
       <li><a class="text-light" href="{{ static('files/Weeklong 101 & FAQs v1.0') }}">New Player Guide</a></li>
       <li><a class="text-light" href="{{ url('missions') }}">Common Mission Types</a></li>
@@ -31,23 +30,26 @@
   </div>
 </header>
 
+<main class="ui-layout" id=landing">
 <aside class="ui-sidebar" id="side-nav">
   <nav class="ui-menu">
     <ul class="ui-menu__section">
-    {{ for prev_game in prev_games }}
+    {% for prev_game in prev_games %}
       <li><div class="ui-form-group pt-2">
         <input class="btn btn-block btn-primary" type="submit" value="{{prev_game.name}}" name="{{ prev_game.name }}">
       </div></li>
-      {{ endfor }}
+      {% endfor %}
     </ul>
   </nav>
 </aside>
-{% endblock %}
 
-{% block subcontent %}
+<br>
+<br>
+<br>
+<br>
 <h2>{{ game_rendering }} Game Zombie Tree</h2>
 <div id="zombie-tree"></div>
-
+</main>
 {% endblock %}
 
 {% block scripts %}
