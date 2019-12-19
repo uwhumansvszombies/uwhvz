@@ -110,30 +110,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th>MC 3rd Floor</th>
-            <td>10am–5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
+          {% for signup in signups %}
+	  <tr>
+            <th>{{ signup.name }}</th>
+            <td>{{ signup.mon_hours if signup.mon_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.tues_hours if signup.tues_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.wed_hours if signup.wed_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.thurs_hours if signup.thurs_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.fri_hours if signup.fri_hours != '' else 'N/A' }}</td>
           </tr>
-          <tr>
-            <th>STC Lobby</th>
-            <td>10am–5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-          </tr>
-          <tr>
-            <th>DC Foyer</th>
-            <td>10am–5pm</td>
-            <td>N/A</td>
-            <td>N/A</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>

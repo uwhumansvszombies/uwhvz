@@ -5,7 +5,7 @@ from django.views import View
 from rest_framework.utils import json
 
 from app.util import MobileSupportedView, most_recent_game
-from app.models import Game, Tag, Player, PlayerRole
+from app.models import Game, Tag, Player, PlayerRole, SignupLocation
 
 
 class IndexView(MobileSupportedView):
@@ -14,7 +14,8 @@ class IndexView(MobileSupportedView):
 
     def get(self, request):
         game = most_recent_game()
-        return self.mobile_or_desktop(request, {'game': game})
+        signups = SignupLocation.objects.filter(game=game).exclude(name='Online')
+        return self.mobile_or_desktop(request, {'game': game, 'signups':signups})
 
 
 @method_decorator(login_required, name='dispatch')
