@@ -20,6 +20,12 @@ class SignupLocation(models.Model):
 
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     modified_at: datetime = models.DateTimeField(auto_now=True)
+    
+    mon_hours: str = models.CharField(max_length=15, null=True, blank=True)
+    tues_hours: str = models.CharField(max_length=15, null=True, blank=True)
+    wed_hours: str = models.CharField(max_length=15, null=True, blank=True)
+    thurs_hours: str = models.CharField(max_length=15, null=True, blank=True)
+    fri_hours: str = models.CharField(max_length=15, null=True, blank=True)
 
     objects = SignupLocationManager()
 
