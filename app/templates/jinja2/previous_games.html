@@ -4,7 +4,7 @@
 
 {% block styles %}
   {% compress css %}
-    <link href="{% sass_src 'stylesheets/dashboard.scss' %}" rel="stylesheet" type="text/css">
+    <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
   {% endcompress %}
 {% endblock %}
 
@@ -31,7 +31,7 @@
 </header>
 
 <main class="ui-layout" id=landing">
-<aside class="ui-sidebar" id="side-nav">
+<aside class="ui-sidebar__item" id="side-nav">
   <nav class="ui-menu">
     <ul class="ui-menu__section">
     {% for prev_game in prev_games %}
@@ -43,12 +43,10 @@
   </nav>
 </aside>
 
-<br>
-<br>
-<br>
-<br>
+<section class="ui-layout__item" id="intro">
 <h2>{{ game_rendering }} Game Zombie Tree</h2>
 <div id="zombie-tree"></div>
+</section>
 </main>
 {% endblock %}
 
