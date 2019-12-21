@@ -115,4 +115,4 @@ class PrevGamesView(View):
             if game.name in request.POST:
                 game_selection = game
         
-        return self.render_zombie_tree(request,prev_games,game_selection)
+        return self.render_zombie_tree(request,prev_games,(game_selection)[1])
