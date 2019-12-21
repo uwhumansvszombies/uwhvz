@@ -5,6 +5,8 @@
 {% block styles %}
   {% compress css %}
     <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
+    <link href="{% sass_src 'stylesheets/dashboard.scss' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous">
   {% endcompress %}
 {% endblock %}
 
@@ -30,8 +32,7 @@
   </div>
 </header>
 
-<main class="ui-layout" id=landing">
-<aside class="ui-sidebar__item" id="side-nav">
+<aside class="ui-sidebar" id="side-nav">
   <nav class="ui-menu">
     <ul class="ui-menu__section">
     {% for prev_game in prev_games %}
@@ -43,6 +44,7 @@
   </nav>
 </aside>
 
+<main class="ui-layout" id="landing">
 <section class="ui-layout__item" id="intro">
 <h2>{{ game_rendering }} Game Zombie Tree</h2>
 <div id="zombie-tree"></div>
