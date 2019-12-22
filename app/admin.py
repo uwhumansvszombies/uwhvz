@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 from app.models import *
 
@@ -10,6 +11,30 @@ mark_oz_bulk.short_description = "Make OZ"
 def remove_oz_bulk(ModelAdmin, request, queryset):
     queryset.update(in_oz_pool=False)
 remove_oz_bulk.short_description = "Remove OZ"
+
+class UserChangeForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
+        model = User
+
+class UserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+
+    def clean_username(self):
+        email = self.cleaned_data['email']
+        try:
+            User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        raise forms.ValidationError(self.error_messages['duplicate_username'])
+
+@admin.register(User)
+class UserAdmin(UserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('legacy_points',)}),
+    )
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
@@ -31,7 +56,7 @@ class PlayerAdmin(admin.ModelAdmin):
 class LegacyAdmin(admin.ModelAdmin):
     search_fields = ('user', 'time','cost')
     list_display = ('user', 'time', 'cost')
-    ordering = ('time')
+    ordering = ('time', 'user')
     
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser

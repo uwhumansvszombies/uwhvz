@@ -1,5 +1,6 @@
 from .faction import Faction
 from .game import Game, GameState
+from .legacy import Legacy
 from .moderator import Moderator
 from .modifier import Modifier, ModifierType
 from .participant import Participant, ParticipantRole

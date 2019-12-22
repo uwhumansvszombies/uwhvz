@@ -115,3 +115,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.moderator_set.get(game=game, active=True)
 
         return None
+    
+    def legacy_points_spent(self) -> int:
+        return sum([legacy.cost for legacy in self.user_legacy])
+            

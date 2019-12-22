@@ -18,7 +18,7 @@ class Legacy(models.Model):
     cost: int = models.IntegerField()
     details: str = models.CharField(max_length=50)
     
-    user: User = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_name')
+    user: User = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_legacy')
     
 
     time: datetime = models.DateTimeField(auto_now_add=True)
