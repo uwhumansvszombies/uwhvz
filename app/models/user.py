@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 
 
 class UserManager(BaseUserManager):
@@ -50,6 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name: str = models.CharField("First name", max_length=30, blank=True)
     last_name: str = models.CharField("Last name", max_length=150, blank=True)
+    legacy_points: str = models.IntegerField("Legacy points", default=0, validators=[MinValueValidator(0)])
     email: str = models.EmailField(
         "Email address",
         unique=True,

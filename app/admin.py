@@ -26,7 +26,15 @@ class PlayerAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
-
+  
+@admin.register(Legacy)
+class LegacyAdmin(admin.ModelAdmin):
+    search_fields = ('user', 'time','cost')
+    list_display = ('user', 'time', 'cost')
+    ordering = ('time')
+    
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
 
 @admin.register(Moderator)
 class ModeratorAdmin(admin.ModelAdmin):
