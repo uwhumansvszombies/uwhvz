@@ -16,7 +16,7 @@ class UserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = User
 
-class UserCreationForm(UserCreationForm):
+class UserCreateForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
 
@@ -26,12 +26,19 @@ class UserCreationForm(UserCreationForm):
             User.objects.get(email=email)
         except User.DoesNotExist:
             return email
-        raise forms.ValidationError(self.error_messages['duplicate_username'])
+        raise forms.ValidationError(self.error_messages['duplicate_email'])
+    
+    def save(self, commit=True):
+            user = super(UserCreateForm, self).save(commit=False)
+            user.email = self.cleaned_data["email"]
+            if commit:
+                user.save()
+            return user    
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
     form = UserChangeForm
-    add_form = UserCreationForm
+    add_form = UserCreateForm
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': ('legacy_points',)}),
     )
