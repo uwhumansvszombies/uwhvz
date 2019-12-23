@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.contrib.auth.models import User as djUser
+@admin.unregister(djUser)
 
 from app.models import *
 
@@ -12,36 +13,27 @@ def remove_oz_bulk(ModelAdmin, request, queryset):
     queryset.update(in_oz_pool=False)
 remove_oz_bulk.short_description = "Remove OZ"
 
-class UserChangeForm(UserChangeForm):
-    class Meta(UserChangeForm.Meta):
-        model = User
+class UserInLine(admin.StackedInline):
+    model = User
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
 
-class UserCreateForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-
-    def clean_username(self):
-        email = self.cleaned_data['email']
-        try:
-            User.objects.get(email=email)
-        except User.DoesNotExist:
-            return email
-        raise forms.ValidationError(self.error_messages['duplicate_email'])
-    
-    def save(self, commit=True):
-            user = super(UserCreateForm, self).save(commit=False)
-            user.email = self.cleaned_data["email"]
-            if commit:
-                user.save()
-            return user    
 
 @admin.register(User)
-class UserAdmin(UserAdmin):
-    form = UserChangeForm
-    add_form = UserCreateForm
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('legacy_points',)}),
-    )
+class EmailUserAdmin(UserAdmin):
+    inlines = (UserInline, )
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'get_legacy')
+    list_select_related = ('user', )
+
+    def get_legacy(self, instance):
+        return instance.user.legacy_points
+    get_legacy.short_description = 'Legacy Points'
+
+    def get_inline_instances(self, request, obj=None):
+        if not obj:
+            return list()
+        return super(UserAdmin, self).get_inline_instances(request, obj)
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
