@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from app.models import *
+from app.views.forms import UserCreationForm, UserChangeForm
 
 def mark_oz_bulk(ModelAdmin, request, queryset):
     queryset.update(in_oz_pool=True)
@@ -11,14 +12,9 @@ def remove_oz_bulk(ModelAdmin, request, queryset):
     queryset.update(in_oz_pool=False)
 remove_oz_bulk.short_description = "Remove OZ"
 
-class UserInLine(admin.StackedInline):
-    model = User
-    can_delete = False
-    verbose_name_plural = 'Profile'
-    fk_name = 'user'
-
 class UserAdmin(UserAdmin):
-    inlines = (UserInLine, )
+    add_form = 
+    form = 
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'get_legacy')
     list_select_related = ('user', )
 
@@ -26,12 +22,6 @@ class UserAdmin(UserAdmin):
         return instance.user.legacy_points
     get_legacy.short_description = 'Legacy Points'
 
-    def get_inline_instances(self, request, obj=None):
-        if not obj:
-            return list()
-        return super(UserAdmin, self).get_inline_instances(request, obj)
-    
-@admin.register(User, UserAdmin)
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
