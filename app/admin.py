@@ -1,7 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User as djUser
-@admin.unregister(djUser)
 
 from app.models import *
 
@@ -19,11 +17,9 @@ class UserInLine(admin.StackedInline):
     verbose_name_plural = 'Profile'
     fk_name = 'user'
 
-
-@admin.register(User)
-class EmailUserAdmin(UserAdmin):
-    inlines = (UserInline, )
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'get_legacy')
+class UserAdmin(UserAdmin):
+    inlines = (UserInLine, )
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'get_legacy')
     list_select_related = ('user', )
 
     def get_legacy(self, instance):
@@ -34,6 +30,8 @@ class EmailUserAdmin(UserAdmin):
         if not obj:
             return list()
         return super(UserAdmin, self).get_inline_instances(request, obj)
+    
+@admin.register(User, UserAdmin)
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
