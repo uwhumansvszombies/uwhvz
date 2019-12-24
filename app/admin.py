@@ -13,8 +13,8 @@ def remove_oz_bulk(ModelAdmin, request, queryset):
 remove_oz_bulk.short_description = "Remove OZ"
 
 class UserAdmin(UserAdmin):
-    add_form = 
-    form = 
+    add_form = UserCreationForm
+    form = UserChangeForm
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'get_legacy')
     list_select_related = ('user', )
 
