@@ -6,13 +6,13 @@ class UserCreationForm(authforms.UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email')
+        fields = ('email',)
 
 class UserChangeForm(authforms.UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('email')
+        fields = ('email','legacy_points')
 
 class UserSignupForm(forms.Form):
     first_name = forms.CharField(
