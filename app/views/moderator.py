@@ -285,6 +285,7 @@ class ManageLegacyView(View):
 
         return render(request, self.template_name, {
             'game': game,
+            'participant': request.user.participant(game),
             'all_legacies': all_legacies,
             'permanent_status': permanent_status,
             'add_legacy_form': add_legacy_form,
