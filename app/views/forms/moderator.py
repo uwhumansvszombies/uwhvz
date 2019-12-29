@@ -17,7 +17,7 @@ def get_users():
     return ((x.id, f'{x.get_full_name()} - {x.email}') for x in User.objects.filter(is_active=True))
 
 def get_users_legacy():
-    return ((x.id, f'{x.get_full_name()}, {x.email} - {x.legacy_points()}') for x in User.objects.filter(is_active=True))
+    return ((x.id, f'{x.get_full_name()}, {x.email} - {x.legacy_points()}') for x in User.objects.filter(is_active=True).order_by('-first_name'))
 
 def get_months():
     return ((i, date(2008, i, 1).strftime('%B')) for i in range(1,13))
