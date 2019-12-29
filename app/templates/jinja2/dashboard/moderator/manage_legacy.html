@@ -9,7 +9,7 @@
 {% block subcontent %}
 <div class="ui-grid">
   <div class="ui-grid s-dashboard__signup-players">
-    {% call card("Manage Legacy Points", id="card--add-legacy") %}
+    {% call card("Manage Legacy Tokens", id="card--add-legacy") %}
       <form action="{{ url('manage_legacy') }}" method="post" novalidate>
         {{ csrf_input }}
 
@@ -72,8 +72,13 @@
       <tr>
         <td scope="col">{{ user.get_full_name() }}</td>
         <td scope="col">{{ user.email }}</td>
-        <td scope="col">{{ "&#8734;" if user in permanent_status else user.legacy_points() }}</td>
-        <td scope="col">{{ "&#10004;" if user in permanent_status else "" }}</td>
+        {% if user in permanent_status  %}
+        <td scope="col">&#8734;</td>
+        <td scope="col">&#10004;</td>
+        {% else %}
+        <td scope="col">{{ user.legacy_points() }}</td>
+        <td scope="col"></td>
+        {% endif %}
       </tr>
       {% endfor %}
       </tbody>
