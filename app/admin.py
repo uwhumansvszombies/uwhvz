@@ -12,15 +12,19 @@ def remove_oz_bulk(ModelAdmin, request, queryset):
     queryset.update(in_oz_pool=False)
 remove_oz_bulk.short_description = "Remove OZ"
 
+def get_legacy(self, instance):
+    return instance.user.legacy_points
+get_legacy.short_description = 'Legacy Points'
+
 class UserAdmin(UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
+    fieldsets = (
+        (('User'), {'fields': ('email','is_staff', 'legacy_points')}),
+        (('Permissions'), {'fields': ('is_active','is_staff')}),
+    )
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'get_legacy')
-    list_select_related = ('user', )
 
-    def get_legacy(self, instance):
-        return instance.user.legacy_points
-    get_legacy.short_description = 'Legacy Points'
 
 
 @admin.register(Player)
@@ -41,8 +45,8 @@ class PlayerAdmin(admin.ModelAdmin):
   
 @admin.register(Legacy)
 class LegacyAdmin(admin.ModelAdmin):
-    search_fields = ('user', 'time','cost')
-    list_display = ('user', 'time', 'cost')
+    search_fields = ('user', 'time','value')
+    list_display = ('user', 'time', 'value')
     ordering = ('time', 'user')
     
     def has_delete_permission(self, request, obj=None):
