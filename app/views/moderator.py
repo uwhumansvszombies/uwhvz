@@ -291,19 +291,20 @@ class ManageLegacyView(View):
             'add_legacy_form': add_legacy_form,
             'token_transactions': token_transactions,
              })
-        
+    
     def get(self, request):
         return self.render_manage_legacy(request)
 
     def post(self, request):
         legacy_form = AddLegacyForm(request.POST)
         if not legacy_form.is_valid():
-            return self.render_manage_legacy(request, add_legacy_form=AddLegacyForm())
+            return self.render_manage_legacy(request, add_legacy_form=add_legacy_form)
     
         game = most_recent_game()
         cleaned_data = legacy_form.cleaned_data
         legacy_points, legacy_user, legacy_details = int(cleaned_data['legacy_points']),\
-            cleaned_data['legacy_user'], cleaned_data['legacy_details']
+            User.objects.get(id=cleaned_data['legacy_user']), cleaned_data['legacy_details']
+        
         
         if legacy_points < 0 and -1*(legacy_points) > legacy_user.legacy_points():
             messages.error(request, f"{legacy_user} does not have {legacy_points} points available to spend!")
