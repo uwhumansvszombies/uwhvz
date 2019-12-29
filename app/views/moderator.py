@@ -7,7 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import Group
 
 from app.mail import send_signup_email
-from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants, necromancer_required
 from app.views.forms import *
 
@@ -263,18 +263,58 @@ class ManageStaffView(View):
        
 
     def post(self, request):
-        #legacy_form = LegacyForm(request.POST)
-        #if not legacy_form.is_valid():
-            #return self.render_manage_players(request, legacy_form=LegacyForm())
-
-        #game = most_recent_game()
-        #cleaned_data = legacy_form.cleaned_data
-        #legacy_points, legacy_user, legacy_details = cleaned_data['legacy_points'],\
-            #cleaned_data['legacy_user'], cleaned_data['legacy_details']
-        
-        ## This will be used to implement the legacy object
-        #messages.success(request, f"Succesfully gave {legacy_points} legacy points to {legacy_user}.")
         return redirect('manage_staff')
+    
+@method_decorator(necromancer_required, name='dispatch')
+class ManageLegacyView(View):
+    template_name = "dashboard/moderator/manage_legacy.html"
+
+    def render_manage_legacy(self, request, add_legacy_form=AddLegacyForm()):
+        game = most_recent_game()
+        
+        all_legacies = []
+        permanent_status = []
+        points_for_permanent = 8
+        token_transactions = Legacy.objects
+        
+        for user in User.objects:
+            if user.legacy_points():
+                all_legacies.append(user)
+                if sum(user.user_legacy().filter(value>0)) >= points_for_permanent:
+                    permanent_status.append(user)
+
+        return render(request, self.template_name, {
+            'game': game,
+            'all_legacies': all_legacies,
+            'permanent_status': permanent_status,
+            'add_legacy_form': add_legacy_form,
+            'token_transactions': token_transactions,
+             })
+        
+    def get(self, request):
+        return self.render_manage_legacy(request)
+
+    def post(self, request):
+        legacy_form = LegacyForm(request.POST)
+        if not legacy_form.is_valid():
+            return self.render_manage_legacy(request, legacy_form=LegacyForm())
+    
+        game = most_recent_game()
+        cleaned_data = legacy_form.cleaned_data
+        legacy_points, legacy_user, legacy_details = int(cleaned_data['legacy_points']),\
+            cleaned_data['legacy_user'], cleaned_data['legacy_details']
+        
+        if legacy_points < 0 and -1*(legacy_points) > legacy_user.legacy_points():
+            messages.error(request, f"{legacy_user} does not have {legacy_points} points available to spend!")
+            return self.render_manage_legacy(request, legacy_form=LegacyForm())
+        
+        Legacy.objects.create_legacy(user=legacy_user,value=legacy_points,details=legacy_details)
+        
+        if legacy_points > 0:
+            messages.success(request, f"Succesfully gave {legacy_points} tokens to {legacy_user.get_full_name()}.")
+        else:
+            messages.success(request, f"{legacy_user.get_full_name()} succesfully spent {abs(legacy_points)} tokens.")
+        return redirect('manage_legacy')
 
 @method_decorator(necromancer_required, name='dispatch')    
 class ManageModsView(View):
@@ -323,7 +363,7 @@ class ManageVolunteersView(View):
         vol_group.user_set.add(volunteer)
         vol_group.save()
         
-        messages.success(request, f"Added signup location {volunteer.get_full_name}")
+        messages.success(request, f"Added volunteer {volunteer.get_full_name}")
         
         return redirect('manage_staff')
 

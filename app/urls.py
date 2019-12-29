@@ -51,6 +51,7 @@ urlpatterns = [
     
     # Necromancer pages
     path("dashboard/moderator/manage-staff", views.ManageStaffView.as_view(), name='manage_staff'),
+    path("dashboard/moderator/manage-legacy", views.ManageLegacyView.as_view(), name='manage_legacy'),
     path("dashboard/moderator/manage-mods", views.ManageModsView.as_view(), name='manage_mods'),
     path("dashboard/moderator/manage-volunteers", views.ManageVolunteersView.as_view(), name='manage_volunteers'),    
     path("dashboard/moderator/email-templates", views.EmailTemplatesView.as_view(), name='email_templates'),

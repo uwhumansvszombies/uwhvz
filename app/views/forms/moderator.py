@@ -16,6 +16,9 @@ def get_players():
 def get_users():
     return ((x.id, f'{x.get_full_name()} - {x.email}') for x in User.objects.filter(is_active=True))
 
+def get_users_legacy():
+    return ((x.id, f'{x.get_full_name()}, {x.email} - {x.legacy_points()}') for x in User.objects.filter(is_active=True))
+
 def get_months():
     return ((i, date(2008, i, 1).strftime('%B')) for i in range(1,13))
 
@@ -246,6 +249,40 @@ class AddVolunteerForm(forms.Form):
             }
         )
     )
+    
+class AddLegacyForm(forms.Form):
+    legacy_user = forms.ChoiceField(
+        label="User to add Tokens to",
+        choices=get_users_legacy,
+        widget=forms.Select(
+            attrs={
+                'class': 'custom-select',
+            }
+        )
+    )
+    legacy_details = forms.CharField(
+        label="Token Info",
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'Leave a note of what this is for'
+            }
+        )
+    )
+    legacy_points = forms.IntegerField(
+        label="Number of Tokens",
+        initial=0,
+        help_text=
+        "This value can be positive or negative. A positive value indicates a gain of tokens, a negative value indicates a loss of tokens.\
+        Users can never have a negative number of tokens. Necromancers will usually receive 2 for each game they run, and all others receive 1.",           
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'input_type':'number'
+            }
+        )
+    )    
     
 class SignupEmailForm(forms.Form):
     signup_email_html = forms.CharField(

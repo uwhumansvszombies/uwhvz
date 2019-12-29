@@ -1,0 +1,85 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Manage Players{% endblock %}
+
+{% block pagetitle %}{{ game }} &mdash; Necromancer Actions{% endblock %}
+{% block pagesubtitle %}Manage Legacies{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid">
+  <div class="ui-grid s-dashboard__signup-players">
+    {% call card("Manage Legacy Points", id="card--add-legacy") %}
+      <form action="{{ url('manage_legacy') }}" method="post" novalidate>
+        {{ csrf_input }}
+
+        {% for field in add_legacy_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+            {% endfor %}
+            </div>
+          {% endfor %}
+        
+        <div class="ui-form-group pt text-center">
+          <input type="submit" value="Add Legacy" class="btn btn-block btn-primary">
+        </div>
+      </form>
+    {% endcall %}
+  </div>
+
+  <div class="ui-grid s-dashboard__signup-players">
+  {% call card("Token Transactions") %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Details</th>
+        <th scope="col">Token Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for token in token_transactions %}
+      <tr>
+        <td scope="col">{{ token.user.get_full_name() }}</td>
+        <td scope="col">{{ token.user.email }}</td>
+        <td scope="col">{{ token.details }}</td>
+        <td scope="col">{{ token.value }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endcall %}
+  
+  {% call card("Token Status") %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Tokens</th>
+        <th scope="col">Permanent Status?</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for user in all_legacies %}
+      <tr>
+        <td scope="col">{{ user.get_full_name() }}</td>
+        <td scope="col">{{ user.email }}</td>
+        <td scope="col">{{ "&#8734;" if user in permanent_status else user.legacy_points() }}</td>
+        <td scope="col">{{ "&#10004;" if user in permanent_status else "" }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endcall %}
+    </div>
+    
+</div>
+{% endblock %}

@@ -51,7 +51,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name: str = models.CharField("First name", max_length=30, blank=True)
     last_name: str = models.CharField("Last name", max_length=150, blank=True)
-    legacy_points: str = models.IntegerField("Legacy points", default=0, validators=[MinValueValidator(0)])
     email: str = models.EmailField(
         "Email address",
         unique=True,
@@ -116,6 +115,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return None
     
-    def legacy_points_spent(self) -> int:
-        return sum([legacy.cost for legacy in self.user_legacy])
-            
+    def legacy_points(self) -> int:
+        if self.user_legacy:
+            return sum([legacy.value for legacy in self.user_legacy])
+        else:
+            return 0
