@@ -296,9 +296,9 @@ class ManageLegacyView(View):
         return self.render_manage_legacy(request)
 
     def post(self, request):
-        legacy_form = LegacyForm(request.POST)
+        legacy_form = AddLegacyForm(request.POST)
         if not legacy_form.is_valid():
-            return self.render_manage_legacy(request, legacy_form=LegacyForm())
+            return self.render_manage_legacy(request, legacy_form=AddLegacyForm())
     
         game = most_recent_game()
         cleaned_data = legacy_form.cleaned_data
