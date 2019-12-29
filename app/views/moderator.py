@@ -280,7 +280,7 @@ class ManageLegacyView(View):
         for user in User.objects.all():
             if user.legacy_points():
                 all_legacies.append(user)
-                if sum(user.user_legacy().filter(value>0).values_list('value', flat=True)) >= points_for_permanent:
+                if sum(Legacy.objects.filter(user=user,value__gt=0).values_list('value', flat=True)) >= points_for_permanent:
                     permanent_status.append(user)
 
         return render(request, self.template_name, {
