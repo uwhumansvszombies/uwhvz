@@ -117,6 +117,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def legacy_points(self) -> int:
         if self.user_legacy:
-            return sum([legacy.value for legacy in self.user_legacy])
+            return sum([legacy.value for legacy in self.user_legacy.all()])
         else:
             return 0
