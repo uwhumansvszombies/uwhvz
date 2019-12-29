@@ -12,7 +12,7 @@ class UserChangeForm(authforms.UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('email','legacy_points')
+        fields = ('email',)
 
 class UserSignupForm(forms.Form):
     first_name = forms.CharField(
