@@ -522,7 +522,7 @@ class EmailTemplatesView(View):
             
             if not reminder_email_form.is_valid():
                 return self.render_email_templates(request, reminder_email_form=reminder_email_form)       
-            cd = signup_email_form.cleaned_data
+            cd = reminder_email_form.cleaned_data
             
             try:
                 f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','w')
