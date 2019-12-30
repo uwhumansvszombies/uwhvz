@@ -43,7 +43,6 @@ class Player(Participant):
 
     faction: Faction = models.ForeignKey(Faction, on_delete=models.PROTECT, blank=True, null=True)
     point_modifier: int = models.IntegerField(default=0)
-    is_score_public: bool = models.BooleanField(null=True,default=False)
 
     objects = PlayerManager()
 

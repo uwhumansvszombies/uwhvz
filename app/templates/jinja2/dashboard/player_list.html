@@ -18,7 +18,6 @@
       <th scope="col">Email</th>
       {% endif -%}
       <th scope="col">Role</th>
-      <th scope="col">Score</th>
     </tr>
   </thead>
   <tbody>
@@ -34,8 +33,6 @@
         {% else %}
           {%- if p.is_player %}{{ p.role }}{% else %}{{ p.type }}{% endif -%}
         {% endif -%}</td>
-        <td scope="col">{% if p.is_player and p.is_score_public %}{{ p.score() }}{% elif p.is_player %}Hidden
-        {% elif p.is_moderator and p.score %}{{ p.score }}{% else %}N/A{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>
