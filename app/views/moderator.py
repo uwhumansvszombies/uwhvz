@@ -15,6 +15,9 @@ from datetime import datetime
 from pytz import utc
 from random import sample
 
+def get_text(file):
+    return ''.join(open(file,'r'))
+
 
 @method_decorator(moderator_required, name='dispatch')
 class KillUnsuppliedHumansView(View):
@@ -477,7 +480,8 @@ class ManageShopView(View):
 class EmailTemplatesView(View):
     template_name = "dashboard/moderator/email_templates.html"
 
-    def render_email_templates(self, request, signup_email_form=SignupEmailForm(),\
+    def render_email_templates(self, request, signup_email_form=SignupEmailForm(initial={'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
+                'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')}),\
                 reminder_email_form=ReminderEmailForm(), start_email_form=StartEmailForm()):        
         game = most_recent_game()
 
