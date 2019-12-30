@@ -305,10 +305,13 @@ class SignupEmailForm(forms.Form):
             }
         )
     )
+    def get_initial(self):
+        return {'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
+                'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')}
     def __init__(self, *args, **kwargs):
+        super(SignupEmailForm, self).__init__(*args, **kwargs)
         self.initial['signup_email_html'] = get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html')
         self.initial['signup_email_txt'] = get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')
-        super(SignupEmailForm, self).__init__(*args, **kwargs)
     
                      
     
