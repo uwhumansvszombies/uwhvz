@@ -17,7 +17,8 @@ def get_users():
     return ((x.id, f'{x.get_full_name()} - {x.email}') for x in User.objects.filter(is_active=True))
 
 def get_users_legacy():
-    return ((x.id, f'{x.get_full_name()}, {x.email} - {x.legacy_points()}') for x in User.objects.filter(is_active=True).order_by('-user_legacy','first_name').distinct())
+    users = User.objects.filter(is_active=True).order_by('-user_legacy','first_name').distinct()
+    return ((x.id, f'{x.get_full_name()}, {x.email} - {x.legacy_points()}') for x in users)
 
 def get_months():
     return ((i, date(2008, i, 1).strftime('%B')) for i in range(1,13))
@@ -303,7 +304,14 @@ class SignupEmailForm(forms.Form):
                 'class': 'ui-input',
             }
         )
-    )    
+    )
+    def __init__(self, *args, **kwargs):
+            kwargs.update(initial={
+                'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
+                'singup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')
+            })
+    
+            super(SingupEmailForm, self).__init__(*args, **kwargs)         
     
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
@@ -325,6 +333,14 @@ class ReminderEmailForm(forms.Form):
             }
         )
     )
+    
+    def __init__(self, *args, **kwargs):
+            kwargs.update(initial={
+                'reminder_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html'),
+                'reminder_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt')
+            })
+    
+            super(ReminderEmailForm, self).__init__(*args, **kwargs)    
 
 class StartEmailForm(forms.Form):
     start_email_html = forms.CharField(
@@ -345,4 +361,12 @@ class StartEmailForm(forms.Form):
                 'class': 'ui-input',
             }
         )
-    )    
+    )
+    
+    def __init__(self, *args, **kwargs):
+            kwargs.update(initial={
+                'start_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html'),
+                'start_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt')
+            })
+    
+            super(StartEmailForm, self).__init__(*args, **kwargs)     

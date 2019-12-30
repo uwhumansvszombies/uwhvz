@@ -34,7 +34,7 @@
     {% call card("Signup Locations") %}
     <form action="{{ url('add_signup') }}" method="post" novalidate>
       {{ csrf_input }}
-      <table><thead><tr><td scope="col">Add location: </td>
+      <table><tr><td scope="col">Add location: </td>
        {% for field in signup_loc_form %}
         <td scope="col">
           {{ field }}
@@ -43,7 +43,7 @@
        <td scope="col"><div class="ui-form-group">
         <input class="btn btn-block btn-primary" type="submit" value="Add">
       </div></td>
-      </table></thead></tr>
+      </tr></table>
     </form>
     
     <table class="table table-striped">

@@ -15,13 +15,58 @@
     </div>
   {% else %}
     <div class="alert alert-success show">
-      You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}. {% endif %}
+      You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}.{% endif %}
     </div>
   {% endif %}
 {% endif %}
 
 <div class="ui-grid s-dashboard__game-info align-content-start">
   <div class="ui-grid align-content-start">
+  
+    {% if participant.user.legacy_points() %}
+    {% call card("Legacy Tokens") %}
+    
+    {% if points_accu < points_for_permanent %}
+      <p>You currently have {{ participant.user.legacy_points() }} tokens available to use! You have accumulated {{ points_accu }} tokens total and need {{ points_for_permanent - points_accu }} more tokens to achieve legacy status. You may use a legacy token to start a game either as OZ or with 15 points. If you use a token, you gain acccess to the volunteer mission.</p>
+      {% if participant.is_oz or participant.score() >= 15 %}
+      <p>You are either already an OZ or have 15 points to start with.</p>
+      {% else %}
+      <table><tr>
+      <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start as OZ" name="oz">
+        </form></td>
+        <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start with 15 Points" name="pts">
+        </form></td>
+      </tr></table>
+      {% endif %}
+    {% else %}
+      <p>You have succesfully achieved Legacy Status! You may request to be OZ or receive 15 starting points every game prior to every game start! You will always have volunteer mission access when you choose to use these perks!</p>
+      {% if participant.is_oz or participant.score() >= 15 %}
+      <p>You are either already an OZ or have 15 points to start with.</p>
+      {% else %}
+      <table><tr>
+      <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start as OZ" name="oz">
+        </form></td>
+        <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start with 15 Points" name="pts">
+        </form></td>
+      </tr></table>
+      {% endif %}
+    {% endif %}
+    
+    {% endcall %}
+    {% endif %}
+    
     {% call card("System Requirements") %}
       <p>Currently, this website is fully supported by <b>Chrome</b>, <b>Firefox</b>, and <b>Microsoft Edge</b>. If you are not using one of these browsers, you may experience some technical issues.</p>
     {% endcall %}

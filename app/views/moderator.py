@@ -15,9 +15,6 @@ from datetime import datetime
 from pytz import utc
 from random import sample
 
-def get_text(file):
-    return ''.join(open(file,'r'))
-
 
 @method_decorator(moderator_required, name='dispatch')
 class KillUnsuppliedHumansView(View):
@@ -60,6 +57,11 @@ class GameStartView(View):
         
         if not 'Online' in list(SignupLocation.objects.filter(game=game).values_list('name', flat=True)):
             SignupLocation.objects.create_signup_location('Online', game)
+        
+        volunteers = Group.objects.get(name='Volunteer').item_set.all()
+        for volunteer in volunteers:
+            if volunteer.email != 'volunteer@email.com':
+                volunteer.groups.remove("Volunteer")
             
         messages.success(request, f"The Game \"{game_title}\" is open for signups.")
         return redirect('manage_game')
@@ -144,7 +146,7 @@ class ManageGameView(View):
             recipients = list(User.objects \
                 .filter(game=game, active=True, groups__name="Volunteer") \
                 .values_list('user__email', flat=True))    
-            subject_set = '[hvz-volunteers]'        
+            subject_set = '[hvz-volunteers]'
             
         recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
@@ -475,21 +477,9 @@ class ManageShopView(View):
 class EmailTemplatesView(View):
     template_name = "dashboard/moderator/email_templates.html"
 
-    def render_email_templates(self, request, signup_email_form=SignupEmailForm(initial=\
-                {'signup_email_html':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),\
-                 'signup_email_txt':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')}),\
-                reminder_email_form=ReminderEmailForm(initial=\
-                {'reminder_email_html':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html'),\
-                 'reminder_email_txt':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt')}),\
-                start_email_form=StartEmailForm(initial=\
-                {'start_email_html':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html'),\
-                 'start_email_txt':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt')})):
-        
+    def render_email_templates(self, request, signup_email_form=SignupEmailForm()):        
         game = most_recent_game()
-        
-        messages.success(request, get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt'))
-        
-        
+
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),

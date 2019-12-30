@@ -3,9 +3,10 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
 from django.views import View
 from rest_framework.utils import json
+from django.contrib.auth.models import Group
 
 from app.util import MobileSupportedView, most_recent_game
-from app.models import Game, Tag, Player, PlayerRole, SignupLocation
+from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy
 
 
 class IndexView(MobileSupportedView):
@@ -25,7 +26,32 @@ class DashboardView(MobileSupportedView):
 
     def get(self, request):
         game = most_recent_game()
-        return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game)})
+        points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
+        points_for_permanent = 8        
+        return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game),
+                                                'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
+    
+    def post(self, request):
+        game = most_recent_game()
+        
+        if "pts" in request.POST:
+            player = request.user.participant(game)
+            player.point_modifier = 15
+            player.save()
+            
+            messages.success(request, "You will now start the game with 15 points.")
+        elif "oz" in request.POST:
+            player = request.user.participant(game)
+            player.is_oz = True
+            player.save()
+            messages.success(request, "You will now start the game as OZ.")
+        
+        volunteers = Group.objects.get(name='Volunteer')
+        volunteers.add(request.user)
+            
+        return redirect('dashboard')
+    
+    
 
 class MissionsView(MobileSupportedView):
     desktop_template = "missions.html"
