@@ -311,7 +311,7 @@ class SignupEmailForm(forms.Form):
                 'singup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')
             })
     
-            super(SingupEmailForm, self).__init__(*args, **kwargs)         
+            super(SignupEmailForm, self).__init__(*args, **kwargs)         
     
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
