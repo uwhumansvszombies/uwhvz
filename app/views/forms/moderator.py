@@ -286,32 +286,29 @@ class AddLegacyForm(forms.Form):
     )    
     
 class SignupEmailForm(forms.Form):
-    signup_email_html = forms.CharField(
-        label="Signup Email - HTML",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
-        widget=forms.Textarea(
-            attrs={
-                'class': 'ui-input',
-            }
-        )
-    )
+    signup_email_html = forms.CharField()
+    signup_email_txt = forms.CharField()
     
-    signup_email_txt = forms.CharField(
-        label="Signup Email - txt",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt'),
-        widget=forms.Textarea(
-            attrs={
-                'class': 'ui-input',
-            }
-        )
-    )
     def __init__(self, *args, **kwargs):
-            kwargs.update(initial={
-                'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
-                'singup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')
-            })
+        super(SignupEmailForm, self).__init__(*args, **kwargs)
+        self.fields['signup_email_html'] = forms.CharField(
+            label="Signup Email - HTML",
+            initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
+            widget=forms.Textarea(
+                attrs={
+                    'class': 'ui-input',
+                }
+            ))
+        self.fields['signup_email_txt'] = forms.CharField(
+            label="Signup Email - txt",
+            initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt'),
+            widget=forms.Textarea(
+                attrs={
+                    'class': 'ui-input',
+                }
+            ))        
     
-            super(SignupEmailForm, self).__init__(*args, **kwargs)         
+                     
     
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
