@@ -477,8 +477,8 @@ class ManageShopView(View):
 class EmailTemplatesView(View):
     template_name = "dashboard/moderator/email_templates.html"
 
-    def render_email_templates(self, request, signup_email_form=SignupEmailForm,\
-                reminder_email_form=ReminderEmailForm, start_email_form=StartEmailForm):        
+    def render_email_templates(self, request, signup_email_form=SignupEmailForm(),\
+                reminder_email_form=ReminderEmailForm(), start_email_form=StartEmailForm()):        
         game = most_recent_game()
 
         return render(request, self.template_name, {
