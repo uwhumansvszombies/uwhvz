@@ -24,7 +24,10 @@ def get_months():
     return ((i, date(2008, i, 1).strftime('%B')) for i in range(1,13))
 
 def get_text(file):
-    return ''.join(open(file,'r'))
+    x = open(file,'r')
+    s = ''.join(x)
+    x.close()
+    return s
 
 class ModeratorSignupPlayerForm(forms.Form):
     email = forms.EmailField(
@@ -308,6 +311,7 @@ class SignupEmailForm(forms.Form):
     def get_initial(self):
         return {'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
                 'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')}
+    
     def __init__(self, *args, **kwargs):
         super(SignupEmailForm, self).__init__(*args, **kwargs)
         self.initial['signup_email_html'] = get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html')
