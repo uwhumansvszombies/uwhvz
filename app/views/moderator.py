@@ -16,7 +16,10 @@ from pytz import utc
 from random import sample
 
 def get_text(file):
-    return ''.join(open(file,'r'))
+    x = open(file,'r')
+    s = ''.join(x)
+    x.close()
+    return s
 
 
 @method_decorator(moderator_required, name='dispatch')
