@@ -5,11 +5,11 @@ from app.models import *
 from app.views.forms import UserCreationForm, UserChangeForm
 
 def mark_oz_bulk(ModelAdmin, request, queryset):
-    queryset.update(in_oz_pool=True)
+    queryset.update(is_oz=True)
 mark_oz_bulk.short_description = "Make OZ"
 
 def remove_oz_bulk(ModelAdmin, request, queryset):
-    queryset.update(in_oz_pool=False)
+    queryset.update(is_oz=False)
 remove_oz_bulk.short_description = "Remove OZ"
 
 def get_legacy(self, instance):
