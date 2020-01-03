@@ -1,4 +1,0 @@
-Thank you for signing up for Humans vs Zombies {{ game }}!
-
-[Please finish signing up to our website
-here.]({{ site_url }}{{ url('signup', args=[signup_invite.id]) }})

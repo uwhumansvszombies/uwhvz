@@ -6,7 +6,7 @@ from django.views import View
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import Group
 
-from app.mail import send_signup_email
+from app.mail import send_signup_email, send_signup_reminder
 from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants, necromancer_required
 from app.views.forms import *
@@ -502,6 +502,8 @@ class EmailTemplatesView(View):
        
 
     def post(self, request):
+        game = most_recent_game()
+        
         if "change_signup" in request.POST:
             signup_email_form = SignupEmailForm(request.POST)
             
@@ -569,4 +571,29 @@ class EmailTemplatesView(View):
                 return redirect('email_templates')            
             
             messages.success(request, "Succesfully updated game start email.")
-            return self.render_email_templates(request)          
+            return self.render_email_templates(request)
+        
+        if 'test_reminder' in request.POST:
+            send_signup_reminder(request, request.user.email, '<<User signup link will be here>>', game)
+            messages.success(request, f"Reminder email sent to {request.user.email}.")
+        if 'test_start' in request.POST:
+            send_start_email(request, request.user.participant(game), game)
+            messages.success(request, f"Game Start email sent to {request.user.email}.")           
+        if 'send_reminder' in request.POST:
+            for invite in SignupInvite.objects.filter(game=game,used_at__isnull=True):
+                send_signup_reminder(request, invite, game)
+            messages.success(request, f"Reminder emails sent to {SignupInvite.objects.filter(game=game,used_at__isnull=True).count()} people.") 
+        if 'send_start' in request.POST:
+            recipients = Player.objects.filter(game=game, active=True)
+            for parti in recipients:
+                send_start_email(request, parti, game)
+
+            recipients = Moderator.objects.filter(game=game, active=True)
+            for parti in recipients:
+                send_start_email(request, parti, game)            
+        
+            recipients = Spectator.objects.filter(game=game, active=True)
+            for parti in recipients:
+                send_start_email(request, parti, game)            
+            messages.success(request, f"Game start emails sent to {Player.objects.filter(game=game, active=True).count()} players,\
+            {Moderator.objects.filter(game=game, active=True).count()} mods, and {Spectator.objects.filter(game=game, active=True).count()} spectators.") 

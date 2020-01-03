@@ -26,14 +26,24 @@ def send_signup_email(request, signup_invite, game):
     )
 
 
-def send_signup_reminder(request, email, url, game):
+def send_signup_reminder(request, signup_invite, game):
     _send_mail_template(
         request,
         "email/signup_reminder.txt",
         "email/signup_reminder.html",
         "[ACTION REQUIRED] UW HvZ - Uncompleted Game Signup",
-        email,
-        {'signup_url': url, 'game': game},
+        signup_invite.email,
+        {'signup_invite': signup_invite, 'game': game}
+    )
+    
+def send_start_email(request, participant, game):
+    _send_mail_template(
+        request,
+        "email/game_start.txt",
+        "email/game_start.html",
+        "UW HvZ - Game Start!",
+        participant.user.email,
+        {'participant': participant, 'game': game},
     )
 
 

@@ -1,4 +1,4 @@
-You are a {{ 'human' if (participant.is_player and participant.is_human) else 'zombie' }}! Welcome to the game!
+You are a {{ 'Moderator' if participant.is_moderator else ('Spectator' if participant.is_spectator else participant.role)}}! Welcome to the game!
 
 Sincerely, 
 The UW HvZ Website

@@ -48,6 +48,18 @@
         <input class="btn btn-block btn-primary" type="submit" value="Save" name="change_reminder">
       </div>
     </form>
+    <table><tr><td>
+       <div class="ui-form-group">
+        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Test Reminder Email" name="test_reminder">
+        </form>
+      </div>
+      </td><td>
+      <div class="ui-form-group">
+        <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#ReminderModal">Send Reminder Email</button>
+      </div>
+    </td></tr></table>
     {% endcall %}
     
     {% call card("Game Start Email") %}
@@ -66,7 +78,67 @@
         <input class="btn btn-block btn-primary" type="submit" value="Save" name="change_start">
       </div>
     </form>
+    <p>Note: You can also send a game start email through the message players tab if you like!</p>
+    <table><tr><td>
+       <div class="ui-form-group">
+        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Test Start Email" name="test_start">
+        </form>
+      </div>
+      </td><td>
+      <div class="ui-form-group">
+        <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#StartModal">Send Start Email</button>
+      </div>
+    </td></tr></table>
     {% endcall %}
 </div>
-    
+
+<div class="modal fade" id="ReminderModal" tabindex="-1" role="dialog" aria-labelledby="ReminderModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure you want to send a reminder email?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>A reminder email will send to all players who haven't followed their link. This is irreversible. Do not spam it.</p>
+        <p>Please ensure you have changed both the HTML <i>and</i> the txt files!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Send Reminder Email" name="send_reminder">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="StartModal" tabindex="-1" role="dialog" aria-labelledby="StartModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure you want to send a game start email?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>A game start email will send to all players who are signed up. <b>The game should be started prior to pressing this button.</b> This is irreversible. You should almost never have to use this twice.</p>
+        <p>Please ensure you have changed both the HTML <i>and</i> the txt files!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Send Reminder Email" name="send_start">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
