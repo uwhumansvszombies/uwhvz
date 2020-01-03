@@ -15,7 +15,6 @@
   
   
     {% call card("Signup Email") %}
-    <p>{{ signup_email_html }}</p>
     <form action="{{ url('email_templates') }}" method="post" novalidate>
       {{ csrf_input }}
        {% for field in signup_email_form %}

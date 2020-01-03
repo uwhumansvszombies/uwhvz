@@ -483,19 +483,18 @@ class ManageShopView(View):
 class EmailTemplatesView(View):
     template_name = "dashboard/moderator/email_templates.html"
 
-    def render_email_templates(self, request, signup_email_form=SignupEmailForm(),\
-                reminder_email_form=ReminderEmailForm(), start_email_form=StartEmailForm()):        
+    def render_email_templates(self, request):        
         game = most_recent_game()
 
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
             'signup_email_form': SignupEmailForm(initial={'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
-            'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt') }),
-            'reminder_email_form':reminder_email_form,
-            'start_email_form':start_email_form,
-            'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
-            'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')           
+                                                          'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt') }),
+            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html'),
+                                                             'reminder_email_txt':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt')}),
+            'start_email_form':StartEmailForm(initial={'start_email_html':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html'),
+                                                       'start_email_txt':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt')}),          
              })
         
     def get(self, request):
@@ -507,7 +506,7 @@ class EmailTemplatesView(View):
             signup_email_form = SignupEmailForm(request.POST)
             
             if not signup_email_form.is_valid():
-                return self.render_email_templates(request, signup_email_form=signup_email_form)        
+                return self.render_email_templates(request)        
             cd = signup_email_form.cleaned_data
             
             try:
@@ -524,13 +523,13 @@ class EmailTemplatesView(View):
                 return redirect('email_templates')            
             
             messages.success(request, "Succesfully updated signup email.")
-            return self.render_email_templates(request, signup_email_form=signup_email_form)
+            return self.render_email_templates(request)
         
         if "change_reminder" in request.POST:
             reminder_email_form=ReminderEmailForm(request.POST)
             
             if not reminder_email_form.is_valid():
-                return self.render_email_templates(request, reminder_email_form=reminder_email_form)       
+                return self.render_email_templates(request)      
             cd = reminder_email_form.cleaned_data
             
             try:
@@ -547,13 +546,13 @@ class EmailTemplatesView(View):
                 return redirect('email_templates')
             
             messages.success(request, "Succesfully updated reminder email.")
-            return self.render_email_templates(request, reminder_email_form=reminder_email_form) 
+            return self.render_email_templates(request)
         
         if "change_start" in request.POST:
             start_email_form=StartEmailForm(request.POST)
             
             if not start_email_form.is_valid():
-                return self.render_email_templates(request, start_email_form=start_email_form) 
+                return self.render_email_templates(request)
             cd = start_email_form.cleaned_data
             
             try:
@@ -570,4 +569,4 @@ class EmailTemplatesView(View):
                 return redirect('email_templates')            
             
             messages.success(request, "Succesfully updated game start email.")
-            return self.render_email_templates(request, start_email_form=start_email_form)            
+            return self.render_email_templates(request)          
