@@ -490,7 +490,8 @@ class EmailTemplatesView(View):
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
-            'signup_email_form': signup_email_form,
+            'signup_email_form': SignupEmailForm(initial={'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
+            'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt') }),
             'reminder_email_form':reminder_email_form,
             'start_email_form':start_email_form,
             'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
