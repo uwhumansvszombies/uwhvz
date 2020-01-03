@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 from rest_framework.utils import json
 from django.contrib.auth.models import Group
+from django.contrib import messages
 
 from app.util import MobileSupportedView, most_recent_game
 from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy
@@ -38,12 +39,14 @@ class DashboardView(MobileSupportedView):
             player = request.user.participant(game)
             player.point_modifier = 15
             player.save()
+            Legacy.objects.create_legacy(user=request.user,value=-1,details=f'Started {game} game with 15 points.')
             messages.success(request, "You will now start the game with 15 points.")
             
         elif "oz" in request.POST:
             player = request.user.participant(game)
             player.is_oz = True
             player.save()
+            Legacy.objects.create_legacy(user=request.user,value=-1,details=f'Started {game} game as OZ.')
             messages.success(request, "You will now start the game as OZ.")
         
         volunteers = Group.objects.get(name='Volunteer')

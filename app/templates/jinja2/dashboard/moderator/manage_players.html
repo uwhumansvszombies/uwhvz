@@ -86,7 +86,7 @@
           <td scope="col">{{ p.user.email }}</td>
           <td scope="col">{% if p.is_player %}{{ p.code }}{% else %}N/A{% endif %}</td>
           <td scope="col">{% if p.is_player %}{{ p.role }}{% else %}{{ p.type }}{% endif %}</td>
-          {%- if p.is_player %}<td scope="col">{{ p.shop_score() }}</td><td scope="col">{{ p.score() }}</td>{% else %}<td scope="col">N/A</td><td scope="col">N/A</td>{% endif -%}
+          {%- if p.is_player %}<td scope="col">{{ p.shop_score() }}</td><td scope="col">{{ p.score() }}</td>{% else %}<td scope="col">N/A</td><td scope="col">{{ p.score if p.is_moderator and p.score else 'N/A' }}</td>{% endif -%}
         </tr>
         {% endfor %}
       </tbody>
