@@ -38,8 +38,8 @@ class DashboardView(MobileSupportedView):
             player = request.user.participant(game)
             player.point_modifier = 15
             player.save()
-            
             messages.success(request, "You will now start the game with 15 points.")
+            
         elif "oz" in request.POST:
             player = request.user.participant(game)
             player.is_oz = True

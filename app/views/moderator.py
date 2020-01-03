@@ -483,8 +483,7 @@ class ManageShopView(View):
 class EmailTemplatesView(View):
     template_name = "dashboard/moderator/email_templates.html"
 
-    def render_email_templates(self, request, signup_email_form=SignupEmailForm(initial={'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
-                'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')}),\
+    def render_email_templates(self, request, signup_email_form=SignupEmailForm(),\
                 reminder_email_form=ReminderEmailForm(), start_email_form=StartEmailForm()):        
         game = most_recent_game()
 
@@ -494,6 +493,8 @@ class EmailTemplatesView(View):
             'signup_email_form': signup_email_form,
             'reminder_email_form':reminder_email_form,
             'start_email_form':start_email_form,
+            'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
+            'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')           
              })
         
     def get(self, request):
