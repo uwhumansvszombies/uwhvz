@@ -209,7 +209,7 @@ class ManageOZView(View):
         players = Player.objects.filter(game=game, in_oz_pool=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
         cd = oz_shuffle_form.cleaned_data
         
-        to_make_ozs = sample(players,cd['amount'])
+        to_make_ozs = sample(set(players),cd['amount'])
         
         for old_oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
             old_oz.is_oz=False
