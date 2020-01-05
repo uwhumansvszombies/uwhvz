@@ -82,6 +82,8 @@ class ReportTagView(View):
         try:
             tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
                                          cleaned_data['location'], cleaned_data['description'], tag_modifier_amount)
+            tag.active = False
+            tag.save()
         except ValueError as err:
             messages.error(request, err)
             return redirect('player_info')

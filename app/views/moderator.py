@@ -6,8 +6,8 @@ from django.views import View
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import Group
 
-from app.mail import send_signup_email, send_signup_reminder
-from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy
+from app.mail import send_signup_email, send_signup_reminder, send_start_email
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy, Tag
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants, necromancer_required
 from app.views.forms import *
 
@@ -186,8 +186,10 @@ class ManageOZView(View):
         game = most_recent_game()
         players = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
         forced_oz = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE).order_by('user__first_name')
+        max_value = Player.objects.filter(game=most_recent_game()).exclude(role=PlayerRole.ZOMBIE).distinct().count()
         return render(request, self.template_name, {
             'game': game,
+            'total_players': max_value,
             'participant': request.user.participant(game),
             'players': players,
             'forced_oz':forced_oz,
@@ -245,7 +247,48 @@ class AddSignupView(View):
         messages.success(request, f"Added signup location {loc}")
         
         return redirect('manage_players')
+    
+@method_decorator(moderator_required, name='dispatch')
+class StunVerificationView(View):
+    template_name = "dashboard/moderator/manage_staff.html"
 
+    def render_stun_verification(self, request):
+        game = most_recent_game()
+        unverified_stuns = Tag.objects.filter(
+            initiator__game=game,
+            receiver__game=game,
+            active=False)
+
+        return render(request, self.template_name, {
+            'game': game,
+            'participant': request.user.participant(game),
+            'unverified_stuns': unverified_stuns,
+             })
+    
+    def get(self, request):
+        return self.render_stun_verification(request)
+
+    def post(self, request):
+        game = most_recent_game()
+        unverified_stuns = Tag.objects.filter(
+            initiator__game=game,
+            receiver__game=game,
+            active=False)
+        
+        for tag in unverified_stuns:
+            if str(tag.id)+'-activate' in request.POST:
+                tag.active = True
+                tag.save()
+                messages.success(request, f"Succesfully approved tag {tag}")
+                return redirect('stun_verification')
+            if str(tag.id)+'-remove' in request.POST:
+                messages.success(request, f"Deleted tag {tag}")  
+                tag.delete()
+                return redirect('stun_verification')
+        
+        messages.error(request, "Tag ID not found")
+        
+        return redirect('stun_verification')
 
 
 @method_decorator(necromancer_required, name='dispatch')
@@ -573,9 +616,6 @@ class EmailTemplatesView(View):
             messages.success(request, "Succesfully updated game start email.")
             return self.render_email_templates(request)
         
-        if 'test_reminder' in request.POST:
-            send_signup_reminder(request, request.user.email, '<<User signup link will be here>>', game)
-            messages.success(request, f"Reminder email sent to {request.user.email}.")
         if 'test_start' in request.POST:
             send_start_email(request, request.user.participant(game), game)
             messages.success(request, f"Game Start email sent to {request.user.email}.")           

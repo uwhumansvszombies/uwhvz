@@ -48,6 +48,7 @@ urlpatterns = [
     path("dashboard/moderator/manage-oz", views.ManageOZView.as_view(), name='manage_oz'),
     path("dashboard/moderator/manage-players", views.ManagePlayersView.as_view(), name='manage_players'),
     path("dashboard/moderator/manage-shop", views.ManageShopView.as_view(), name='manage_shop'),
+    path("dashboard/moderator/stun-verification", views.StunVerificationView.as_view(), name='stun_verification'),
     
     # Necromancer pages
     path("dashboard/moderator/manage-staff", views.ManageStaffView.as_view(), name='manage_staff'),

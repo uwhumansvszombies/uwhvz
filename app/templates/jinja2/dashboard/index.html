@@ -23,7 +23,7 @@
 <div class="ui-grid s-dashboard__game-info align-content-start">
   <div class="ui-grid align-content-start">
   
-    {% if participant.user.legacy_points() %}
+    {% if not game.is_finished() and participant.user.legacy_points() %}
     {% call card("Legacy Tokens") %}
     
     {% if points_accu < points_for_permanent %}

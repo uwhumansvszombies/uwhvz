@@ -40,6 +40,7 @@
     <p>This will randomly select the given number of OZs from anyone in the OZ pool. Those chosen will be listed with the locked OZs above, but replace any non-locked OZs. For example: if there are 4 locked OZs and you select 5 random OZs, hitting "shuffle" will give you 9 OZs.</p>
     <p>Note: Locked OZs can be removed by the Necro going in to their player settings and manually removing their "zombie" function. BUT legacy players can force their role to be zombies, so don't remove a locked OZ once you set them unless you're certain they didn't set it themselves!</p>
     <p>Also, because of this function, legacy players may in fact deduce that they are selected as OZs if you lock in the OZ settings before the game. It is therefore advisable to only set your OZs right before the game starts</p>
+    <p>There are currently {{ total_players }} players in this game.</p>
     <form action="{{ url('manage_oz') }}" method="post" novalidate>
       {{ csrf_input }}
        {% for field in oz_shuffle_form %}

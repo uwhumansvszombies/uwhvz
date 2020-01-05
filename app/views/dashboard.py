@@ -23,12 +23,17 @@ class IndexView(MobileSupportedView):
 @method_decorator(login_required, name='dispatch')
 class DashboardView(MobileSupportedView):
     desktop_template = "dashboard/index.html"
-    mobile_template = "mobile/dashboard/index.html"
+    mobile_template = "mobile/dashboard/index.html"   
 
     def get(self, request):
         game = most_recent_game()
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
-        points_for_permanent = 8        
+        points_for_permanent = 8       
+        if game.is_running() and (request.user.is_superuser or request.user.participant(game).is_moderator()):
+            unverified = Tag.objects.filter(initiator__game=game,
+                receiver__game=game,active=False).count()
+            if unverified:
+                messages.error(f"There are {unverified} tags that require verification")
         return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game),
                                                 'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
     

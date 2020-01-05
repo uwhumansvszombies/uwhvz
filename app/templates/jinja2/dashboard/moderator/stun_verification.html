@@ -1,0 +1,40 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Stun Verification{% endblock %}
+{% block pagetitle %}{{ game }} &mdash; Mod Actions{% endblock %}
+{% block pagesubtitle %}Stun Verification{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid">
+    {% call card("Stun Verification") %}
+    {% if unverified_stuns %}
+    <p>Warning: removed stuns cannot be retrieved!</p>
+    <table>
+    {%for tag in unverified_stuns%}
+    <tr><td>
+    <p>{{tag}}</p>
+    <p>Location: {{tag.location}}</p>
+    <p>Time: {{tag.created_at}}</p>
+    <p>Details: {{tag.description}}</p>
+    </td><td>
+    <div class="ui-form-group">
+        <form class="mb-0" action="{{ url('stun_verification') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Approve" name="{{tag.id}}-activate">
+        </form>
+    </div>
+    <div class="ui-form-group">
+        <form class="mb-0" action="{{ url('stun_verification') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Delete" name="{{tag.id}}-remove">
+        </form>
+    </div>
+    </td></tr>
+    {% endfor %}
+    </table>
+    {% else %}
+    <p>There are no unverified stuns right now!</p>
+    {% endif %}
+    {% endcall %}
+{% endblock %}

@@ -48,18 +48,9 @@
         <input class="btn btn-block btn-primary" type="submit" value="Save" name="change_reminder">
       </div>
     </form>
-    <table><tr><td>
-       <div class="ui-form-group">
-        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
-          {{ csrf_input }}
-          <input type="submit" class="btn btn-primary" value="Test Reminder Email" name="test_reminder">
-        </form>
-      </div>
-      </td><td>
       <div class="ui-form-group">
         <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#ReminderModal">Send Reminder Email</button>
       </div>
-    </td></tr></table>
     {% endcall %}
     
     {% call card("Game Start Email") %}
