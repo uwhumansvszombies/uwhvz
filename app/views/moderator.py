@@ -257,7 +257,7 @@ class AddSignupView(View):
     
 @method_decorator(moderator_required, name='dispatch')
 class StunVerificationView(View):
-    template_name = "dashboard/moderator/manage_staff.html"
+    template_name = "dashboard/moderator/stun_verification.html"
 
     def render_stun_verification(self, request):
         game = most_recent_game()
