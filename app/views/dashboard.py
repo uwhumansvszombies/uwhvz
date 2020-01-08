@@ -54,8 +54,9 @@ class DashboardView(MobileSupportedView):
             Legacy.objects.create_legacy(user=request.user,value=-1,details=f'Started {game} game as OZ.')
             messages.success(request, "You will now start the game as OZ.")
         
-        volunteers = Group.objects.get(name='Volunteer')
-        volunteers.add(request.user)
+        legacy_users = Group.objects.get(name='LegacyUsers')
+        if request.user.id not in list(User.objects.filter(groups__name="LegacyUsers").values_list('id', flat=True)):
+            legacy_users.add(request.user)
             
         return redirect('dashboard')
     

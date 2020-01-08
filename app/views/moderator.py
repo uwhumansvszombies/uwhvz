@@ -68,6 +68,10 @@ class GameStartView(View):
         for volunteer in volunteers:
             if volunteer.email != 'volunteer@email.com':
                 volunteer.groups.remove("Volunteer")
+        
+        legacy_users = Group.objects.get(name='LegacyUsers').item_set.all()
+        for user in legacy_users:
+            user.groups.remove("LegacyUsers")        
             
         messages.success(request, f"The Game \"{game_title}\" is open for signups.")
         return redirect('manage_game')
@@ -148,10 +152,13 @@ class ManageGameView(View):
                 .values_list('user__email', flat=True))    
             subject_set = '[hvz-humans]'
             
-        elif cd['recipients'] == "Volunteers":
+        elif cd['recipients'] == "Volunteers and Legacy":
             recipients = list(User.objects \
                 .filter(game=game, active=True, groups__name="Volunteer") \
-                .values_list('user__email', flat=True))    
+                .values_list('user__email', flat=True)) 
+            recipients.extend(list(User.objects \
+                .filter(game=game, active=True, groups__name="LegacyUsers") \
+                .values_list('user__email', flat=True)))             
             subject_set = '[hvz-volunteers]'
             
         recipients.extend(list(Moderator.objects \
@@ -412,7 +419,7 @@ class ManageVolunteersView(View):
             return redirect('manage_staff')
         
         volunteer = User.objects.get(id=vol_id, game=game)
-        vol_group = Group.objects.get(name='Volunteer')
+        vol_group = Group.objects.get(name='Volunteers')
         vol_group.user_set.add(volunteer)
         vol_group.save()
         
