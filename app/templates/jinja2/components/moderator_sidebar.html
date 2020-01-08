@@ -18,6 +18,7 @@
       {% if game.is_running %}
         <li><a href="{{ url('generate_supply_codes') }}">Create Supply Codes</a></li>
         <li><a href="{{ url('manage_shop') }}">Manage Shop</a></li>
+        <li><a href="{{ url('stun_verification') }}">Stun Verification</a></li>
       {% endif %}
       {% if user.is_superuser %}
         <li><a href="{{ url('manage_staff') }}">Mods/Volunteers</a></li>
