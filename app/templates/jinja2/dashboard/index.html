@@ -23,7 +23,7 @@
 <div class="ui-grid s-dashboard__game-info align-content-start">
   <div class="ui-grid align-content-start">
   
-    {% if not game.is_finished() and participant and participant.user.legacy_points() %}
+    {% if not game.is_finished and participant and participant.user.legacy_points() %}
     {% call card("Legacy Tokens") %}
     
     {% if points_accu < points_for_permanent %}
@@ -31,9 +31,9 @@
       {% if participant.is_oz or participant.point_modifier >= 15 %}
       <p>You are either already an OZ or have 15 points to start with.</p>
       {% else %}
-      {% if game.is_running() %}<p>The game has already started, but you can still use legacy tokens to gain 15 points</p>{% endif %}
+      {% if game.is_running %}<p>The game has already started, but you can still use legacy tokens to gain 15 points</p>{% endif %}
       <table><tr>
-      {% if not game.is_running() %}
+      {% if not game.is_running %}
       <td scope="col">
       <form class="mb-0" action="{{ url('dashboard') }}" method="post">
           {{ csrf_input }}
