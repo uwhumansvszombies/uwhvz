@@ -10,12 +10,13 @@
     {% call card("Stun Verification") %}
     {% if unverified_stuns %}
     <p>Warning: removed stuns cannot be retrieved!</p>
-    <table>
+    <table class="table table-striped">
     {%for tag in unverified_stuns%}
     <tr><td>
     <p>{{tag}}</p>
     <p>Location: {{tag.location}}</p>
-    <p>Time: {{tag.created_at}}</p>
+    </td><td>
+    <p>Time: {{tag.created_at.date()}} {{tag.created_at.hour}}:{{tag.created_at.minute}} <i>{{tag.created_at.tzinfo}}</i></p>
     <p>Details: {{tag.description}}</p>
     </td><td>
     <div class="ui-form-group">
