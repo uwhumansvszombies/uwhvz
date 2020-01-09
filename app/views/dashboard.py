@@ -33,7 +33,7 @@ class DashboardView(MobileSupportedView):
             unverified = Tag.objects.filter(initiator__game=game,
                 receiver__game=game,active=False).count()
             if unverified:
-                messages.error(f"There are {unverified} tags that require verification")
+                messages.error(request, f"There are {unverified} tags that require verification")
         return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game),
                                                 'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
     
