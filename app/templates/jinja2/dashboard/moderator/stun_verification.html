@@ -16,7 +16,7 @@
     <p>{{tag}}</p>
     <p>Location: {{tag.location}}</p>
     </td><td>
-    <p>Time: {{tag.created_at.date()}} {{tag.created_at.hour}}:{{tag.created_at.minute}} <i>{{tag.created_at.tzinfo}}</i></p>
+    <p>Time: {{timezone('Canada/Eastern').localize(tag.created_at).strftime("%Y-%m-%d %H:%M:%S")}}</p>
     <p>Details: {{tag.description}}</p>
     </td><td>
     <div class="ui-form-group">

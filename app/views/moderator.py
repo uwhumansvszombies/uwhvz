@@ -12,7 +12,7 @@ from app.util import moderator_required, most_recent_game, running_game_required
 from app.views.forms import *
 
 from datetime import datetime
-from pytz import utc
+from pytz import utc, timezone
 from random import sample
 
 def get_text(file):

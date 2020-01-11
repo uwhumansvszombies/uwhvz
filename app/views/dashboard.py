@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 
 from app.util import MobileSupportedView, most_recent_game
-from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy
+from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode
 
 
 class IndexView(MobileSupportedView):
@@ -27,6 +27,12 @@ class DashboardView(MobileSupportedView):
 
     def get(self, request):
         game = most_recent_game()
+        stuns = Tag.objects.filter(initiator__user=request.user,initiator__role=PlayerRole.HUMAN,
+            receiver__role=PlayerRole.ZOMBIE,active=True).count()
+        kills = Tag.objects.filter(initiator__user=request.user,initiator__role=PlayerRole.ZOMBIE,
+            receiver__role=PlayerRole.HUMAN,active=True).count()
+        codes = SupplyCode.objects.filter(claimed_by__user=request.user,active=True).count()
+        
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
         points_for_permanent = 8       
         if game.is_running and (request.user.is_superuser or request.user.participant(game).is_moderator):
@@ -35,6 +41,7 @@ class DashboardView(MobileSupportedView):
             if unverified:
                 messages.error(request, f"There are {unverified} tags that require verification")
         return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game),
+                                                'stuns':stuns, 'kills':kills, 'codes':codes,
                                                 'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
     
     def post(self, request):

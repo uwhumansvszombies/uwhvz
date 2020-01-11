@@ -83,6 +83,12 @@
     {% call card() %}
       <a class="twitter-timeline" height="500" href="https://twitter.com/HVZAlertSystem?ref_src=twsrc%5Etfw">Tweets by HVZAlertSystem</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     {% endcall %}
+    
+    {% call card("Lifetime Stats") %}
+      <p>Total Stuns: {{ stuns }}</p>
+      <p>Total Kills: {{ kills }}</p>
+      <p>Total Supply Codes Redeemed: {{ codes }}</p>
+    {% endcall %}
   </div>
 </div>
 {% endblock %}
