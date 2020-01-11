@@ -270,6 +270,7 @@ class StunVerificationView(View):
             'game': game,
             'participant': request.user.participant(game),
             'unverified_stuns': unverified_stuns,
+            'timezone':timezone('Canada/Eastern'),
              })
     
     def get(self, request):
