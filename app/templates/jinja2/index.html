@@ -132,5 +132,7 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static('scripts/countdown.js') }}"></script>
+  <script src="{{ static('scripts/countdown.js') }}">
+    var deadline = new Date({{ for_js }});
+  </script>
 {% endblock %}

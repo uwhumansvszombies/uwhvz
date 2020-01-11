@@ -5,6 +5,8 @@ from django.views import View
 from rest_framework.utils import json
 from django.contrib.auth.models import Group
 from django.contrib import messages
+from time import mktime
+from datetime import datetime
 
 from app.util import MobileSupportedView, most_recent_game
 from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode
@@ -17,7 +19,11 @@ class IndexView(MobileSupportedView):
     def get(self, request):
         game = most_recent_game()
         signups = SignupLocation.objects.filter(game=game).exclude(name='Online')
-        return self.mobile_or_desktop(request, {'game': game, 'signups':signups})
+        if game.started_on:
+            for_js = int(mktime(game.started_on.timetuple())) * 1000
+        else:
+            for_js = int(mktime(datetime.utcnow().timetuple())) * 1000
+        return self.mobile_or_desktop(request, {'game': game, 'signups':signups, 'for_js':for_js})
 
 
 @method_decorator(login_required, name='dispatch')
