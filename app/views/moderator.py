@@ -335,7 +335,7 @@ class ManageLegacyView(View):
         all_legacies = []
         permanent_status = []
         points_for_permanent = 8
-        token_transactions = Legacy.objects.all().order_by('first_name')
+        token_transactions = Legacy.objects.all().order_by('user__first_name')
         
         for user in User.objects.all():
             if user.legacy_points():
