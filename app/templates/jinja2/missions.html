@@ -25,6 +25,7 @@
     <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
     <a class="btn btn-primary" href="{{ url('player_info') }}">Go to dashboard</a>
   {% else %}
+    <a class="btn btn-outline-primary" href="{{ url('accounts/signup') }}">Sign Up</a>
     <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
   {% endif %}
   </div>

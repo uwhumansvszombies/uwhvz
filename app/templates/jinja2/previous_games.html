@@ -25,25 +25,33 @@
     <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
     <a class="btn btn-primary" href="{{ url('player_info') }}">Go to dashboard</a>
   {% else %}
+    <a class="btn btn-outline-primary" href="{{ url('accounts/signup') }}">Sign Up</a>
     <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
   {% endif %}
   </div>
 </header>
+
+<main class="ui-layout" id="landing">
+<br><br>
 
 <aside class="ui-sidebar" id="side-nav">
   <nav class="ui-menu">
     <ul class="ui-menu__section">
     {% for prev_game in prev_games %}
       <li><div class="ui-form-group pt-2">
-        <input class="btn btn-block btn-primary" type="submit" value="{{prev_game.name}}" name="{{ prev_game.name }}">
+      <form class="mb-0" action="{{ url('previous_games') }}" method="post">
+          {{ csrf_input }}
+          <input class="btn btn-block btn-primary" type="submit" value="{{prev_game.name}}" name="{{ prev_game.name }}">
+        </form>
+        
       </div></li>
       {% endfor %}
     </ul>
   </nav>
 </aside>
 
-<main class="ui-layout" id="landing">
-<section class="ui-layout__item" id="intro">
+
+<section class="container ui-layout__item" id="intro">
 <h2>{{ game_rendering }} Game Zombie Tree</h2>
 <div id="zombie-tree"></div>
 </section>
