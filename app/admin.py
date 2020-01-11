@@ -134,7 +134,7 @@ class TagAdmin(admin.ModelAdmin):
     game.short_description = 'Game'
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
 
 @admin.register(SignupLocation)
