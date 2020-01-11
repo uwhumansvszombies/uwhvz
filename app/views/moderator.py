@@ -265,13 +265,13 @@ class StunVerificationView(View):
             initiator__game=game,
             receiver__game=game,
             active=False)
-        timezone = timezone('Canada/Eastern')
+        tz = timezone('Canada/Eastern')
 
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
             'unverified_stuns': unverified_stuns,
-            'timezone':timezone,
+            'timezone':tz,
              })
     
     def get(self, request):
