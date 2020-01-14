@@ -69,6 +69,17 @@
         {% if participant.faction.description %}{{ participant.faction.description|safe }}{% endif %}
       {% endcall %}
     {% endif %}
+    
+    {% call card("Toggle Score Visibility") %}
+      <form class="mb-0" action="{{ url('player_info') }}" method="post">
+      <label class="switch">
+        {{ csrf_input }}
+        <input type="checkbox" {{if participant.is_player and participant.is_score_public}}checked{{endif}} id="is_score_public" name="is_score_public">
+        <span class="slider round"></span>
+      </label>
+      </form>
+    {% endcall %}
+      
     </div>
   {% endif %}
 </div>

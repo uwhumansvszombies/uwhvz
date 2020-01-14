@@ -42,6 +42,14 @@ class PlayerInfoView(View):
         if not game.is_running or not request.user.participant(game) or not request.user.participant(game).is_player:
             return redirect('dashboard')
         return render_player_info(request)
+    
+    def post(self, request):
+        if 'is_score_public' in request.POST:
+            is_score_public = request.POST.get('is_score_public', 'off') == 'on'
+            player = request.user.participant(most_recent_game())
+            player.is_score_public = is_score_public
+            player.save()
+        return render_player_info(request)
 
 
 @method_decorator(running_game_required, name='dispatch')
