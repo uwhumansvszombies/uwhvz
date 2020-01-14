@@ -39,6 +39,6 @@ function initClock(id, endtime) {
   var timeInterval = setInterval(updateClock, 1000);
 }
 
-var deadline = new Date(document.currentScript.getAttribute('deadline'));
+var deadline = new Date(Number(document.currentScript.getAttribute('deadline')));
 
 initClock('countdown', deadline);
