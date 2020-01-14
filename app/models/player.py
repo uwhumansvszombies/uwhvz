@@ -40,7 +40,7 @@ class Player(Participant):
     role: Enum = EnumField(enum=PlayerRole, max_length=1)
     in_oz_pool: bool = models.BooleanField(default=False)
     is_oz: bool = models.BooleanField(null=True,default=False)
-    is_score_public: bool = models.BooleanField(blank=True,null=True) 
+    is_score_public: bool = models.BooleanField(blank=True,null=True, default=False) 
 
     faction: Faction = models.ForeignKey(Faction, on_delete=models.PROTECT, blank=True, null=True)
     point_modifier: int = models.IntegerField(default=0)
