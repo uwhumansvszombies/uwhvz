@@ -92,9 +92,11 @@ class Player(Participant):
         if self.is_zombie:
             raise ValueError("This player is already a zombie.")
 
-        self.active = False
+        #self.active = False
+        self.role = PlayerRole.ZOMBIE
+        self.point_modifier = -1*self.shop_score() #player should have effectively zero points
         self.save()
-        return Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
+        return #Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
 
     @property
     def is_player(self) -> bool:
