@@ -646,3 +646,4 @@ class EmailTemplatesView(View):
                 send_start_email(request, parti, game)            
             messages.success(request, f"Game start emails sent to {Player.objects.filter(game=game, active=True).count()} players,\
             {Moderator.objects.filter(game=game, active=True).count()} mods, and {Spectator.objects.filter(game=game, active=True).count()} spectators.") 
+        return self.render_email_templates(request)
