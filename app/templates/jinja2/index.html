@@ -15,7 +15,7 @@
     <ul>
       <li><a class="text-light" href="#signup-schedule">Signup Schedule</a></li>
       <li><a class="text-light" href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>
-      <li><a class="text-light" href="{{ static('files/Weeklong 101 & FAQs v1.0') }}">New Player Guide</a></li>
+      <li><a class="text-light" href="{{ static('files/Weeklong 101 & FAQs v1.0.pdf') }}">New Player Guide</a></li>
       <li><a class="text-light" href="{{ url('missions') }}">Common Mission Types</a></li>
       <!--<li><a class="text-light" href="{{ url('previous_games') }}">Game Archives</a></li>-->
     </ul>
@@ -25,7 +25,7 @@
     <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
     <a class="btn btn-primary" href="{{ url('player_info') }}">Go to dashboard</a>
   {% else %}
-    <a class="btn btn-outline-primary" href="{{ url('user_signup') }}">Sign Up</a>
+    <a class="btn btn-outline-primary" href="{{ url('unrestricted_user_signup') }}">Sign Up</a>
     <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
   {% endif %}
   </div>
@@ -36,66 +36,68 @@
       {{ svg('club-logo') }}
       <div class="ui-section__content">
         {% if game.is_signups %}
-          <h1 class="start">The game begins in</h1>
-          <div class="js-countdown" id="countdown">
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="days"></span>
-              <p class="js-countdown__text">Days</p>
-            </div>
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="hours"></span>
-              <p class="js-countdown__text">Hours</p>
-            </div>
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="minutes"></span>
-              <p class="js-countdown__text">Minutes</p>
-            </div>
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="seconds"></span>
-              <p class="js-countdown__text">Seconds</p>
-            </div>
+        <h1 class="start">The game begins in</h1>
+        <div class="js-countdown" id="countdown">
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="days"></span>
+            <p class="js-countdown__text">Days</p>
           </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="hours"></span>
+            <p class="js-countdown__text">Hours</p>
+          </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="minutes"></span>
+            <p class="js-countdown__text">Minutes</p>
+          </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="seconds"></span>
+            <p class="js-countdown__text">Seconds</p>
+          </div>
+        </div>
         {% elif game.is_running %}
-          <h1 class="start">The game has now begun.</h1>
+        <h1 class="start">The game has now begun.</h1>
         {% else %}
-          <h1 class="start">The game is now over.</h1>
+        <h1 class="start">The game is now over.</h1>
         {% endif %}
       </div>
     </div>
   </section>
   <section class="ui-layout__item" id="mailing-list">
-  <div id="mc_embed_signup">
-<form action="https://facebook.us16.list-manage.com/subscribe/post?u=08527a0cbafe6eb4fdbd42660&amp;id=e5788694bc" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-    <div id="mc_embed_signup_scroll">
-	<h2>Join our Mailing List!</h2>
-<div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
-<div class="mc-field-group">
-	<label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
-</label>
-	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-</div>
-<div class="mc-field-group">
-	<label for="mce-FNAME">First Name  <span class="asterisk">*</span>
-</label>
-	<input type="text" value="" name="FNAME" class="" id="mce-FNAME">
-</div>
-<div class="mc-field-group">
-	<label for="mce-LNAME">Last Name  <span class="asterisk">*</span>
-</label>
-	<input type="text" value="" name="LNAME" class="" id="mce-LNAME">
-</div>
-	<div id="mce-responses" class="clear">
-		<div class="response" id="mce-error-response" style="display:none"></div>
-		<div class="response" id="mce-success-response" style="display:none"></div>
-	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_08527a0cbafe6eb4fdbd42660_e5788694bc" tabindex="-1" value=""></div>
-    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    <div id="mc_embed_signup">
+      <form action="https://facebook.us16.list-manage.com/subscribe/post?u=08527a0cbafe6eb4fdbd42660&amp;id=e5788694bc" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+        <div id="mc_embed_signup_scroll">
+          <h1>Join our Mailing List!</h1>
+          <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+          <div class="mc-field-group">
+            <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+            </label>
+            <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+          </div>
+          <div class="mc-field-group">
+            <label for="mce-FNAME">First Name  <span class="asterisk">*</span>
+            </label>
+            <input type="text" value="" name="FNAME" class="" id="mce-FNAME">
+          </div>
+          <div class="mc-field-group">
+            <label for="mce-LNAME">Last Name  <span class="asterisk">*</span>
+            </label>
+            <input type="text" value="" name="LNAME" class="" id="mce-LNAME">
+          </div>
+          <div id="mce-responses" class="clear">
+            <div class="response" id="mce-error-response" style="display:none"></div>
+            <div class="response" id="mce-success-response" style="display:none"></div>
+          </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_08527a0cbafe6eb4fdbd42660_e5788694bc" tabindex="-1" value=""></div>
+          <div class="clear">
+            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button bg-primary">
+          </div>
+        </div>
+      </form>
     </div>
-</form>
-</div>
-<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+    <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
   </section>
-  
+
   <section class="ui-layout__item" id="signup-schedule">
     <div class="ui-section">
       <h1>Signups Schedule</h1>
@@ -112,7 +114,7 @@
         </thead>
         <tbody>
           {% for signup in signups %}
-	  <tr>
+          <tr>
             <th>{{ signup.name }}</th>
             <td>{{ signup.mon_hours if signup.mon_hours != '' else 'N/A' }}</td>
             <td>{{ signup.tues_hours if signup.tues_hours != '' else 'N/A' }}</td>
@@ -132,6 +134,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static('scripts/countdown.js') }}" deadline={{for_js}}>
-  </script>
+<script src="{{ static('scripts/countdown.js') }}" deadline={{for_js}}>
+</script>
 {% endblock %}

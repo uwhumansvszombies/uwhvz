@@ -239,7 +239,7 @@ class ZombieTreeView(View):
         except ObjectDoesNotExist:
             return redirect('dashboard')
 
-        if game.is_running and player.is_human and not player.is_moderator:
+        if game.is_running and not player.is_spectator and not player.is_moderator and player.is_human:
             raise PermissionDenied
 
         player_codes = {}
@@ -274,7 +274,7 @@ class ZombieTreeView(View):
 
         for code, name in player_codes.items():
             nodes[code] = {'label': name}
-            
+
         # BFS on the edge list so that we can put each node into a group based on
         # its level in the tree.
         queue = ['NECROMANCER']

@@ -127,8 +127,8 @@ class ManageGameView(View):
             'message_players_form': message_players_form,
             'game_start_form': game_start_form,
         })
-    
-    def post(self, request):   
+
+    def post(self, request):
         game = most_recent_game()
         message_players_form = ModMessageForm(request.POST)
         if not message_players_form.is_valid():
@@ -151,23 +151,23 @@ class ManageGameView(View):
                 .filter(game=game, active=True, role=PlayerRole.HUMAN) \
                 .values_list('user__email', flat=True))    
             subject_set = '[hvz-humans]'
-            
+
         elif cd['recipients'] == "Volunteers and Legacy":
             recipients = list(User.objects \
                 .filter(game=game, active=True, groups__name="Volunteer") \
                 .values_list('user__email', flat=True)) 
             recipients.extend(list(User.objects \
                 .filter(game=game, active=True, groups__name="LegacyUsers") \
-                .values_list('user__email', flat=True)))             
+                .values_list('user__email', flat=True)))
             subject_set = '[hvz-volunteers]'
-            
+
         recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
-        
+
         recipients.extend(list(Spectator.objects \
                 .filter(game=game, active=True) \
-                .values_list('user__email', flat=True)))        
+                .values_list('user__email', flat=True)))
 
         EmailMultiAlternatives(
             subject=f"{subject_set} {cd['subject']}",
@@ -202,7 +202,7 @@ class ManageOZView(View):
             'forced_oz':forced_oz,
             'oz_shuffle_form':oz_shuffle_form,
         })
-    
+
     def post(self, request):
         game = most_recent_game()
         if 'set_oz' in request.POST:
@@ -210,26 +210,26 @@ class ManageOZView(View):
                 oz.role=PlayerRole.ZOMBIE
                 oz.save()
             return redirect('manage_oz')
-        
+
         oz_shuffle_form = OZShuffleForm(request.POST)
         if not oz_shuffle_form.is_valid():
             return self.get(request, oz_shuffle_form=oz_shuffle_form)
-        
+
         players = Player.objects.filter(game=game, in_oz_pool=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
         cd = oz_shuffle_form.cleaned_data
-        
+
         to_make_ozs = sample(set(players),cd['amount'])
-        
+
         for old_oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
             old_oz.is_oz=False
             old_oz.save()
-            
+
         for oz in to_make_ozs:
             oz.is_oz=True
             oz.save()
-        
+
         messages.success(request, "Succesfully updated OZ list.")
-        
+
         return redirect('manage_oz')
 
 @method_decorator(moderator_required, name='dispatch')
@@ -242,19 +242,19 @@ class AddSignupView(View):
         signup_loc_form = AddSignupForm(request.POST)
         if not signup_loc_form.is_valid():
             return redirect('manage_players')
-        
+
         cd = signup_loc_form.cleaned_data
         loc = cd['location']
         if loc in list(SignupLocation.objects.filter(game=game).values_list('name', flat=True)):
             messages.error(request, "That location already exists")
             return redirect('manage_players')
-        
+
         SignupLocation.objects.create_signup_location(loc, game)
-        
+
         messages.success(request, f"Added signup location {loc}")
-        
+
         return redirect('manage_players')
-    
+
 @method_decorator(moderator_required, name='dispatch')
 class StunVerificationView(View):
     template_name = "dashboard/moderator/stun_verification.html"
@@ -273,7 +273,7 @@ class StunVerificationView(View):
             'unverified_stuns': unverified_stuns,
             'tz':tz,
              })
-    
+
     def get(self, request):
         return self.render_stun_verification(request)
 
@@ -283,7 +283,7 @@ class StunVerificationView(View):
             initiator__game=game,
             receiver__game=game,
             active=False)
-        
+
         for tag in unverified_stuns:
             if str(tag.id)+'-activate' in request.POST:
                 tag.active = True
@@ -294,9 +294,9 @@ class StunVerificationView(View):
                 messages.success(request, f"Deleted tag {tag}")  
                 tag.delete()
                 return redirect('stun_verification')
-        
+
         messages.error(request, "Tag ID not found")
-        
+
         return redirect('stun_verification')
 
 
@@ -317,26 +317,26 @@ class ManageStaffView(View):
             'add_mod_form': add_mod_form,
             'add_volunteer_form': add_volunteer_form,
              })
-        
+
     def get(self, request):
         return self.render_manage_staff(request)
-       
+
 
     def post(self, request):
         return redirect('manage_staff')
-    
+
 @method_decorator(necromancer_required, name='dispatch')
 class ManageLegacyView(View):
     template_name = "dashboard/moderator/manage_legacy.html"
 
     def render_manage_legacy(self, request, add_legacy_form=AddLegacyForm()):
         game = most_recent_game()
-        
+
         all_legacies = []
         permanent_status = []
         points_for_permanent = 8
         token_transactions = Legacy.objects.all().order_by('user__first_name')
-        
+
         for user in User.objects.all():
             if user.legacy_points():
                 all_legacies.append(user)
@@ -351,7 +351,7 @@ class ManageLegacyView(View):
             'add_legacy_form': add_legacy_form,
             'token_transactions': token_transactions,
              })
-    
+
     def get(self, request):
         return self.render_manage_legacy(request)
 
@@ -359,19 +359,19 @@ class ManageLegacyView(View):
         legacy_form = AddLegacyForm(request.POST)
         if not legacy_form.is_valid():
             return self.render_manage_legacy(request, add_legacy_form=legacy_form)
-    
+
         game = most_recent_game()
         cleaned_data = legacy_form.cleaned_data
         legacy_points, legacy_user, legacy_details = int(cleaned_data['legacy_points']),\
             User.objects.get(id=cleaned_data['legacy_user']), cleaned_data['legacy_details']
-        
-        
+
+
         if legacy_points < 0 and -1*(legacy_points) > legacy_user.legacy_points():
             messages.error(request, f"{legacy_user} does not have {legacy_points} points available to spend!")
             return self.render_manage_legacy(request, add_legacy_form=legacy_form)
-        
+
         Legacy.objects.create_legacy(user=legacy_user,value=legacy_points,details=legacy_details)
-        
+
         if legacy_points > 0:
             messages.success(request, f"Succesfully gave {legacy_points} tokens to {legacy_user.get_full_name()}.")
         else:
@@ -388,19 +388,19 @@ class ManageModsView(View):
         add_mod_form = AddModForm(request.POST)
         if not add_mod_form.is_valid():
             return redirect('manage_staff')
-        
+
         cd = add_mod_form.cleaned_data
         mod_id = cd['mod']
         if mod_id in list(Moderator.objects.filter(game=game).values_list('id', flat=True)):
             messages.error(request, "That mod already exists in this game")
             return redirect('manage_staff')
-        
+
         mod = User.objects.get(id=mod_id)
-        
+
         Moderator.objects.create_moderator(user=mod, game=game)
-        
+
         messages.success(request, f"Added mod {mod.get_full_name()}")
-        
+
         return redirect('manage_staff')
 
 @method_decorator(necromancer_required, name='dispatch')    
@@ -413,20 +413,20 @@ class ManageVolunteersView(View):
         add_volunteer_form=AddVolunteerForm(request.POST)
         if not add_volunteer_form.is_valid():
             return redirect('manage_staff')
-        
+
         cd = add_volunteer_form.cleaned_data
         vol_id = cd['volunteer']
         if vol_id in list(User.objects.filter(groups__name="Volunteers").values_list('id', flat=True)):
             messages.error(request, "That volunteer already exists")
             return redirect('manage_staff')
-        
+
         volunteer = User.objects.get(id=vol_id, game=game)
         vol_group = Group.objects.get(name='Volunteers')
         vol_group.user_set.add(volunteer)
         vol_group.save()
-        
+
         messages.success(request, f"Added volunteer {volunteer.get_full_name}")
-        
+
         return redirect('manage_staff')
 
 
@@ -489,9 +489,9 @@ class GenerateSupplyCodesView(View):
     def post(self, request):
         make_codes_form = GenerateSupplyCodeForm(request.POST)
         if not make_codes_form.is_valid():
-            return self.get(request, make_codes_form=make_codes_form)        
+            return self.get(request, make_codes_form=make_codes_form)
         cd = make_codes_form.cleaned_data
-        
+
         game = most_recent_game()
         supply_code = SupplyCode.objects.create_supply_code(game, cd['value'], cd['code'])
         messages.success(request, f"Generated new supply code \"{supply_code}\".")
@@ -516,16 +516,16 @@ class ManageShopView(View):
     def post(self, request):
         make_sale_form = ShopForm(request.POST)
         if not make_sale_form.is_valid():
-            return self.get(request, make_sale_form=make_sale_form)        
+            return self.get(request, make_sale_form=make_sale_form)
         cd = make_sale_form.cleaned_data
-        
+
         game = most_recent_game()
         buyer = Player.objects.get(id=cd['buyer'],game=game)
-        
+
         if buyer.shop_score() < int(cd['cost']):
             messages.error(request, f"{buyer} does not have enough points for this purchase!")
             return redirect('manage_shop')
-        
+
         supply_code = Purchase.objects.create_purchase(buyer=buyer, cost=int(cd['cost']), details=cd['purchase'], game=game)
         messages.success(request, f"Succesfully sold {cd['purchase']} to {buyer}.")
         return redirect('manage_shop')
@@ -535,103 +535,103 @@ class ManageShopView(View):
 class EmailTemplatesView(View):
     template_name = "dashboard/moderator/email_templates.html"
 
-    def render_email_templates(self, request):        
+    def render_email_templates(self, request):
         game = most_recent_game()
 
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
-            'signup_email_form': SignupEmailForm(initial={'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
-                                                          'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt') }),
-            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html'),
-                                                             'reminder_email_txt':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt')}),
-            'start_email_form':StartEmailForm(initial={'start_email_html':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html'),
-                                                       'start_email_txt':get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt')}),          
-             })
-        
+            'signup_email_form': SignupEmailForm(initial={'signup_email_html': get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup.html'),
+                                                          'signup_email_txt': get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup.txt') }),
+            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.html'),
+                                                             'reminder_email_txt':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.txt')}),
+            'start_email_form':StartEmailForm(initial={'start_email_html':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.html'),
+                                                       'start_email_txt':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.txt')})
+        })
+
     def get(self, request):
         return self.render_email_templates(request)
-       
+
 
     def post(self, request):
         game = most_recent_game()
-        
+
         if "change_signup" in request.POST:
             signup_email_form = SignupEmailForm(request.POST)
-            
+
             if not signup_email_form.is_valid():
-                return self.render_email_templates(request)        
+                return self.render_email_templates(request)
             cd = signup_email_form.cleaned_data
-            
+
             try:
-                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html','w')
+                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup.html','w')
                 f.write(cd['signup_email_html'])
                 f.close()
-                SignupEmailForm().fields['signup_email_html'].initial=cd['signup_email_html']
-                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt','w')
+                SignupEmailForm().fields['signup_email_html'].initial = cd['signup_email_html']
+                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup.txt','w')
                 f.write(cd['signup_email_txt'])
                 f.close()
                 SignupEmailForm().fields['signup_email_txt'].initial=cd['signup_email_txt']
             except:
                 messages.error(request, "There was an error updating the signup email.")
-                return redirect('email_templates')            
-            
+                return redirect('email_templates')
+
             messages.success(request, "Succesfully updated signup email.")
             return self.render_email_templates(request)
-        
+
         if "change_reminder" in request.POST:
             reminder_email_form=ReminderEmailForm(request.POST)
-            
+
             if not reminder_email_form.is_valid():
-                return self.render_email_templates(request)      
+                return self.render_email_templates(request)
             cd = reminder_email_form.cleaned_data
-            
+
             try:
-                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html','w')
+                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.html','w')
                 f.write(cd['reminder_email_html'])
                 f.close()
                 ReminderEmailForm().fields['reminder_email_html'].initial=cd['reminder_email_html']
-                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt','w')
+                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.txt','w')
                 f.write(cd['reminder_email_txt'])
                 f.close()
                 ReminderEmailForm().fields['reminder_email_txt'].initial=cd['reminder_email_txt']
             except:
                 messages.error(request, "There was an error updating the reminder email.")
                 return redirect('email_templates')
-            
+
             messages.success(request, "Succesfully updated reminder email.")
             return self.render_email_templates(request)
-        
+
         if "change_start" in request.POST:
             start_email_form=StartEmailForm(request.POST)
-            
+
             if not start_email_form.is_valid():
                 return self.render_email_templates(request)
             cd = start_email_form.cleaned_data
-            
+
             try:
-                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html','w')
+                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.html','w')
                 f.write(cd['start_email_html'])
                 f.close()
                 StartEmailForm().fields['start_email_html'].initial=cd['start_email_html']
-                f = open('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt','w')
+                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.txt','w')
                 f.write(cd['start_email_txt'])
                 f.close()
                 StartEmailForm().fields['start_email_txt'].initial=cd['start_email_txt']
             except:
                 messages.error(request, "There was an error updating the game start email.")
-                return redirect('email_templates')            
-            
+                return redirect('email_templates')
+
             messages.success(request, "Succesfully updated game start email.")
             return self.render_email_templates(request)
-        
+
         if 'test_start' in request.POST:
             send_start_email(request, request.user.participant(game), game)
-            messages.success(request, f"Game Start email sent to {request.user.email}.")           
+            messages.success(request, f"Game Start email sent to {request.user.email}.")
         if 'send_reminder' in request.POST:
             for invite in SignupInvite.objects.filter(game=game,used_at__isnull=True):
                 send_signup_reminder(request, invite, game)
-            messages.success(request, f"Reminder emails sent to {SignupInvite.objects.filter(game=game,used_at__isnull=True).count()} people.") 
+            messages.success(request, f"Reminder emails sent to {SignupInvite.objects.filter(game=game,used_at__isnull=True).count()} people.")
         if 'send_start' in request.POST:
             recipients = Player.objects.filter(game=game, active=True)
             for parti in recipients:
@@ -639,11 +639,11 @@ class EmailTemplatesView(View):
 
             recipients = Moderator.objects.filter(game=game, active=True)
             for parti in recipients:
-                send_start_email(request, parti, game)            
-        
+                send_start_email(request, parti, game)
+
             recipients = Spectator.objects.filter(game=game, active=True)
             for parti in recipients:
-                send_start_email(request, parti, game)            
+                send_start_email(request, parti, game)
             messages.success(request, f"Game start emails sent to {Player.objects.filter(game=game, active=True).count()} players,\
             {Moderator.objects.filter(game=game, active=True).count()} mods, and {Spectator.objects.filter(game=game, active=True).count()} spectators.") 
         return self.render_email_templates(request)

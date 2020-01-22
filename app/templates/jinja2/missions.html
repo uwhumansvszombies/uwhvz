@@ -15,7 +15,7 @@
     <ul>
       <li><a class="text-light" href="/#signup-schedule">Signup Schedule</a></li>
       <li><a class="text-light" href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>
-      <li><a class="text-light" href="{{ static('files/Weeklong 101 & FAQs v1.0') }}">New Player Guide</a></li>
+      <li><a class="text-light" href="{{ static('files/Weeklong 101 & FAQs v1.0.pdf') }}">New Player Guide</a></li>
       <li><a class="text-light" href="{{ url('missions') }}">Common Mission Types</a></li>
       <!--<li><a class="text-light" href="{{ url('previous_games') }}">Game Archives</a></li>-->
     </ul>
@@ -25,232 +25,230 @@
     <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
     <a class="btn btn-primary" href="{{ url('player_info') }}">Go to dashboard</a>
   {% else %}
-    <a class="btn btn-outline-primary" href="{{ url('user_signup') }}">Sign Up</a>
+    <a class="btn btn-outline-primary" href="{{ url('unrestricted_user_signup') }}">Sign Up</a>
     <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
   {% endif %}
   </div>
 </header>
 
 <main class="ui-layout" id="landing">
-<br>
-<br>
-<br>
-<br>
-<div class="container">
-    <p>Below are listed some common missions that players will experience in Humans vs Zombies. While missions will vary slightly in the weeklong, these are some generic rules that help provide a basic level of understanding. Mods may choose to vary their missions from the rules here.</p>
-  <p>During the weeklong, mini-missions will last 30-60 minutes and main missions will last 1.5-3 hours.</p>
-  <div class="panel-group" id="accordion1">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion1" href="#collapse0">Note on Boss Mods</a>
-        </h4>
-      </div>
-      <div id="collapse0" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>Boss Mods are mods that provide powerful advantages to either team. Some common boss mods are listed below.</p>
-  
-  <p><b>Angel:</b> A zombie boss mod with the ability to revive any zombie by placing their hand on the zombies shoulders for 20 seconds. Angels may be stunned by a human and are stunned for 1 minute.</p>
-  
-  <p><b>Wraith Boss:</b> A zombie boss mod with a collection of wraith whips tied to their waist. Any zombie may use the whips attached to the wraith boss as though they were a wraith. A Wraith Boss may be stunned by a human and is stunned for 1 minute.</p>
-  
-  <p><b>Banshee:</b> A neutral boss mod that will chase both zombies and humans. The Banshee can throw a sock at or tag a player to force them to leave visible sight of the Banshee. The Banshee will target based on whichever player is closer or which group of players is bigger. The Banshee cannot be stunned.</p>
-  
-  <p><b>The Wall:</b> A human boss mod that will block zombies from passing them in a hallway. Can only be used indoors and has a 2 minute limit before they automatically disable. Has a 2 minute cooldown between uses. Cannot be tagged.</p>
-  
-  <p><b>Guardian:</b> A human boss mod with a plastic sword or Nerf Blaster that can stun zombies. If they are tagged by a zombie, they will kneel for 30 seconds.</p>
-  <p><b>Alert Bot:</b> A top-tier ultra-powerful human boss mod that will alert humans as to when zombies are present.</p>
-  <p><b>Paranoid Bot:</b> Alert Bot except afraid of every little sound or movement.</p>
-</div>
-      </div>
+  <div class="mission_details">
+    <div class="container missions">
+        <p>Below are listed some common missions that players will experience in Humans vs Zombies. While missions will vary slightly in the weeklong, these are some generic rules that help provide a basic level of understanding. Mods may choose to vary their missions from the rules here.</p>
+      <p>During the weeklong, mini-missions will last 30-60 minutes and main missions will last 1.5-3 hours.</p>
+      <div class="panel-group" id="accordion1">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion1" href="#collapse0">Note on Boss Mods</a>
+            </h4>
+          </div>
+          <div id="collapse0" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>Boss Mods are mods that provide powerful advantages to either team. Some common boss mods are listed below.</p>
+              <ul>
+                <li><b>Angel:</b> A zombie boss mod with the ability to revive any zombie by placing their hand on the zombies shoulders for 20 seconds. Angels may be stunned by a human and are stunned for 1 minute.</li>
+                <li><b>Wraith Boss:</b> A zombie boss mod with a collection of wraith whips tied to their waist. Any zombie may use the whips attached to the wraith boss as though they were a wraith. A Wraith Boss may be stunned by a human and is stunned for 1 minute.</li>
+                <li><b>Banshee:</b> A neutral boss mod that will chase both zombies and humans. The Banshee can throw a sock at or tag a player to force them to leave visible sight of the Banshee. The Banshee will target based on whichever player is closer or which group of players is bigger. The Banshee cannot be stunned.</li>
+                <li><b>The Wall:</b> A human boss mod that will block zombies from passing them in a hallway. Can only be used indoors and has a 2 minute limit before they automatically disable. Has a 2 minute cooldown between uses. Cannot be tagged.</li>
+                <li><b>Guardian:</b> A human boss mod with a plastic sword or Nerf Blaster that can stun zombies. If they are tagged by a zombie, they will kneel for 30 seconds.</li>
+                <li><b>Alert Bot:</b> A top-tier ultra-powerful human boss mod that will alert humans as to when zombies are present.</li>
+                <li><b>Paranoid Bot:</b> Alert Bot except afraid of every little sound or movement.</li>
+              </ul>
     </div>
-    </div>
-    </div>
-<div class="container">
-<br>
-<h3>Mission Types</h3>
-<div class="panel-group" id="accordion">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">Point Capture</a>
-        </h4>
-      </div>
-      <div id="collapse1" class="panel-collapse collapse in">
-        <div class="panel-body">
-  <div class="panel-body">
-  <p>Point Captures consist of a number of different points across campus, each with a mod stationed at it. Humans and zombies can capture (“cap”) a point for their team by spending enough time at it. The other team may steal this point by spending the same length of time at the point. The time spent at a point may be cumulative. The team with enough points at the end of a predetermined length of time wins.</p>
+          </div>
+        </div>
+        </div>
+        </div>
+    <div class="container">
+    <br>
+    <h1>Mission Types</h1>
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">Point Capture</a>
+            </h4>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse in">
+            <div class="panel-body">
+            <p>Point Captures consist of a number of different points across campus, each with a mod stationed at it. Humans and zombies can capture (“cap”) a point for their team by spending enough time at it. The other team may steal this point by spending the same length of time at the point. The time spent at a point may be cumulative. The team with enough points at the end of a predetermined length of time wins.</p>
 
-<p><i>Variant</i>: Point Neutralization. Before the other team may steal a point, they will need to first undo the capturing of the point by the original team by spending a period of time at the point. After capturing a point has been undone, the point is considered to belong to no one, just like at the start of the mission.</p></div>
-</div>
-</div>
-      </div>
+          <p><i>Variant</i>: Point Neutralization. Before the other team may steal a point, they will need to first undo the capturing of the point by the original team by spending a period of time at the point. After capturing a point has been undone, the point is considered to belong to no one, just like at the start of the mission.</p></div>
+          </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Mod Escort</a>
+            </h4>
+          </div>
+          <div id="collapse2" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Humans need to transport mods between a variety of different points, some inside, and some outside buildings. The mods may or may not need to wait at each point. The mods may or may not choose to follow human instructions. Mods may have a limited number of times they may be touched by zombies ("lives"). After reaching their tag limit, the humans lose the ability to complete the escort with that mod. If all the mods in the mission die, humans lose. If humans visit every point will at least half of the mods within a time limit, they win.</p></div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Poster Tag Collection</a>
+            </h4>
+          </div>
+          <div id="collapse3" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Humans need to collect tags from posters (usually ~30 posters) around campus and deliver these tags to mods. Zombies cannot interact with posters. Humans must deliver at least 20 tags within the time limit to win.</p>
+      
+      <p><i>Variant</i>: Mod Specific Posters. Humans must deliver tags from specific posters to a specific mod in order for the tag to count.</p>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Mod Escort</a>
-        </h4>
-      </div>
-      <div id="collapse2" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>Humans need to transport mods between a variety of different points, some inside, and some outside buildings. The mods may or may not need to wait at each point. The mods may or may not choose to follow human instructions. Mods may have a limited number of times they may be touched by zombies ("lives"). After reaching their tag limit, the humans lose the ability to complete the escort with that mod. If all the mods in the mission die, humans lose. If humans visit every point will at least half of the mods within a time limit, they win.</p></div>
-      </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Poster Tag Collection</a>
-        </h4>
-      </div>
-      <div id="collapse3" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>Humans need to collect tags from posters (usually ~30 posters) around campus and deliver these tags to mods. Zombies cannot interact with posters. Humans must deliver at least 20 tags within the time limit to win.</p>
-  
-  <p><i>Variant</i>: Mod Specific Posters. Humans must deliver tags from specific posters to a specific mod in order for the tag to count.</p>
-</div>
-      </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Guard Mission</a>
-        </h4>
-      </div>
-      <div id="collapse4" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>A variety of buildings or regions on campus will have guards roaming them. When a guard tags a player, the player is required to leave the region/building via the closest possible exit regardless of other players. Guards will target either humans or zombies and cannot be stunned/killed or in any other way stopped from their task. Humans need to complete puzzles or tasks that are located inside each building/region. These may consist of word searches, metal ring puzzles, crosswords, mazes, etc.</P>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Guard Mission</a>
+            </h4>
+          </div>
+          <div id="collapse4" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>A variety of buildings or regions on campus will have guards roaming them. When a guard tags a player, the player is required to leave the region/building via the closest possible exit regardless of other players. Guards will target either humans or zombies and cannot be stunned/killed or in any other way stopped from their task. Humans need to complete puzzles or tasks that are located inside each building/region. These may consist of word searches, metal ring puzzles, crosswords, mazes, etc.</P>
 
-<p><i>Variant</i>: Jail. When a human is tagged by a guard, they do not leave the building but instead go to a “jail” within the building. The human must remain in jail until 5 minutes has passed. Additionally, only 5 humans may be in the jail at a time. If a sixth human arrives, the human who has been there the longest leaves. Upon becoming free, a human must immediately leave the building.</p>
-</div>
-      </div>
+    <p><i>Variant</i>: Jail. When a human is tagged by a guard, they do not leave the building but instead go to a “jail” within the building. The human must remain in jail until 5 minutes has passed. Additionally, only 5 humans may be in the jail at a time. If a sixth human arrives, the human who has been there the longest leaves. Upon becoming free, a human must immediately leave the building.</p>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Tug of War</a>
-        </h4>
-      </div>
-      <div id="collapse5" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>There are three mods on campus that will start at different buildings. Each mod has a predetermined route and starts in the middle of their route. Humans need to take the mods along the route to one end of it and zombies to the other end. A mod will follow anyone within a 5 ft radius of them. A mod will not follow stunned zombies. A mod may be <i>stolen</i> if a team chases off the previous team that was with the mod. If a mod reaches the end of their route the route is completed and they cannot be stolen by the other team. If the mission reaches the end and a mod's route is still not complete, the side of the route the mod is on is credited with completion.</p>
-</div>
-      </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Tug of War</a>
+            </h4>
+          </div>
+          <div id="collapse5" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>There are three mods on campus that will start at different buildings. Each mod has a predetermined route and starts in the middle of their route. Humans need to take the mods along the route to one end of it and zombies to the other end. A mod will follow anyone within a 5 ft radius of them. A mod will not follow stunned zombies. A mod may be <i>stolen</i> if a team chases off the previous team that was with the mod. If a mod reaches the end of their route the route is completed and they cannot be stolen by the other team. If the mission reaches the end and a mod's route is still not complete, the side of the route the mod is on is credited with completion.</p>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Recipes</a>
-        </h4>
-      </div>
-      <div id="collapse6" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>There are mods across campus distributing items. Each mod will provide one of their item type to a human present every five minutes. These items can be combined at any other mod using a <i>recipe</i>. Recipes are scattered inside certain buildings. Humans may combine any number of items at any mod that did not produce the items by providing the mod with the physical recipe and the items. Combining items will produce a <i>deluxe item</i> and takes 10 minutes. Humans need to deliver a collection of deluxe items to a central mod before the end of the mission.</p>
-</div>
-      </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Recipes</a>
+            </h4>
+          </div>
+          <div id="collapse6" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>There are mods across campus distributing items. Each mod will provide one of their item type to a human present every five minutes. These items can be combined at any other mod using a <i>recipe</i>. Recipes are scattered inside certain buildings. Humans may combine any number of items at any mod that did not produce the items by providing the mod with the physical recipe and the items. Combining items will produce a <i>deluxe item</i> and takes 10 minutes. Humans need to deliver a collection of deluxe items to a central mod before the end of the mission.</p>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Doom Train</a>
-        </h4>
-      </div>
-      <div id="collapse7" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>A train of zombie boss mods slowly approaches a point where humans are located. If zombies manage to hold the point for 15 minutes, zombies win. If humans survive the entire 3 hour mission, they win. The zombie boss mod train has to visit 5 points before it will approach the human location. It will spend 15 minutes at each point. However, there are metal pie tins on the boss mods. If the train goes between 2 points without being hit by a dart or sock, it will skip it's next location and go to the one after it, thus arriving at the humans sooner. Every time the train passes a point, the zombies will gain one mobile boss mod that will detach from the train. The boss mods on the train are still active - they just have to move with the train.</p>
-</div>
-      </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Doom Train</a>
+            </h4>
+          </div>
+          <div id="collapse7" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>A train of zombie boss mods slowly approaches a point where humans are located. If zombies manage to hold the point for 15 minutes, zombies win. If humans survive the entire 3 hour mission, they win. The zombie boss mod train has to visit 5 points before it will approach the human location. It will spend 15 minutes at each point. However, there are metal pie tins on the boss mods. If the train goes between 2 points without being hit by a dart or sock, it will skip it's next location and go to the one after it, thus arriving at the humans sooner. Every time the train passes a point, the zombies will gain one mobile boss mod that will detach from the train. The boss mods on the train are still active - they just have to move with the train.</p>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Escape</a>
-        </h4>
-      </div>
-      <div id="collapse8" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>Humans need to travel from one point to another without dying. That's it.</p>
-  
-  <p><i>Variant</i>: Supply Retrieval. Humans need to visit certain points before going to the end point, potentially stopping at each point for a length of time before progressing, similar to a Point Capture. These points may need to be visited in a specific order.</p>
-</div>
-      </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Escape</a>
+            </h4>
+          </div>
+          <div id="collapse8" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Humans need to travel from one point to another without dying. That's it.</p>
+      
+      <p><i>Variant</i>: Supply Retrieval. Humans need to visit certain points before going to the end point, potentially stopping at each point for a length of time before progressing, similar to a Point Capture. These points may need to be visited in a specific order.</p>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">
-          <script>
-var text="Rave Dimension" // YOUR TEXT
-var speed=50 // SPEED OF FADE
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">
+                <script>
+                  var text = "Rave Dimension" // YOUR TEXT
+                  var speed = 50 // SPEED OF FADE
 
-// ********** LEAVE THE NEXT BIT ALONE!
+                  // ********** LEAVE THE NEXT BIT ALONE!
+                  if (document.all || document.getElementById) {
+                    document.write('<span id="highlight">' + text + '</span>');
+                    var storetext=document.getElementById? document.getElementById("highlight") : document.all.highlight;
+                  }
+                  else {
+                    document.write(text);
+                  }
+                  var hex = new Array("00","14","28","3C","50","64","78","8C","A0","B4","C8","DC","F0");
+                  var r = 1;
+                  var g = 1;
+                  var b = 1;
+                  var seq = 1;
 
+                  function changetext() {
+                    rainbow="#"+hex[r]+hex[g]+hex[b];
+                    storetext.style.color=rainbow;
+                  }
 
-if (document.all||document.getElementById){
-document.write('<span id="highlight">' + text + '</span>')
-var storetext=document.getElementById? document.getElementById("highlight") : document.all.highlight
-}
-else
-document.write(text)
-var hex=new Array("00","14","28","3C","50","64","78","8C","A0","B4","C8","DC","F0")
-var r=1
-var g=1
-var b=1
-var seq=1
-function changetext(){
-rainbow="#"+hex[r]+hex[g]+hex[b]
-storetext.style.color=rainbow
-}
-function change(){
-if (seq==6){
-b--
-if (b==0)
-seq=1
-}
-if (seq==5){
-r++
-if (r==12)
-seq=6
-}
-if (seq==4){
-g--
-if (g==0)
-seq=5
-}
-if (seq==3){
-b++
-if (b==12)
-seq=4
-}
-if (seq==2){
-r--
-if (r==0)
-seq=3
-}
-if (seq==1){
-g++
-if (g==12)
-seq=2
-}
-changetext()
-}
-function starteffect(){
-if (document.all||document.getElementById)
-flash=setInterval("change()",speed)
-}
-starteffect()
-</script>
-</b></a>
-        </h4>
-      </div>
-      <div id="collapse9" class="panel-collapse collapse">
-        <div class="panel-body">
-  <p>The Rave Dimension is any mission that consist of 2 “dimensions”. Players that are in the alternate (“Rave”) dimension are identifiable by the glowsticks that they wear. Players can change dimension at “Portal” mods, which will distribute or take back glowsticks. Players can see, but not interact with, players in the other dimension. There will be tasks that need to be completed in one dimension or the other, identifiable by the glowsticks (or lack of glowsticks) present at the task. Additionally, there will be Time Cops, who are mods identified by the many glowing things they wear. If they touch a player with a light sword, dart, or their hand, they may force the player to immediately change dimensions.</p>
-</div>
+                  function change() {
+                    if (seq == 6) {
+                      b--;
+                      if (b == 0) {
+                        seq = 1;
+                      }
+                    }
+                    if (seq == 5) {
+                      r++;
+                      if (r == 12) {
+                        seq = 6;
+                      }
+                    }
+                    if (seq == 4) {
+                      g--;
+                      if (g==0) {
+                        seq = 5;
+                      }
+                    }
+                    if (seq == 3) {
+                      b++;
+                      if (b == 12) {
+                        seq = 4;
+                      }
+                    }
+                    if (seq == 2) {
+                      r--;
+                      if (r == 0) {
+                        seq = 3;
+                      }
+                    }
+                    if (seq == 1) {
+                      g++;
+                      if (g == 12) {
+                        seq = 2;
+                      }
+                    }
+                    changetext();
+                  }
+                  function starteffect() {
+                    if (document.all || document.getElementById) {
+                      flash = setInterval("change()", speed);
+                    }
+                  }
+                  starteffect();
+                </script>
+              </b></a>
+            </h4>
+          </div>
+          <div id="collapse9" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>The Rave Dimension is any mission that consist of 2 “dimensions”. Players that are in the alternate (“Rave”) dimension are identifiable by the glowsticks that they wear. Players can change dimension at “Portal” mods, which will distribute or take back glowsticks. Players can see, but not interact with, players in the other dimension. There will be tasks that need to be completed in one dimension or the other, identifiable by the glowsticks (or lack of glowsticks) present at the task. Additionally, there will be Time Cops, who are mods identified by the many glowing things they wear. If they touch a player with a light sword, dart, or their hand, they may force the player to immediately change dimensions.</p>
+        </div>
       </div>
     </div>
-
-  
   <footer>
     <p>&copy; UWaterloo Humans vs Zombies Society <time>2017</time> &ndash; <time><script>document.write(new Date().getFullYear())</script></time>.</p>
   </footer>

@@ -1,7 +1,6 @@
 #landing {
   height: auto;
-  display: block;
-  position: relative;
+  display: block; position: relative;
   background: color(ink);
   color: color(sky);
   
@@ -121,9 +120,26 @@
   }
 }
 
+#mailing-list {
+  background: color(light);
+  font-family: ff('body');
+
+  #mc_embed_signup {
+    width: 50%;
+  }
+}
+
 .start {
   font-size: 3rem;
   line-height: 1.25;
+}
+
+.missions {
+  padding-top: 8rem;
+}
+
+.ui-layout .mission_details {
+  height: 100%;
 }
 
 footer {

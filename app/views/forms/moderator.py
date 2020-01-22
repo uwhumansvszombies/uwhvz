@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from enumfields import EnumField
 
 from app.models import ParticipantRole, SignupLocation, Player, User, PlayerRole
@@ -77,7 +78,7 @@ class ModMessageForm(forms.Form):
             }
         )
     )
-    
+
     subject = forms.CharField(
         label="Subject",
         required=True,
@@ -88,7 +89,7 @@ class ModMessageForm(forms.Form):
                 'placeholder': 'Message subject'
             }
         )
-    )    
+    )
 
     message = forms.CharField(
         label="Message",
@@ -125,8 +126,8 @@ class GenerateSupplyCodeForm(forms.Form):
                 'input_type':'number'
             }
         )
-    )  
-    
+    )
+
 class AddSignupForm(forms.Form):
     location = forms.CharField(
         label="Location",
@@ -137,21 +138,24 @@ class AddSignupForm(forms.Form):
             }
         )
     )
-    
+
 class OZShuffleForm(forms.Form):
-    amount = forms.IntegerField(
-        label="Number of Random OZs",
-        initial=Player.objects.filter(game=most_recent_game()).distinct().count()//10,
-        min_value=0,
-        max_value=Player.objects.filter(game=most_recent_game()).exclude(role=PlayerRole.ZOMBIE).distinct().count(),
-        widget=forms.TextInput(
-            attrs={
-                'class': 'ui-input',
-                'input_type':'number'
-            }
+    try:
+        amount = forms.IntegerField(
+            label="Number of Random OZs",
+            initial=Player.objects.filter(game=most_recent_game()).distinct().count()//10,
+            min_value=0,
+            max_value=Player.objects.filter(game=most_recent_game()).exclude(role=PlayerRole.ZOMBIE).distinct().count(),
+            widget=forms.TextInput(
+                attrs={
+                    'class': 'ui-input',
+                    'input_type':'number'
+                }
+            )
         )
-    )
-    
+    except:
+        pass
+
 class GameStartForm(forms.Form):
     name = forms.CharField(
         label="Name",
@@ -162,13 +166,13 @@ class GameStartForm(forms.Form):
             }
         )
     )
-    
+
     day = forms.IntegerField(
         label="Day",
         min_value=0,
         max_value=31,
         help_text=
-        "Please don't try to be smart and enter a day that doesn't exist.",        
+        "Please don't try to be smart and enter a day that doesn't exist.",
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -176,7 +180,7 @@ class GameStartForm(forms.Form):
             }
         )
     )
-    
+
     month = forms.ChoiceField(
         label="Month",
         choices=get_months,
@@ -185,8 +189,8 @@ class GameStartForm(forms.Form):
                 'class': 'custom-select',
             }
         )
-    )    
-    
+    )
+
     year = forms.IntegerField(
         label="Year",
         min_value=1,
@@ -197,8 +201,8 @@ class GameStartForm(forms.Form):
                 'input_type':'number'
             }
         )
-    )    
-    
+    )
+
 class ShopForm(forms.Form):
     buyer = forms.ChoiceField(
         label="Buyer",
@@ -209,7 +213,7 @@ class ShopForm(forms.Form):
             }
         )
     )
-    
+
     purchase = forms.CharField(
         label="Purchase Info",
         required=False,
@@ -242,7 +246,7 @@ class AddModForm(forms.Form):
             }
         )
     )
-    
+
 class AddVolunteerForm(forms.Form):
     volunteer = forms.ChoiceField(
         label="User To Become A Volunteer",
@@ -253,7 +257,7 @@ class AddVolunteerForm(forms.Form):
             }
         )
     )
-    
+
 class AddLegacyForm(forms.Form):
     legacy_user = forms.ChoiceField(
         label="User to add/spend Tokens to/from",
@@ -279,29 +283,29 @@ class AddLegacyForm(forms.Form):
         initial=0,
         help_text=
         "This value can be positive or negative. A positive value indicates a gain of tokens, a negative value indicates a loss of tokens.\
-        Users can never have a negative number of tokens. Necromancers will usually receive 2 for each game they run, and all others receive 1.",           
+        Users can never have a negative number of tokens. Necromancers will usually receive 2 for each game they run, and all others receive 1.",
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
                 'input_type':'number'
             }
         )
-    )    
-    
+    )
+
 class SignupEmailForm(forms.Form):
     signup_email_html = forms.CharField(
         label="Signup Email - HTML",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
+        initial=get_text('app/templates/jinja2/email/signup.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
             }
         )
     )
-    
+
     signup_email_txt = forms.CharField(
         label="Signup Email - txt",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt'),
+        initial=get_text('app/templates/jinja2/email/signup.txt'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
@@ -309,70 +313,62 @@ class SignupEmailForm(forms.Form):
         )
     )
     def get_initial(self):
-        return {'signup_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html'),
-                'signup_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')}
-    
+        return {'signup_email_html': get_text('app/templates/jinja2/email/signup.html'),
+                'signup_email_txt': get_text('app/templates/jinja2/email/signup.txt')}
+
     def __init__(self, *args, **kwargs):
         super(SignupEmailForm, self).__init__(*args, **kwargs)
-        self.initial['signup_email_html'] = get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.html')
-        self.initial['signup_email_txt'] = get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup.txt')
-    
-                     
-    
+        self.initial['signup_email_html'] = get_text('app/templates/jinja2/email/signup.html')
+        self.initial['signup_email_txt'] = get_text('app/templates/jinja2/email/signup.txt')
+
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
         label="Reminder Email - HTML",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html'),
+        initial=get_text('app/templates/jinja2/email/signup_reminder.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
             }
         )
     )
-    
     reminder_email_txt = forms.CharField(
         label="Reminder Email - txt",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt'),
+        initial=get_text('app/templates/jinja2/email/signup_reminder.txt'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
             }
         )
     )
-    
     def __init__(self, *args, **kwargs):
             kwargs.update(initial={
-                'reminder_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.html'),
-                'reminder_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/signup_reminder.txt')
+                'reminder_email_html': get_text('app/templates/jinja2/email/signup_reminder.html'),
+                'reminder_email_txt': get_text('app/templates/jinja2/email/signup_reminder.txt')
             })
-    
-            super(ReminderEmailForm, self).__init__(*args, **kwargs)    
+            super(ReminderEmailForm, self).__init__(*args, **kwargs)
 
 class StartEmailForm(forms.Form):
     start_email_html = forms.CharField(
         label="Game Start Email - HTML",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html'),
+        initial=get_text('app/templates/jinja2/email/game_start.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
             }
         )
     )
-    
     start_email_txt = forms.CharField(
         label="Game Start Email - txt",
-        initial=get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt'),
+        initial=get_text('app/templates/jinja2/email/game_start.txt'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
             }
         )
     )
-    
     def __init__(self, *args, **kwargs):
             kwargs.update(initial={
-                'start_email_html': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.html'),
-                'start_email_txt': get_text('/users/hvz/uwhvz/app/templates/jinja2/email/game_start.txt')
+                'start_email_html': get_text('app/templates/jinja2/email/game_start.html'),
+                'start_email_txt': get_text('app/templates/jinja2/email/game_start.txt')
             })
-    
-            super(StartEmailForm, self).__init__(*args, **kwargs)     
+            super(StartEmailForm, self).__init__(*args, **kwargs)
