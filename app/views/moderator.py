@@ -37,7 +37,7 @@ class KillUnsuppliedHumansView(View):
                 human.kill()
 
         return redirect('manage_game')
-    
+
 @method_decorator(moderator_required, name='dispatch')
 class GameStartView(View):
     def get(self, request):
@@ -48,34 +48,34 @@ class GameStartView(View):
         if not game_start_form.is_valid():
             messages.error(request, "There was an error with your request. Check your inputs again!")
             return redirect('manage_game')
-        
+
         cd = game_start_form.cleaned_data
         game_title = cd['name']
-        
+
         try:
             start_day = utc.localize(datetime(int(cd['year']), int(cd['month']),int(cd['day'])))
         except:
             messages.error(request, "That's not a valid day!")
-            return redirect('manage_game')            
+            return redirect('manage_game')
         Game.objects.create_game(name=game_title, started_on=start_day, started_by=request.user)
-        
+
         game=most_recent_game()
-        
+
         if not 'Online' in list(SignupLocation.objects.filter(game=game).values_list('name', flat=True)):
             SignupLocation.objects.create_signup_location('Online', game)
-        
+
         volunteers = Group.objects.get(name='Volunteer').item_set.all()
         for volunteer in volunteers:
             if volunteer.email != 'volunteer@email.com':
                 volunteer.groups.remove("Volunteer")
-        
+
         legacy_users = Group.objects.get(name='LegacyUsers').item_set.all()
         for user in legacy_users:
-            user.groups.remove("LegacyUsers")        
-            
+            user.groups.remove("LegacyUsers")
+
         messages.success(request, f"The Game \"{game_title}\" is open for signups.")
         return redirect('manage_game')
-    
+
 @method_decorator(moderator_required, name='dispatch')
 class GameSetView(View):
     def get(self, request):
@@ -86,13 +86,13 @@ class GameSetView(View):
         try:
             game.started_on = utc.localize(datetime.now())
             game.save()
-        
+
             messages.success(request, f"The Game \"{game.name}\" has started.")
             return redirect('manage_game')
         except:
             messages.error(request, f"There was an error with the starting of the game \"{game.name}\"")
             return redirect('manage_game')
-        
+
 @method_decorator(moderator_required, name='dispatch')
 class GameEndView(View):
     def get(self, request):
@@ -108,8 +108,8 @@ class GameEndView(View):
             return redirect('manage_game')
         except:
             messages.error(request, f"There was an error with the ending of the game \"{game.name}\"")
-            return redirect('manage_game')  
-    
+            return redirect('manage_game')
+
 
 @method_decorator(moderator_required, name='dispatch')
 class ManageGameView(View):
@@ -149,13 +149,13 @@ class ManageGameView(View):
         elif cd['recipients'] == "Humans":
             recipients = list(Player.objects \
                 .filter(game=game, active=True, role=PlayerRole.HUMAN) \
-                .values_list('user__email', flat=True))    
+                .values_list('user__email', flat=True))
             subject_set = '[hvz-humans]'
 
         elif cd['recipients'] == "Volunteers and Legacy":
             recipients = list(User.objects \
                 .filter(game=game, active=True, groups__name="Volunteer") \
-                .values_list('user__email', flat=True)) 
+                .values_list('user__email', flat=True))
             recipients.extend(list(User.objects \
                 .filter(game=game, active=True, groups__name="LegacyUsers") \
                 .values_list('user__email', flat=True)))
@@ -233,12 +233,20 @@ class ManageOZView(View):
         return redirect('manage_oz')
 
 @method_decorator(moderator_required, name='dispatch')
-class AddSignupView(View):
+class ManageSignupView(View):
     def get(self, request):
         return redirect('manage_players')
 
     def post(self, request):
         game = most_recent_game()
+
+        locations = SignupLocation.objects.filter(game=game)
+        for location in locations:
+            if str(location.id)+'-remove' in request.POST:
+                location.delete()
+                messages.success(request, f"Deleted signup location {location}")
+                return redirect('manage_players')
+
         signup_loc_form = AddSignupForm(request.POST)
         if not signup_loc_form.is_valid():
             return redirect('manage_players')
@@ -291,7 +299,7 @@ class StunVerificationView(View):
                 messages.success(request, f"Succesfully approved tag {tag}")
                 return redirect('stun_verification')
             if str(tag.id)+'-remove' in request.POST:
-                messages.success(request, f"Deleted tag {tag}")  
+                messages.success(request, f"Deleted tag {tag}")
                 tag.delete()
                 return redirect('stun_verification')
 
@@ -378,7 +386,7 @@ class ManageLegacyView(View):
             messages.success(request, f"{legacy_user.get_full_name()} succesfully spent {abs(legacy_points)} tokens.")
         return redirect('manage_legacy')
 
-@method_decorator(necromancer_required, name='dispatch')    
+@method_decorator(necromancer_required, name='dispatch')
 class ManageModsView(View):
     def get(self, request):
         return redirect('manage_staff')
@@ -403,7 +411,7 @@ class ManageModsView(View):
 
         return redirect('manage_staff')
 
-@method_decorator(necromancer_required, name='dispatch')    
+@method_decorator(necromancer_required, name='dispatch')
 class ManageVolunteersView(View):
     def get(self, request):
         return redirect('manage_staff')
@@ -645,5 +653,5 @@ class EmailTemplatesView(View):
             for parti in recipients:
                 send_start_email(request, parti, game)
             messages.success(request, f"Game start emails sent to {Player.objects.filter(game=game, active=True).count()} players,\
-            {Moderator.objects.filter(game=game, active=True).count()} mods, and {Spectator.objects.filter(game=game, active=True).count()} spectators.") 
+            {Moderator.objects.filter(game=game, active=True).count()} mods, and {Spectator.objects.filter(game=game, active=True).count()} spectators.")
         return self.render_email_templates(request)
