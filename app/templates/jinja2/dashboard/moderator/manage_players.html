@@ -25,14 +25,14 @@
             {% endfor %}
             </div>
           {% endfor %}
-        
+
         <div class="ui-form-group pt text-center">
           <input type="submit" value="Signup" class="btn btn-block btn-primary">
         </div>
       </form>
     {% endcall %}
     {% call card("Signup Locations") %}
-    <form action="{{ url('add_signup') }}" method="post" novalidate>
+    <form action="{{ url('manage_signup') }}" method="post" novalidate>
       {{ csrf_input }}
       <table><tr><td scope="col">Add location: </td>
        {% for field in signup_loc_form %}
@@ -41,25 +41,34 @@
         </td>
       {% endfor %}
        <td scope="col"><div class="ui-form-group">
-        <input class="btn btn-block btn-primary" type="submit" value="Add">
+         <input class="btn btn-block btn-primary" type="submit" value="Add" name="add">
       </div></td>
       </tr></table>
     </form>
-    
+
     <table class="table table-striped">
       <thead>
       <tr>
         <th scope="col">Signup Location</th>
         <th scope="col">Emails sent</th>
         <th scope="col">Emails acted on</th>
+        <th scope="col"></th>
       </tr>
       </thead>
       <tbody>
       {% for location in signup_locations %}
       <tr>
-        <td scope="col">{{ location.name }}</td>
-        <td scope="col">{{ location.signupinvite_set.values_list('email', flat=True).distinct().count() }}</td>
-        <td scope="col">{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
+        <td class="align-middle" scope="col">{{ location.name }}</td>
+        <td class="align-middle" scope="col">{{ location.signupinvite_set.values_list('email', flat=True).distinct().count() }}</td>
+        <td class="align-middle" scope="col">{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
+        <div class="ui-form-group">
+        </div>
+        <td scope="col">
+          <form class="mb-0" action="{{ url('manage_signup')}}" method="post">
+            {{ csrf_input }}
+            <input type="submit" class="btn btn-sm btn-link" value="Delete" name="{{location.id}}-remove">
+          </form>
+        </td>
       </tr>
       {% endfor %}
       </tbody>

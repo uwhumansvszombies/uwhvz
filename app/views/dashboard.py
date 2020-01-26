@@ -29,7 +29,7 @@ class IndexView(MobileSupportedView):
 @method_decorator(login_required, name='dispatch')
 class DashboardView(MobileSupportedView):
     desktop_template = "dashboard/index.html"
-    mobile_template = "mobile/dashboard/index.html"   
+    mobile_template = "mobile/dashboard/index.html"
 
     def get(self, request):
         game = most_recent_game()
@@ -38,9 +38,9 @@ class DashboardView(MobileSupportedView):
         kills = Tag.objects.filter(initiator__user=request.user,initiator__role=PlayerRole.ZOMBIE,
             receiver__role=PlayerRole.HUMAN,active=True).count()
         codes = SupplyCode.objects.filter(claimed_by__user=request.user,active=True).count()
-        
+
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
-        points_for_permanent = 8       
+        points_for_permanent = 8
         if game.is_running and (request.user.is_superuser or (request.user.participant(game) and request.user.participant(game).is_moderator)):
             unverified = Tag.objects.filter(initiator__game=game,
                 receiver__game=game,active=False).count()
@@ -49,31 +49,31 @@ class DashboardView(MobileSupportedView):
         return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game),
                                                 'stuns':stuns, 'kills':kills, 'codes':codes,
                                                 'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
-    
+
     def post(self, request):
         game = most_recent_game()
-        
+
         if "pts" in request.POST:
             player = request.user.participant(game)
             player.point_modifier = 15
             player.save()
             Legacy.objects.create_legacy(user=request.user,value=-1,details=f'Started {game} game with 15 points.')
             messages.success(request, "You will now start the game with 15 points.")
-            
+
         elif "oz" in request.POST:
             player = request.user.participant(game)
             player.is_oz = True
             player.save()
             Legacy.objects.create_legacy(user=request.user,value=-1,details=f'Started {game} game as OZ.')
             messages.success(request, "You will now start the game as OZ.")
-        
+
         legacy_users = Group.objects.get(name='LegacyUsers')
         if request.user.id not in list(User.objects.filter(groups__name="LegacyUsers").values_list('id', flat=True)):
             legacy_users.add(request.user)
-            
+
         return redirect('dashboard')
-    
-    
+
+
 
 class MissionsView(MobileSupportedView):
     desktop_template = "missions.html"
@@ -85,7 +85,7 @@ class MissionsView(MobileSupportedView):
 
 class PrevGamesView(View):
     template_name = "previous_games.html"
-    
+
     def render_zombie_tree(self, request, prev_games, game):
 
         player_codes = {}
@@ -120,7 +120,7 @@ class PrevGamesView(View):
 
         for code, name in player_codes.items():
             nodes[code] = {'label': name}
-            
+
         # BFS on the edge list so that we can put each node into a group based on
         # its level in the tree.
         queue = ['NECROMANCER']
@@ -153,14 +153,14 @@ class PrevGamesView(View):
 
     def get(self, request):
         prev_games = Game.objects.filter(include_summary=True)
-        
+
         return self.render_zombie_tree(request,prev_games,prev_games.order_by('-created_at').first())
-    
+
     def post(self, request):
         prev_games = Game.objects.filter(include_summary=True)
         game_selection = prev_games.order_by('-created_at').first()
         for game in prev_games:
             if game.name in request.POST:
                 game_selection = game
-        
+
         return self.render_zombie_tree(request,prev_games,game_selection)
