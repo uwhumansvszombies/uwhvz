@@ -1,8 +1,7 @@
 ////
 /// Site-specific classes for the dashboard/index page live here.
 /// @group site, @page dashboard/index
-////
-
+//// 
 
 .s-dashboard__index {
   grid-template-columns: 1fr 2fr 2fr;
@@ -91,4 +90,11 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.faction-name {
+  font-family: ff('body');
+  font-size: 1.25rem;
+  font-weight: $fw-regular;
+  margin-bottom: 0.5em;
 }

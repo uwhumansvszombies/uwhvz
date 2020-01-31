@@ -21,6 +21,7 @@
         <li><a href="{{ url('stun_verification') }}">Stun Verification</a></li>
       {% endif %}
       {% if user.is_superuser %}
+        <li><a href="{{ url('manage_factions') }}">Manage Factions</a><li>
         <li><a href="{{ url('manage_staff') }}">Mods/Volunteers</a></li>
         <li><a href="{{ url('manage_legacy') }}">Legacy Tokens</a></li>
         <li><a href="{{ url('email_templates') }}">Game Emails</a></li>

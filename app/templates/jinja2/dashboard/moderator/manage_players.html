@@ -61,12 +61,12 @@
         <td class="align-middle" scope="col">{{ location.name }}</td>
         <td class="align-middle" scope="col">{{ location.signupinvite_set.values_list('email', flat=True).distinct().count() }}</td>
         <td class="align-middle" scope="col">{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
-        <div class="ui-form-group">
-        </div>
-        <td scope="col">
+        <td scope="col" style="width: 40px">
           <form class="mb-0" action="{{ url('manage_signup')}}" method="post">
             {{ csrf_input }}
-            <input type="submit" class="btn btn-sm btn-link" value="Delete" name="{{location.id}}-remove">
+            <button name="{{location.id}}-remove" type="submit" class="btn btn-danger">
+              <i class="fas fa-trash"></i>
+            </button>
           </form>
         </td>
       </tr>

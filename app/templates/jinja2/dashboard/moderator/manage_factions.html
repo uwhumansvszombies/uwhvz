@@ -1,0 +1,134 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Manage Factions{% endblock %}
+
+{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
+{% block pagesubtitle %}Manage Factions{% endblock %}
+
+{% block subcontent %}
+  <div class="ui-grid">
+    <div class="ui-grid s-dashboard__signup-players">
+      {% call card("Change Player's Faction", id="card--add-player-to-faction") %}
+        <form method="post" novalidate>
+          {{ csrf_input }}
+
+          {% for field in mod_add_player_to_faction_form %}
+            <div class="ui-form-group">
+              <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+              {% endif %}
+              {% for error in field.errors %}
+                <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <div class="ui-form-group pt text-center">
+            <input type="submit" value="Change Player's Faction" name="add-player-to-faction" class="btn btn-block btn-primary">
+          </div>
+        </form>
+      {% endcall %}
+      {% call card("Add/Edit Faction in " + game.name, id="card--add-faction") %}
+        <form method="post" novalidate>
+          {{ csrf_input }}
+
+          {% for field in mod_add_faction_form %}
+            <div class="ui-form-group">
+              <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+              {% endif %}
+              {% for error in field.errors %}
+                <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <div class="ui-form-group pt text-center">
+            <input type="submit" value="Add Faction" name="add-faction" class="btn btn-block btn-primary">
+          </div>
+        </form>
+      {% endcall %}
+      {% call card("Add Modifier to Faction", id="card--add-faction") %}
+        <form method="post" novalidate>
+          {{ csrf_input }}
+
+          {% for field in mod_add_modifier_form %}
+            <div class="ui-form-group">
+              <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+              {% endif %}
+              {% for error in field.errors %}
+                <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          <div class="ui-form-group pt text-center">
+            <input type="submit" value="Add Modifier" name="add-modifier" class="btn btn-block btn-primary">
+          </div>
+        </form>
+      {% endcall %}
+      {% call card("Factions", id="card--list-factions") %}
+        {% for faction, modifiers in factions %}
+          <h3 class="faction-name">
+            {{ faction.name }}
+            <br>
+            <small class="text-muted">{{ faction.description }}</small>
+          </h3>
+
+          <table class="table table-striped">
+            <thead>
+              <th scope="col">Modifier List</th>
+              <th scope="col"></th>
+            </thead>
+            <tbody>
+              {% for modifier in modifiers %}
+                <tr>
+                  <td scope="col">{{ modifier.detail() }}</td>
+                  <td scope="col" style="width: 40px">
+                    <form class="mb-0" action="{{ url('delete_factions')}}" method="post">
+                      {{ csrf_input }}
+                      <button name="{{modifier.id}}-remove" type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endfor %}
+      {% endcall %}
+    </div>
+    {% call card("Player List", id="card--list-players-for-factions") %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Code</th>
+            <th scope="col">Faction</th>
+            <th scope="col">Shop Score</th>
+            <th scope="col">True Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in humans %}
+            <tr>
+              <td scope="col">{{ p.user.get_full_name() }}</td>
+              <td scope="col">{{ p.user.email }}</td>
+              <td scope="col">{{ p.code }}</td>
+              <td scope="col">{{ p.faction }}</td>
+              <td scope="col">{{ p.shop_score() }}</td>
+              <td scope="col">{{ p.score() }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endcall %}
+  </div>
+{% endblock %}

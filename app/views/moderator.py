@@ -7,7 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import Group
 
 from app.mail import send_signup_email, send_signup_reminder, send_start_email
-from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy, Tag
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy, Tag, Faction, Modifier
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants, necromancer_required
 from app.views.forms import *
 
@@ -549,12 +549,12 @@ class EmailTemplatesView(View):
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
-            'signup_email_form': SignupEmailForm(initial={'signup_email_html': get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup.html'),
-                                                          'signup_email_txt': get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup.txt') }),
-            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.html'),
-                                                             'reminder_email_txt':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.txt')}),
-            'start_email_form':StartEmailForm(initial={'start_email_html':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.html'),
-                                                       'start_email_txt':get_text(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.txt')})
+            'signup_email_form': SignupEmailForm(initial={'signup_email_html': get_text('app/templates/jinja2/email/signup.html'),
+                                                          'signup_email_txt': get_text('app/templates/jinja2/email/signup.txt') }),
+            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':get_text('app/templates/jinja2/email/signup_reminder.html'),
+                                                             'reminder_email_txt':get_text('app/templates/jinja2/email/signup_reminder.txt')}),
+            'start_email_form':StartEmailForm(initial={'start_email_html':get_text('app/templates/jinja2/email/game_start.html'),
+                                                       'start_email_txt':get_text('app/templates/jinja2/email/game_start.txt')})
         })
 
     def get(self, request):
@@ -572,11 +572,11 @@ class EmailTemplatesView(View):
             cd = signup_email_form.cleaned_data
 
             try:
-                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup.html','w')
+                f = open('app/templates/jinja2/email/signup.html','w')
                 f.write(cd['signup_email_html'])
                 f.close()
                 SignupEmailForm().fields['signup_email_html'].initial = cd['signup_email_html']
-                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup.txt','w')
+                f = open('app/templates/jinja2/email/signup.txt','w')
                 f.write(cd['signup_email_txt'])
                 f.close()
                 SignupEmailForm().fields['signup_email_txt'].initial=cd['signup_email_txt']
@@ -595,11 +595,11 @@ class EmailTemplatesView(View):
             cd = reminder_email_form.cleaned_data
 
             try:
-                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.html','w')
+                f = open('app/templates/jinja2/email/signup_reminder.html','w')
                 f.write(cd['reminder_email_html'])
                 f.close()
                 ReminderEmailForm().fields['reminder_email_html'].initial=cd['reminder_email_html']
-                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/signup_reminder.txt','w')
+                f = open('app/templates/jinja2/email/signup_reminder.txt','w')
                 f.write(cd['reminder_email_txt'])
                 f.close()
                 ReminderEmailForm().fields['reminder_email_txt'].initial=cd['reminder_email_txt']
@@ -618,11 +618,11 @@ class EmailTemplatesView(View):
             cd = start_email_form.cleaned_data
 
             try:
-                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.html','w')
+                f = open('app/templates/jinja2/email/game_start.html','w')
                 f.write(cd['start_email_html'])
                 f.close()
                 StartEmailForm().fields['start_email_html'].initial=cd['start_email_html']
-                f = open(settings.BASE_DIR + '/app/templates/jinja2/email/game_start.txt','w')
+                f = open('app/templates/jinja2/email/game_start.txt','w')
                 f.write(cd['start_email_txt'])
                 f.close()
                 StartEmailForm().fields['start_email_txt'].initial=cd['start_email_txt']
@@ -655,3 +655,124 @@ class EmailTemplatesView(View):
             messages.success(request, f"Game start emails sent to {Player.objects.filter(game=game, active=True).count()} players,\
             {Moderator.objects.filter(game=game, active=True).count()} mods, and {Spectator.objects.filter(game=game, active=True).count()} spectators.")
         return self.render_email_templates(request)
+
+
+@method_decorator(moderator_required, name='dispatch')
+class DeleteFactionsView(View):
+    def get(self, request):
+        return redirect('manage_factions')
+
+    def post(self, request):
+        game = most_recent_game()
+        modifiers = Modifier.objects.all()
+
+        for modifier in modifiers:
+            if str(modifier.id) + "-remove" in request.POST:
+                modifier_count = modifier.faction.modifier_set.count()
+
+                if modifier_count > 1:
+                    modifier.delete()
+                    messages.success(request, f"Successfully deleted modifier {modifier}.")
+                    break
+
+                if modifier.faction.player_set.count() == 0:
+                    modifier.delete()
+                    modifier.faction.delete()
+                    messages.success(request, f"Successfully deleted faction {modifier.faction}.")
+                else:
+                    messages.error(request, f"Failed to delete modifier and faction {modifier.faction} since players are still a part of it.")
+
+        return redirect('manage_factions')
+
+@method_decorator(moderator_required, name='dispatch')
+class ManageFactionsView(View):
+    template_name = "dashboard/moderator/manage_factions.html"
+
+    def render_manage_factions(self, request, mod_add_player_to_faction_form=AddPlayerToFactionForm(),
+                               mod_add_faction_form=AddFactionForm(), mod_add_modifier_form=AddModifierForm()):
+        game = most_recent_game()
+        human_players = Player.objects.filter(game=game, role=PlayerRole.HUMAN, active=True).order_by('user__first_name')
+        factions = Faction.objects.filter(game=game)
+        modifiers = map(lambda f: f.modifier_set.all(), factions)
+        return render(request, self.template_name, {
+            'game': game,
+            'participant': request.user.participant(game),
+            'humans': human_players,
+            'factions': zip(factions, modifiers),
+            'mod_add_player_to_faction_form': mod_add_player_to_faction_form,
+            'mod_add_faction_form': mod_add_faction_form,
+            'mod_add_modifier_form': mod_add_modifier_form
+        })
+
+    def get(self, request):
+        return self.render_manage_factions(request)
+
+    def post(self, request, **kwargs):
+        game = most_recent_game()
+        if 'add-faction' in request.POST:
+            mod_add_faction_form = AddFactionForm(request.POST)
+            if not mod_add_faction_form.is_valid():
+                return self.render_manage_factions(request, mod_add_faction_form=mod_add_faction_form)
+
+            cleaned_data = mod_add_faction_form.cleaned_data
+            name, description, modifier_type, amount = cleaned_data['name'], cleaned_data['description'], cleaned_data['modifier_type'], cleaned_data['amount']
+            # update if possible
+            try:
+                faction = Faction.objects.get(game=game, name=name)
+                faction.description = description
+                faction.save()
+
+                messages.success(request, f"Updated faction successfully.")
+                return redirect ('manage_factions')
+            # the .get() function throws an error if faction/modifier not found, so we catch it here
+            except (Faction.DoesNotExist, Modifier.DoesNotExist):
+                pass
+
+            # else create
+            try: 
+                faction = Faction.objects.create_faction(game, name, description)
+                if modifier_type and amount:
+                    Modifier.objects.create_modifier(faction, modifier_type, amount)
+                messages.success(request, f"Created faction successfully.")
+            except:
+                messages.error(request, f"There was an error in creating the faction.")
+        elif 'add-player-to-faction' in request.POST:
+            mod_add_player_to_faction_form = AddPlayerToFactionForm(request.POST)
+            if not mod_add_player_to_faction_form.is_valid():
+                return self.render_manage_factions(request, mod_add_player_to_faction_form=mod_add_player_to_faction_form)
+
+            cleaned_data = mod_add_player_to_faction_form.cleaned_data
+            player, faction = cleaned_data['player'], cleaned_data['faction']
+
+
+            try:
+                player_object = Player.objects.get(id=player, game=game)
+                # for clearing a player's faction
+                if (faction == ''):
+                    player_object.faction = None
+                    player_object.save()
+                    messages.success(request, f"Updated player faction successfully.")
+                else:
+                    faction_object = Faction.objects.get(id=faction, game=game)
+                    player_object.faction = faction_object
+                    player_object.save()
+                    messages.success(request, f"Updated player faction successfully.")
+            except:
+                messages.error(request, f"There was an error in setting the players faction.")
+        elif 'add-modifier' in request.POST:
+            mod_add_modifier_form = AddModifierForm(request.POST)
+            if not mod_add_modifier_form.is_valid():
+                return self.render_manage_factions(request, mod_add_modifier_form=mod_add_modifier_form)
+
+            cleaned_data = mod_add_modifier_form.cleaned_data
+            faction, modifier_type, amount = cleaned_data['faction'], cleaned_data['modifier_type'], cleaned_data['amount']
+            try: 
+                faction_object = Faction.objects.get(id=faction, game=game)
+                Modifier.objects.create_modifier(faction_object, modifier_type, amount)
+                messages.success(request, f"Created modifier successfully.")
+            except Exception as e:
+                print(e)
+                messages.error(request, f"Failed to create modifier.")
+
+        return redirect('manage_factions')
+
