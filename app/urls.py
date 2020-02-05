@@ -1,6 +1,8 @@
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, re_path
 
+from rest_framework import routers
+
 from . import views
 
 urlpatterns = [
@@ -58,6 +60,9 @@ urlpatterns = [
     path("dashboard/moderator/manage-mods", views.ManageModsView.as_view(), name='manage_mods'),
     path("dashboard/moderator/manage-volunteers", views.ManageVolunteersView.as_view(), name='manage_volunteers'),
     path("dashboard/moderator/email-templates", views.EmailTemplatesView.as_view(), name='email_templates'),
+    
+    # API
+    path("api/v1/", include('app.api.urls')),
 
     # Impersonation
     re_path(r'^su/', include('django_su.urls')),

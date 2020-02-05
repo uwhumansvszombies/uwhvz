@@ -18,6 +18,10 @@ python manage.py runserver
 - `python manage.py seed_data` generates a bunch of fake data for testing purposes.
 - `python manage.py makemigrations app` to make a migration after changing models, etc.
 
+## API Documentation
+
+The website has a public API currently under development. You can check out the documentation [here](API Documentation.md).
+
 ## Production Setup
 
 ### General

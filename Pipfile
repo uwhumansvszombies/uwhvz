@@ -17,6 +17,7 @@ gunicorn = "*"
 django-compressor = "*"
 django-querysetsequence = "*"
 django-su = "*"
+django-rest-auth = "*"
 
 [dev-packages]
 

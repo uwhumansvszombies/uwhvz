@@ -152,20 +152,19 @@
             "index": "pypi",
             "version": "==0.12"
         },
+        "django-rest-auth": {
+            "hashes": [
+                "sha256:f11e12175dafeed772f50d740d22caeab27e99a3caca24ec65e66a8d6de16571"
+            ],
+            "index": "pypi",
+            "version": "==0.9.5"
+        },
         "django-sass-processor": {
             "hashes": [
                 "sha256:e039551994feaaba6fcf880412b25a772dd313162a34cbb4289814988cfae340"
             ],
             "index": "pypi",
             "version": "==0.8"
-        },
-        "django-su": {
-            "hashes": [
-                "sha256:8f624aed76bd93febe75554b5f14230be56a741d1cf8375673232f0e161af6c5",
-                "sha256:e51fec387e12c30c0e81abe2ccfa0a1927be2340cea329b7667478156f50b542"
-            ],
-            "index": "pypi",
-            "version": "==0.9.0"
         },
         "django-taggit": {
             "hashes": [
@@ -323,7 +322,7 @@
         },
         "pycparser": {
             "hashes": [
-                "sha256:3f9a235325364413047e113b58d4df80a663169993452c56b8a59fb3b35a3363",
+                "sha256:4485f8e7035a31f190edba2a5a13670c372c0ed4293544a75da1f20917ddbbb2",
                 "sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"
             ],
             "version": "==2.19"

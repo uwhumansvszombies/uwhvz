@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     'compressor',
     'svg',
     'django_user_agents',
+    'rest_framework',
+    'rest_auth',
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
@@ -112,7 +114,6 @@ WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/player'
 LOGOUT_REDIRECT_URL = '/'
 
-
 ATOMIC_REQUESTS = True
 
 PASSWORD_HASHERS = [
@@ -155,6 +156,11 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
 
 # If set to True then user signups will be restricted to those who have a signup token.
