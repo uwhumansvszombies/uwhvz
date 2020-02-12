@@ -1,0 +1,42 @@
+ul {
+  list-style-type: none;
+}
+
+.ui-layout > .ui-sidebar {
+  border-color: color(ink, light);
+  min-width: 17vh;
+}
+
+.prev-games-list {
+  padding: 0 spacing(loose);
+}
+
+.prev-games-list > input {
+  color: color(white);
+}
+
+.prev-games-title {
+  padding: spacing(loose);
+}
+
+.game-summary {
+  padding-left: 17vh;
+}
+
+.game-summary > #zombie-tree {
+  height: 75%;
+}
+
+.previous-game {
+  @include type-heading
+  text-decoration: none;
+  text-align: left;
+  background: none;
+  font-size: 1.2rem;
+  color: color(gray, 'lighter');
+  border: none;
+}
+
+.previous-game:hover {
+  text-decoration: underline;
+}
