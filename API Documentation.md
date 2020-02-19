@@ -27,7 +27,7 @@ Authenticates the user with the associated username. Attaches two cookies with n
 
 #### Failure Response
 
-`403` - Login failure, incorrect credentials.
+`401` - Login failure, incorrect credentials.
 
 ## Logout*
 
@@ -49,11 +49,11 @@ None
 
 `Success`
 
-Refreshes `csrftoken` and removes `sessionid` cookie.
+`200` - Refreshes `csrftoken` and removes `sessionid` cookie.
 
 #### Failure Response
 
-`Logout Failed`
+`403 Logout Failed`
 
 This means you had invalid cookies.
 
@@ -62,6 +62,10 @@ This means you had invalid cookies.
 **Note**: This endpoint is currently only built for players. Moderator and spectator information collecting may be added later.
 
 `/api/v1/account_info/`
+
+#### Method
+
+`GET`
 
 #### Parameters
 
@@ -73,7 +77,7 @@ None
 
 #### Success Response
 
-Returns a JSON Object with the fields:
+`200` - Returns a JSON Object with the fields:
 
 | Name         | Type                | Description                                                  |
 | ------------ | ------------------- | ------------------------------------------------------------ |
@@ -113,6 +117,44 @@ Returns a JSON Object with the fields:
 
 #### Failure Response
 
-`Logout Failed`
+`401`: The user is not logged in.
 
-This means you had invalid cookies
+`403`: The user is not a player.
+
+## Stun or Tag
+
+`/api/v1/stun_tag/`
+
+Reports a stun or a tag, depending on whether the logged in player is a human or a zombie.
+
+#### Method
+
+`POST`
+
+#### Parameters
+
+None
+
+#### Body Parameters
+
+| Name          | Type           | Description                                        |
+| ------------- | -------------- | -------------------------------------------------- |
+| `code`        | String         | Code of player who is getting stunned/tagged       |
+| `time`        | 64 bit Integer | Timestamp in Unix epoch time of the event          |
+| `location`    | String         | **Optional**. The location, specified as a string. |
+| `description` | String         | **Optional**. A description of the stun or tag.    |
+
+#### Success Response
+
+`200` - Returns the target's full name as a string.
+
+#### Failure Response
+
+`400` - Request was malformed in some way.
+
+`403` - User given is not a player. Cannot register stun or tag.
+
+`404` - The target is not an active player. Cannot register stun or tag.
+
+`409` - An identical stun or tag has been found. The current one is a duplicate.
+
