@@ -4,6 +4,8 @@ from app.models.modifier import ModifierType
 from app.api.util import *
 from app.mail import send_tag_email, send_stun_email
 from datetime import datetime
+from pytz import timezone
+import pytz
 
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
@@ -47,7 +49,9 @@ def stun_tag(request):
         if type(time) != int:
             return badRequest()
 
-        date = datetime.fromtimestamp(time)
+        eastern = timezone('US/Eastern')
+
+        date = datetime.fromtimestamp(time).replace(tzinfo=pytz.utc).astimezone(tz=eastern)
         location = request.POST.get('location') or ""
         description = request.POST.get('description') or ""
 
