@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "components/navbar.html" import navbar %}
 
 {% block title %}UW HvZ{% endblock %}
 
@@ -9,27 +10,8 @@
 {% endblock %}
 
 {% block content %}
-<header id="landing-nav">
-  <a href="/" class="sitelogo">{{ svg('site-logo-dark') }}</a>
-  <nav>
-    <ul>
-      <li><a class="text-light" href="/#signup-schedule">Signup Schedule</a></li>
-      <li><a class="text-light" href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>
-      <li><a class="text-light" href="{{ static('files/Weeklong 101 & FAQs v1.0.pdf') }}">New Player Guide</a></li>
-      <li><a class="text-light" href="{{ url('missions') }}">Common Mission Types</a></li>
-      <li><a class="text-light" href="{{ url('previous_games') }}">Game Archives</a></li>
-    </ul>
-  </nav>
-  <div class="actions">
-  {% if user.is_authenticated %}
-    <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
-    <a class="btn btn-primary" href="{{ url('player_info') }}">Go to dashboard</a>
-  {% else %}
-    <a class="btn btn-outline-primary" href="{{ url('unrestricted_user_signup') }}">Sign Up</a>
-    <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
-  {% endif %}
-  </div>
-</header>
+
+{{ navbar(user) }}
 
 <main class="ui-layout" id="landing">
   <div class="full-height">
