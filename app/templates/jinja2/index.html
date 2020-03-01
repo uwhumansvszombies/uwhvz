@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
 
 {% block title %}UW HvZ{% endblock %}
 
@@ -110,9 +111,9 @@
       </table>
     </div>
   </section>
-  <footer>
-    <p>&copy; UWaterloo Humans vs Zombies Society <time>2017</time> &ndash; <time><script>document.write(new Date().getFullYear())</script></time>.</p>
-  </footer>
+
+  {{ footer() }}
+
 </main>
 {% endblock %}
 

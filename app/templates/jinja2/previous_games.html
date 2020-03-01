@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
 
 {% block title %}UW HvZ &mdash; Game Archives{% endblock %}
 
@@ -14,7 +15,21 @@
 {{ navbar(user) }}
 
 <main class="full-height ui-layout" id="landing">
-  <aside class="ui-sidebar" id="side-nav">
+  <nav class="d-lg-none game-select-mobile">
+    <h1>Select a Game</h1>
+    <ul class="prev-games-list">
+    {% for prev_game in prev_games %}
+      <li><div class="ui-form-group pt-2">
+      <form class="mb-0" action="{{ url('previous_games') }}" method="post">
+          {{ csrf_input }}
+          <input class="previous-game font-weight-light btn" type="submit" value="{{prev_game.name}}" name="{{ prev_game.name }}">
+        </form>
+
+      </div></li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <aside class="d-none d-lg-block ui-sidebar" id="side-nav">
     <nav class="ui-menu">
       <ul class="prev-games-list">
       {% for prev_game in prev_games %}
@@ -34,9 +49,7 @@
   <section class="game-summary" id="intro">
     <h1 class="prev-games-title">{{ game_rendering }} Game Zombie Tree</h1>
     <div id="zombie-tree"></div>
-    <footer>
-      <p>&copy; UWaterloo Humans vs Zombies Society <time>2017</time> &ndash; <time><script>document.write(new Date().getFullYear())</script></time>.</p>
-    </footer>
+    {{ footer() }}
   </section>
   </main>
 {% endblock %}
