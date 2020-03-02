@@ -4,7 +4,8 @@ ul {
 
 .ui-layout > .ui-sidebar {
   border-color: color(ink, light);
-  min-width: 17vh;
+  min-width: 14vw;
+  max-width: 14vw;
 }
 
 .prev-games-list {
@@ -20,7 +21,9 @@ ul {
 }
 
 .game-summary {
-  padding-left: 17vh;
+  @media (min-width: 992px) {
+    margin-left: 14vw;
+  }
 }
 
 .game-summary > #zombie-tree {
@@ -39,4 +42,8 @@ ul {
 
 .previous-game:hover {
   text-decoration: underline;
+}
+
+.game-select-mobile {
+  text-align: center;
 }

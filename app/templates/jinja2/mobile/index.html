@@ -1,39 +1,90 @@
-{% extends "mobile/base.html" %}
+{% extends "base.html" %}
+{% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
 
-{% block title %}Index{% endblock %}
+{% block title %}UW HvZ{% endblock %}
+
+{% block styles %}
+  {% compress css %}
+    <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
+  {% endcompress %}
+{% endblock %}
 
 {% block content %}
-<header class="navbar navbar-expand-lg navbar-dark ui-title-bar--mobile">
-  <a class="navbar-brand" href="/">{{ svg('site-logo-dark') }}</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon" aria-hidden="true"></span>
-  </button>
 
-  <nav class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav">
-      {% if user.is_authenticated %}
-        <li class="nav-item"><a class="nav-link" href="{{ url('player_info') }}">Player Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url('logout') }}">Logout</a></li>
-      {% else %}
-        <li class="nav-item"><a class="nav-link" href="{{ url('login') }}">Login</a></li>
-      {% endif %}
-    </ul>
-  </nav>
-</header>
+{{ navbar(user) }}
 
-<main class="ui-layout ui-layout--mobile" id="landing-mobile">
-  <section class="ui-layout__item ui-layout__item--mobile">
-    <div id="landing-logo">
+<main class="ui-layout" id="landing-mobile">
+  <section class="ui-layout__item--mobile" id="intro">
+    <div class="landing-logo">
       {{ svg('club-logo') }}
-      <div class="ui-form-group pt-2 text-center">
-        {% if user.is_authenticated %}
-          <a class="btn btn-lg btn-primary d-block" href="{{ url('player_info') }}">Player Dashboard</a>
-          <a class="btn btn-lg btn-outline-light mt-3 d-block" href="{{ url('logout') }}">Logout</a>
+      <div class="ui-section__content">
+        {% if game.is_signups %}
+        <h1 class="start">The game begins in</h1>
+        <div class="js-countdown" id="countdown">
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="days"></span>
+            <p class="js-countdown__text">Days</p>
+          </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="hours"></span>
+            <p class="js-countdown__text">Hours</p>
+          </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="minutes"></span>
+            <p class="js-countdown__text">Minutes</p>
+          </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="seconds"></span>
+            <p class="js-countdown__text">Seconds</p>
+          </div>
+        </div>
+        {% elif game.is_running %}
+        <h1 class="start">The game has now begun.</h1>
         {% else %}
-          <a class="btn btn-lg btn-primary" href="{{ url('login') }}">Login</a>
+        <h1 class="start">The game is now over.</h1>
         {% endif %}
       </div>
     </div>
   </section>
+  <section class="ui-layout__item--mobile" id="signup-schedule-mobile">
+    <div class="ui-section">
+      <h1>Signups Schedule</h1>
+      <div class="table-responsive">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Monday</th>
+              <th>Tuesday</th>
+              <th>Wednesday</th>
+              <th>Thursday</th>
+              <th>Friday</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for signup in signups %}
+            <tr>
+              <th>{{ signup.name }}</th>
+              <td>{{ signup.mon_hours if signup.mon_hours != '' else 'N/A' }}</td>
+              <td>{{ signup.tues_hours if signup.tues_hours != '' else 'N/A' }}</td>
+              <td>{{ signup.wed_hours if signup.wed_hours != '' else 'N/A' }}</td>
+              <td>{{ signup.thurs_hours if signup.thurs_hours != '' else 'N/A' }}</td>
+              <td>{{ signup.fri_hours if signup.fri_hours != '' else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {{ footer() }}
+
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ static('scripts/countdown.js') }}" deadline={{for_js}}>
+</script>
 {% endblock %}
