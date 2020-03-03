@@ -158,3 +158,36 @@ None
 
 `409` - An identical stun or tag has been found. The current one is a duplicate.
 
+## Redeem a Supply Code
+
+`/api/v1/supply_code/`
+
+Reports a stun or a tag, depending on whether the logged in player is a human or a zombie.
+
+#### Method
+
+`POST`
+
+#### Parameters
+
+None
+
+#### Body Parameters
+
+| Name   | Type   | Description          |
+| ------ | ------ | -------------------- |
+| `code` | String | Supply code to claim |
+
+#### Success Response
+
+`200` - Returns the target's full name as a string.
+
+#### Failure Response
+
+`400` - Request was malformed in some way.
+
+`401` - Not logged in
+
+`403` - User given is not a player or is not human.
+
+`404` - The target is not an active player.

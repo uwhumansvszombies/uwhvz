@@ -1,5 +1,5 @@
 from app.serializers.player_serializer import PlayerSerializer
-from app.models import Player, Spectator, Moderator, Modifier, Tag
+from app.models import Player, Spectator, Moderator, Modifier, Tag, SupplyCode
 from app.models.modifier import ModifierType
 from app.api.util import *
 from app.mail import send_tag_email, send_stun_email
@@ -34,8 +34,9 @@ def stun_tag(request):
         return notFound()
     
     elif request.method == "POST":
-        player = Player.objects.get(user=request.user)
-        if not Player:
+        try:
+            player = Player.objects.get(user=request.user)
+        except ObjectDoesNotExist:
             return forbidden()
 
         code = request.POST.get('code') or ""
@@ -80,6 +81,41 @@ def stun_tag(request):
         else:
             send_tag_email(request, tag)
         return success(target.user.get_full_name())
+
+def claim_supply_code(request):
+    if not request.user.is_authenticated:
+        return unauthorized()
+    
+    if request.method == "GET":
+        return notFound()
+    
+    elif request.method == "POST":
+        try:
+            player = Player.objects.get(user=request.user)
+        except ObjectDoesNotExist:
+            return forbidden()
+
+        code = request.POST.get('code') or ""
+        code = code.upper()
+
+        try:
+            supply_code = SupplyCode.objects.get(game=player.game, code=code, claimed_by__isnull=True,
+                                                    active=True)
+        except ObjectDoesNotExist:
+            return notFound("That supply code does not exist or has already been redeemed.")
+        
+        if not player.is_human:
+            return forbidden("Only humans can redeem supply codes.")
+
+        supply_code_modifier_amount = 0
+        try:
+            supply_code_modifier = Modifier.objects.get(faction=player.faction, modifier_type=ModifierType.SUPPLY_CODE)
+            supply_code_modifier_amount = supply_code_modifier.modifier_amount
+        except ObjectDoesNotExist:
+            pass
+
+        supply_code.claim(player, supply_code_modifier_amount)
+        return success("The code has been redeemed successfully.")
 
 @csrf_exempt
 def view_login(request):
