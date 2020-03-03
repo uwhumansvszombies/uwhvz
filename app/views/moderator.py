@@ -428,12 +428,12 @@ class ManageVolunteersView(View):
             messages.error(request, "That volunteer already exists")
             return redirect('manage_staff')
 
-        volunteer = User.objects.get(id=vol_id, game=game)
+        volunteer = User.objects.get(id=vol_id)
         vol_group = Group.objects.get(name='Volunteers')
         vol_group.user_set.add(volunteer)
         vol_group.save()
 
-        messages.success(request, f"Added volunteer {volunteer.get_full_name}")
+        messages.success(request, f"Added volunteer {volunteer.get_full_name()}")
 
         return redirect('manage_staff')
 
