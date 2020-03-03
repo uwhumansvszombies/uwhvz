@@ -1,95 +1,41 @@
-{% from "components/card.html" import card %}
-{% extends "dashboard/base.html" %}
+{% from "components/card.html" import card %} {% extends "dashboard/base.html" %} {% block title %}Dashboard{% endblock %} {% block pagetitle %}My Dashboard{% endblock %} {% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %} {% block subcontent %} {% if game.is_signups %} {% if not participant %}
+You haven't signed up for the {{ game }} game.If you wish to join, you can sign up here. 
+{% else %}
+You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}.{% endif %} 
+{% endif %} {% endif %}
+{% if not game.is_finished and participant.is_player and participant.user.legacy_points() %} {% call card("Legacy Tokens") %} {% if points_accu < points_for_permanent %}
+You currently have {{ participant.user.legacy_points() }} tokens available to use! You have accumulated {{ points_accu }} tokens total and need {{ points_for_permanent - points_accu }} more tokens to achieve legacy status. You may use a legacy token to start a game either as OZ or with 15 points. If you use a token, you gain acccess to the volunteer mission.
+{% if participant.is_oz or participant.point_modifier >= 15 %}
+You are either already an OZ or have 15 points to start with.
+{% else %} {% if game.is_running %}
+The game has already started, but you can still use legacy tokens to gain 15 points
+{% endif %} {% if not game.is_running %} {% endif %}
+{{ csrf_input }} 
+{{ csrf_input }} 
+{% endif %} {% else %}
+You have succesfully achieved Legacy Status! You may request to be OZ or receive 15 starting points every game prior to every game start! You will always have volunteer mission access when you choose to use these perks!
+{% if participant.is_oz or participant.score() >= 15 %}
+You are either already an OZ or have 15 points to start with.
+{% else %}
+{{ csrf_input }} 
+{{ csrf_input }} 
+{% endif %} {% endif %} {% endcall %} {% endif %}
+{% if game.is_signups %} {% call card("Welcome to the game!") %}
+The game will begin on Monday, March 9th @ 12:00 AM, and runs 24 hours a day from the beginning of Monday until the end of final mission on Friday March 13th. If you have any friends who have never played before and would like to join, please send them to one of our signup booths before Friday, March 6th at 5 PM. Alternatively, they can contact us at uwhumansvszombies@gmail.com via email.
+At 7:00 PM on Sunday, March 8th in STC, we will be hosting series of short practice missions and minigames in preparation for the weeklong game. This is a great opportunity to test out your gear, introduce yourself to the rules, and meet other players before the real game begins. Please bring your own bandana and socks/blasters.
+At 11:00 PM on Sunday, March 8th, you will receive an email indicating whether you are beginning the game as a HUMAN or a ZOMBIE. This email will also include information relevant for the entire weeklong, so make sure you’re checking your inbox!
+Throughout the week, the moderator team will be communicating to you primarily through email. Each night, an email will be sent out including the schedule and events for the next day. Main Mission details will be sent out in a separate email one hour before the Main Mission begins - there will be one occurring most nights of the week. Our website (right here!) will also display announcements and mission details for the day.
+Additional important information will also be sent over twitter through @HVZAlertSystem, which can conveniently be found right here!
+If you need to rent a blaster from the Humans vs Zombie Society for use in the weeklong, you can email us at uwhumansvszombies@gmail.com for more information.
+{% endcall %} {% endif %}
 
-{% block title %}Dashboard{% endblock %}
 
-{% block pagetitle %}My Dashboard{% endblock %}
-{% block pagesubtitle %}Welcome, {{ request.user.get_full_name() }}{% endblock %}
-
-{% block subcontent %}
-{% if game.is_signups %}
-  {% if not participant %}
-    <div class="alert alert-warning show">
-      You haven't signed up for the {{ game }} game.If you wish to join,
-    <a href="{{ url('game_signup') }}">you can sign up here</a>.
-    </div>
-  {% else %}
-    <div class="alert alert-success show">
-      You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}.{% endif %}
-    </div>
-  {% endif %}
-{% endif %}
-
-<div class="ui-grid s-dashboard__game-info align-content-start">
-  <div class="ui-grid align-content-start">
-  
-    {% if not game.is_finished and participant.is_player and participant.user.legacy_points() %}
-    {% call card("Legacy Tokens") %}
-    
-    {% if points_accu < points_for_permanent %}
-      <p>You currently have {{ participant.user.legacy_points() }} tokens available to use! You have accumulated {{ points_accu }} tokens total and need {{ points_for_permanent - points_accu }} more tokens to achieve legacy status. You may use a legacy token to start a game either as OZ or with 15 points. If you use a token, you gain acccess to the volunteer mission.</p>
-      {% if participant.is_oz or participant.point_modifier >= 15 %}
-      <p>You are either already an OZ or have 15 points to start with.</p>
-      {% else %}
-      {% if game.is_running %}<p>The game has already started, but you can still use legacy tokens to gain 15 points</p>{% endif %}
-      <table><tr>
-      {% if not game.is_running %}
-      <td scope="col">
-      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
-          {{ csrf_input }}
-          <input type="submit" class="btn btn-normal" value="Start as OZ" name="oz">
-        </form></td>
-      {% endif %}
-        <td scope="col">
-      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
-          {{ csrf_input }}
-          <input type="submit" class="btn btn-normal" value="Start with 15 Points" name="pts">
-        </form></td>
-      </tr></table>
-      {% endif %}
-    {% else %}
-      <p>You have succesfully achieved Legacy Status! You may request to be OZ or receive 15 starting points every game prior to every game start! You will always have volunteer mission access when you choose to use these perks!</p>
-      {% if participant.is_oz or participant.score() >= 15 %}
-      <p>You are either already an OZ or have 15 points to start with.</p>
-      {% else %}
-      <table><tr>
-      <td scope="col">
-      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
-          {{ csrf_input }}
-          <input type="submit" class="btn btn-normal" value="Start as OZ" name="oz">
-        </form></td>
-        <td scope="col">
-      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
-          {{ csrf_input }}
-          <input type="submit" class="btn btn-normal" value="Start with 15 Points" name="pts">
-        </form></td>
-      </tr></table>
-      {% endif %}
-    {% endif %}
-    
-    {% endcall %}
-    {% endif %}
-    
-    {% call card("System Requirements") %}
-      <p>Currently, this website is fully supported by <b>Chrome</b>, <b>Firefox</b>, and <b>Microsoft Edge</b>. If you are not using one of these browsers, you may experience some technical issues.</p>
-    {% endcall %}
-    {% call card("Welcome to the website!") %}
-      <p>We are excited to announce that the website is now running on version 1.1! Some of the new features include: legacy tokens, user interface improvements, player stats, and the implementation of stun verification! Soon, we will even be publishing previous game data to the webpage so you can check out all the old zombie trees!</p>
-      <p>This website is still fairly new, and may need some tweaking here and there as we polish it. Please be patient with us while this happens.</p>
-      <p>If you'd like to report some bugs or give us general feedback on the website, contact the mods at <a href="mailto:uwhumansvszombies@gmail.com">uwhumansvszombies@gmail.com</a> and let us know what you think.</p>
-      <p>Alternatively, if you'd like to contribute to the website yourself, you can find us over at <a href="https://github.com/uwhvz/uwhvz">GitHub</a>.</p>
-    {% endcall %}
-  </div>
-  <div class="ui-grid align-content-start">
-    {% call card() %}
-      <a class="twitter-timeline" height="500" href="https://twitter.com/HVZAlertSystem?ref_src=twsrc%5Etfw">Tweets by HVZAlertSystem</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    {% endcall %}
-    
-    {% call card("Lifetime Stats") %}
-      <p>Total Stuns: {{ stuns }}</p>
-      <p>Total Kills: {{ kills }}</p>
-      <p>Total Supply Codes Redeemed: {{ codes }}</p>
-    {% endcall %}
-  </div>
-</div>
-{% endblock %}
+{% call card("System Requirements") %}
+Currently, this website is fully supported by Chrome, Firefox, and Microsoft Edge. If you are not using one of these browsers, you may experience some technical issues.
+{% endcall %}
+{% call card() %} Tweets by HVZAlertSystem {% endcall %} {% call card("Lifetime Stats") %}
+Total Stuns: {{ stuns }}
+Total Kills: {{ kills }}
+Total Supply Codes Redeemed: {{ codes }}
+{% endcall %} 
+{% endblock %} 
