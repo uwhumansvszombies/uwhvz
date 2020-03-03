@@ -21,22 +21,18 @@
       <div class="ui-section__content">
         {% if game.is_signups %}
         <h1 class="start">The game begins in</h1>
-        <div class="js-countdown" id="countdown">
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="days"></span>
-            <p class="js-countdown__text">Days</p>
+        <div class="js-countdown--mobile" id="countdown">
+          <div class="js-countdown__block--mobile">
+            <span class="js-countdown__num--mobile" id="days"></span>
+            <p class="js-countdown__text--mobile">Days</p>
           </div>
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="hours"></span>
-            <p class="js-countdown__text">Hours</p>
+          <div class="js-countdown__block--mobile">
+            <span class="js-countdown__num--mobile" id="hours"></span>
+            <p class="js-countdown__text--mobile">Hours</p>
           </div>
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="minutes"></span>
-            <p class="js-countdown__text">Minutes</p>
-          </div>
-          <div class="js-countdown__block">
-            <span class="js-countdown__num" id="seconds"></span>
-            <p class="js-countdown__text">Seconds</p>
+          <div class="js-countdown__block--mobile">
+            <span class="js-countdown__num--mobile" id="minutes"></span>
+            <p class="js-countdown__text--mobile">Minutes</p>
           </div>
         </div>
         {% elif game.is_running %}
