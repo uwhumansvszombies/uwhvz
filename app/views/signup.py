@@ -88,6 +88,10 @@ class UnrestrictedUserSignupView(View):
         email, first_name, last_name, password = cleaned_data['email'], cleaned_data['first_name'], cleaned_data[
             'last_name'], cleaned_data['password1']
 
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "An user with this email already exists. Please try logging in!")
+            return self.render_user_signup(request, user_signup_form=user_signup_form)
+
         User.objects.create_user(email, password, first_name=first_name, last_name=last_name)
 
         user = authenticate(username=email, password=password)
