@@ -79,7 +79,8 @@ class ModMessageForm(forms.Form):
 
     recipients = forms.ChoiceField(
         label="Recipients",
-        choices=[("All", "All"), ("Humans", "Humans"), ("Zombies", "Zombies"), ("Volunteers and Legacy", "Volunteers and Legacy")],
+        choices=[("All", "All"), ("Humans", "Humans"), ("Zombies", "Zombies"),
+                 ("Volunteers and Legacy", "Volunteers and Legacy"), ("Self", "Self")],
         widget=forms.Select(
             attrs={
                 'class': 'custom-select',

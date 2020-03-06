@@ -136,8 +136,14 @@ class ManageGameView(View):
 
         cd = message_players_form.cleaned_data
         recipients = []
+        email_mods = request.POST.get('email_mods', 'off') == 'on'
+        email_spectators = request.POST.get('email_spectators', 'off') == 'on'
+        
         subject_set = '[hvz-all]'
-        if cd['recipients'] == "All":
+        if cd['recipients'] == "Self":
+            recipients = list(request.user.email)
+            
+        elif cd['recipients'] == "All":
             recipients = list(Player.objects \
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True))
@@ -160,12 +166,14 @@ class ManageGameView(View):
                 .filter(game=game, active=True, groups__name="LegacyUsers") \
                 .values_list('user__email', flat=True)))
             subject_set = '[hvz-volunteers]'
-
-        recipients.extend(list(Moderator.objects \
+        
+        if email_mods:
+            recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
 
-        recipients.extend(list(Spectator.objects \
+        if email_spectators:
+            recipients.extend(list(Spectator.objects \
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
 
@@ -183,6 +191,14 @@ class ManageGameView(View):
             messages.success(request, "You've sent an email to all zombies.")
         elif cd['recipients'] == "Humans":
             messages.success(request, "You've sent an email to all humans.")
+        elif cd['recipients'] == "Self":
+            messages.success(request, "You've sent an email to yourself.")
+        
+        if not email_mods:
+            messages.warning(request, "You didn't include mods on the email sent.")
+        if not email_spectators:
+            messages.warning(request, "You didn't include spectators on the email sent.")
+        
         return redirect('manage_game')
 
 @method_decorator(moderator_required, name='dispatch')
