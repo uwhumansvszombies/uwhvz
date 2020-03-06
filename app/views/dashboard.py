@@ -9,7 +9,7 @@ from time import mktime
 from datetime import datetime
 
 from app.util import MobileSupportedView, most_recent_game
-from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode
+from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode, User
 
 
 class IndexView(MobileSupportedView):
