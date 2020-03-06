@@ -141,7 +141,7 @@ class ManageGameView(View):
         
         subject_set = '[hvz-all]'
         if cd['recipients'] == "Self":
-            recipients = list(request.user.email)
+            recipients = [request.user.email]
             
         elif cd['recipients'] == "All":
             recipients = list(Player.objects \
