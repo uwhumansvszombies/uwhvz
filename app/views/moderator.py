@@ -138,10 +138,12 @@ class ManageGameView(View):
         recipients = []
         email_mods = request.POST.get('email_mods', 'off') == 'on'
         email_spectators = request.POST.get('email_spectators', 'off') == 'on'
+        html_email = request.POST.get('html_email', 'off') == 'on'
         
         subject_set = '[hvz-all]'
         if cd['recipients'] == "Self":
             recipients = [request.user.email]
+            subject_set = '[Message from {0}]'.format(request.user.get_full_name())
             
         elif cd['recipients'] == "All":
             recipients = list(Player.objects \
@@ -177,13 +179,18 @@ class ManageGameView(View):
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
 
-        EmailMultiAlternatives(
+        msg = EmailMultiAlternatives(
             subject=f"{subject_set} {cd['subject']}",
             body=cd['message'],
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[],
             bcc=recipients
-        ).send()
+        )
+        
+        if html_email:
+            msg.content_subtype = "html"
+        
+        msg.send()
 
         if cd['recipients'] == "All":
             messages.success(request, "You've sent an email to all players.")
