@@ -18,9 +18,9 @@ def account_info(request):
         return unauthorized()
 
     if request.method == "GET":
-        playerSet = Player.objects.all().filter(user=request.user)
+        playerSet = Player.objects.all().filter(user=request.user).order_by('game__started_on')
         if playerSet:
-            player = playerSet[0]
+            player = playerSet.last()
             serializer = PlayerSerializer(player)
             return success(serializer.data)
         else:
@@ -34,9 +34,10 @@ def stun_tag(request):
         return notFound()
     
     elif request.method == "POST":
-        try:
-            player = Player.objects.get(user=request.user)
-        except ObjectDoesNotExist:
+        playerSet = Player.objects.all().filter(user=request.user).order_by('game__started_on')
+        if playerSet:
+            player = playerSet.last()
+        else:
             return forbidden()
 
         code = request.POST.get('code') or ""
@@ -90,9 +91,10 @@ def claim_supply_code(request):
         return notFound()
     
     elif request.method == "POST":
-        try:
-            player = Player.objects.get(user=request.user)
-        except ObjectDoesNotExist:
+        playerSet = Player.objects.all().filter(user=request.user).order_by('game__started_on')
+        if playerSet:
+            player = playerSet.last()
+        else:
             return forbidden()
 
         code = request.POST.get('code') or ""
