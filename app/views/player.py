@@ -85,12 +85,12 @@ class ReportTagView(View):
             pass
 
         if Tag.objects.filter(initiator=initiating_player, receiver=receiving_player,
-                              tagged_at=cleaned_data['datetime'], location=cleaned_data['location'],
+                              tagged_at=cleaned_data['datetime'].replace(tzinfo=timezone('Canada/Eastern')), location=cleaned_data['location'],
                               description=cleaned_data['description']).exists():
             return redirect('player_info')
 
         try:
-            tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'],
+            tag = Tag.objects.create_tag(initiating_player, receiving_player, cleaned_data['datetime'].replace(tzinfo=timezone('Canada/Eastern')),
                                          cleaned_data['location'], cleaned_data['description'], tag_modifier_amount)
             tag.active = False
             tag.save()

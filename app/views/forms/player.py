@@ -1,4 +1,6 @@
 from django import forms
+from datetime import datetime
+from pytz import timezone
 
 
 class ReportTagForm(forms.Form):
@@ -13,16 +15,19 @@ class ReportTagForm(forms.Form):
             }
         )
     )
+    now = datetime.now().replace(tzinfo=timezone('Canada/Eastern'))
     datetime = forms.SplitDateTimeField(
         label="Date/Time",
         widget=forms.SplitDateTimeWidget(
             date_attrs={
                 'class': 'ui-input',
-                'type': 'date'
+                'type': 'date',
+                'placeholder': "{}".format(now.strftime("%Y-%m-%d"))
             },
             time_attrs={
                 'class': 'ui-input',
-                'type': 'time'
+                'type': 'time',
+                'placeholder': "{}".format(now.strftime("%H:%M"))
             }
         )
     )
