@@ -14,6 +14,8 @@ from app.util import most_recent_game, running_game_required, player_required, g
     participant_required
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
 
+from pytz import timezone
+
 
 def render_player_info(request, report_tag_form=ReportTagForm(), claim_supply_code_form=ClaimSupplyCodeForm()):
     template_name = "mobile/dashboard/player.html" if request.user_agent.is_mobile else "dashboard/player.html"
@@ -42,7 +44,7 @@ class PlayerInfoView(View):
         if not game.is_running or not request.user.participant(game) or not request.user.participant(game).is_player:
             return redirect('dashboard')
         return render_player_info(request)
-    
+
     def post(self, request):
         if 'is_score_public' in request.POST:
             is_score_public = request.POST.get('is_score_public', 'off') == 'on'
@@ -162,6 +164,59 @@ class PlayerListView(View):
             'participants': participants,
         })
 
+@method_decorator(running_game_required, name='dispatch')
+@method_decorator(participant_required, name='dispatch')
+class PlayerTagView(View):
+    template_name = 'dashboard/view_tags.html'
+
+    def get(self, request):
+        game = most_recent_game()
+        participant = request.user.participant(game)
+        tz = timezone('Canada/Eastern')
+
+        if participant.is_human:
+            initiator = PlayerRole.HUMAN
+            receiver = PlayerRole.ZOMBIE
+        else:
+            initiator = PlayerRole.ZOMBIE
+            receiver = PlayerRole.HUMAN
+
+        unverified_tags = Tag.objects.filter(
+            initiator=participant,
+            initiator__game=game,
+            receiver__game=game,
+            initiator__role=initiator,
+            receiver__role=receiver,
+            active=False)
+
+        verified_tags = Tag.objects.filter(
+            initiator=participant,
+            initiator__game=game,
+            receiver__game=game,
+            initiator__role=initiator,
+            receiver__role=receiver,
+            active=True)
+
+        received_tags = Tag.objects.filter(
+            receiver=participant,
+            initiator__game=game,
+            receiver__game=game,
+            initiator__role=receiver,
+            receiver__role=initiator)
+
+
+        type = "Stun" if participant.is_human else "Tag"
+
+        return render(request, self.template_name, {
+            'game': game,
+            'participant': participant,
+            'type': type,
+            'unverified_tags': unverified_tags,
+            'verified_tags': verified_tags,
+            'received_tags': received_tags,
+            'tz':tz,
+        })
+
 
 @method_decorator(running_game_required, name='dispatch')
 @method_decorator(player_required, name='dispatch')
@@ -205,11 +260,11 @@ class MessagePlayersView(View):
         recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
-        
+
         recipients.extend(list(Spectator.objects \
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
-        
+
         EmailMultiAlternatives(
             subject=f"{subject_set} Message from {request.user.get_full_name()}",
             body=cd['message'],

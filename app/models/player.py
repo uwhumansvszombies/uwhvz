@@ -55,7 +55,7 @@ class Player(Participant):
         if self.is_human:
             return 5
         eight_hours_ago = current_time - timedelta(hours=8)
-        return max(0, 5 - self.receiver_tags
+        return max(1, 5 - self.receiver_tags
                    .filter(tagged_at__gte=eight_hours_ago, tagged_at__lt=current_time, active=True)
                    .count())
 

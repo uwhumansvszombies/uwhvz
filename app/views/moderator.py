@@ -315,6 +315,11 @@ class StunVerificationView(View):
             receiver__game=game,
             active=False)
 
+        if 'verify-all-stuns' in request.POST:
+            unverified_stuns.update(active=True)
+            messages.success(request, "Succesfully approved all tags!")
+            return redirect('stun_verification')
+
         for tag in unverified_stuns:
             if str(tag.id)+'-activate' in request.POST:
                 tag.active = True

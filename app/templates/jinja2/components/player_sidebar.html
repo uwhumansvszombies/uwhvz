@@ -12,6 +12,7 @@
     <ul class="ui-menu__section collapse{% if "/moderator" not in request.path %} show{% endif %}" data-parent="#side-nav" id="player-actions">
       {%- if participant.is_player %}
         <li><a href="{{ url('player_info') }}">Player Dashboard</a></li>
+        <li><a href="{{ url('view_tags') }}">View {{ "Stuns" if participant.is_human else "Tags" }}</a></li>
       {% endif -%}
       <li><a href="/dashboard/game-info/">Game Info & News</a></li>
       <li><a href="{{ url('player_list') }}">Player List</a></li>

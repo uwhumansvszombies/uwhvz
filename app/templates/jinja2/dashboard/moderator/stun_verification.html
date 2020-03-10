@@ -8,34 +8,69 @@
 {% block subcontent %}
 <div class="ui-grid">
     {% call card("Stun Verification") %}
-    {% if unverified_stuns %}
-    <p>Warning: removed stuns cannot be retrieved!</p>
-    <table class="table table-striped">
-    {%for tag in unverified_stuns%}
-    <tr><td>
-    <p>{{tag}}</p>
-    <p>Location: {{tag.location}}</p>
-    </td><td>
-    <p>Time: {{tag.created_at.astimezone(tz).strftime("%Y-%m-%d %H:%M:%S")}}</p>
-    <p>Details: {{tag.description}}</p>
-    </td><td>
-    <div class="ui-form-group">
-        <form class="mb-0" action="{{ url('stun_verification') }}" method="post">
-          {{ csrf_input }}
-          <input type="submit" class="btn btn-primary" value="Approve" name="{{tag.id}}-activate">
-        </form>
-    </div>
-    <div class="ui-form-group">
-        <form class="mb-0" action="{{ url('stun_verification') }}" method="post">
-          {{ csrf_input }}
-          <input type="submit" class="btn btn-primary" value="Delete" name="{{tag.id}}-remove">
-        </form>
-    </div>
-    </td></tr>
-    {% endfor %}
-    </table>
-    {% else %}
-    <p>There are no unverified stuns right now!</p>
-    {% endif %}
+      {% if unverified_stuns %}
+        <p>Warning: removed stuns cannot be retrieved!</p>
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Stun</th>
+            <th scope="col">Points</th>
+            <th scope="col">Location</th>
+            <th scope="col">Time</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for tag in unverified_stuns %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ tag.description }}">{{ tag }}</td>
+              <td>{{ tag.receiver.value(tag.tagged_at) + tag.point_modifier }}</td>
+              <td>{{ tag.location if tag.location else "N/A" }}</td>
+              <td>{{ tag.tagged_at.astimezone(tz).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+              <td class="d-flex">
+                <form class="mb-0 mr-2" action="{{ url('stun_verification') }}" method="post">
+                  {{ csrf_input }}
+                  <button type="submit" class="btn btn-primary" name="{{tag.id}}-activate">
+                    <i class="fas fa-thumbs-up"></i>
+                  </button>
+                </form>
+                <form class="mb-0 mr-2" action="{{ url('stun_verification') }}" method="post">
+                  {{ csrf_input }}
+                  <button type="submit" class="btn btn-danger" name="{{tag.id}}-remove">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".tag-{{ tag.id }}-details">
+                  <i class="fas fa-info pr-1 pl-1"></i>
+                </button>
+                <div class="modal fade tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ tag }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ tag.description if tag.description else "No details were given for this {} :(".format(type.lower()) }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <div class="ui-form-group">
+          <form class="mb-0" action="{{ url('stun_verification') }}" method="post">
+            {{ csrf_input }}
+            <input type="submit" class="btn btn-primary float-right" value="Confirm All Stuns" name="verify-all-stuns">
+          </form>
+        </div>
+      {% else %}
+        <p>There are no unverified stuns right now!</p>
+      {% endif %}
     {% endcall %}
 {% endblock %}
