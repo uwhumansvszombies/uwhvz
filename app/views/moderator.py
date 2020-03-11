@@ -168,7 +168,7 @@ class ManageGameView(View):
                 .filter(game=game, active=True, groups__name="LegacyUsers") \
                 .values_list('user__email', flat=True)))
             subject_set = '[hvz-volunteers]'
-        
+
         if email_mods:
             recipients.extend(list(Moderator.objects \
                 .filter(game=game, active=True) \
@@ -179,18 +179,21 @@ class ManageGameView(View):
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
 
-        msg = EmailMultiAlternatives(
-            subject=f"{subject_set} {cd['subject']}",
-            body=cd['message'],
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[],
-            bcc=recipients
-        )
-        
-        if html_email:
-            msg.content_subtype = "html"
-        
-        msg.send()
+        # Gmail has a limit of 100 recipients at a time.
+        # Hence we send multiple emails, in batches of 100.
+        for i in range(0, len(recipients), 100):
+            msg = EmailMultiAlternatives(
+                subject=f"{subject_set} {cd['subject']}",
+                body=cd['message'],
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[],
+                bcc=recipients[i:i + 100]
+            )
+
+            if html_email:
+                msg.content_subtype = "html"
+
+            msg.send()
 
         if cd['recipients'] == "All":
             messages.success(request, "You've sent an email to all players.")
@@ -200,12 +203,12 @@ class ManageGameView(View):
             messages.success(request, "You've sent an email to all humans.")
         elif cd['recipients'] == "Self":
             messages.success(request, "You've sent an email to yourself.")
-        
+
         if not email_mods:
             messages.warning(request, "You didn't include mods on the email sent.")
         if not email_spectators:
             messages.warning(request, "You didn't include spectators on the email sent.")
-        
+
         return redirect('manage_game')
 
 @method_decorator(moderator_required, name='dispatch')

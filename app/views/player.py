@@ -174,35 +174,24 @@ class PlayerTagView(View):
         participant = request.user.participant(game)
         tz = timezone('Canada/Eastern')
 
-        if participant.is_human:
-            initiator = PlayerRole.HUMAN
-            receiver = PlayerRole.ZOMBIE
-        else:
-            initiator = PlayerRole.ZOMBIE
-            receiver = PlayerRole.HUMAN
-
         unverified_tags = Tag.objects.filter(
             initiator=participant,
             initiator__game=game,
             receiver__game=game,
-            initiator__role=initiator,
-            receiver__role=receiver,
             active=False)
 
         verified_tags = Tag.objects.filter(
             initiator=participant,
             initiator__game=game,
             receiver__game=game,
-            initiator__role=initiator,
-            receiver__role=receiver,
             active=True)
 
         received_tags = Tag.objects.filter(
             receiver=participant,
             initiator__game=game,
             receiver__game=game,
-            initiator__role=receiver,
-            receiver__role=initiator)
+            initiator__role=PlayerRole.HUMAN,
+            receiver__role=PlayerRole.ZOMBIE)
 
 
         type = "Stun" if participant.is_human else "Tag"
