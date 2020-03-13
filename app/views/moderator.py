@@ -162,10 +162,10 @@ class ManageGameView(View):
 
         elif cd['recipients'] == "Volunteers and Legacy":
             recipients = list(User.objects \
-                .filter(game=game, active=True, groups__name="Volunteer") \
+                .filter(game=game, is_active=True, groups__name="Volunteer") \
                 .values_list('user__email', flat=True))
             recipients.extend(list(User.objects \
-                .filter(game=game, active=True, groups__name="LegacyUsers") \
+                .filter(game=game, is_active=True, groups__name="LegacyUsers") \
                 .values_list('user__email', flat=True)))
             subject_set = '[hvz-volunteers]'
 
