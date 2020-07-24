@@ -27,6 +27,7 @@ class TagManager(models.Manager):
             location=location,
             description=description,
             point_modifier=point_modifier,
+            type = TagType.KILL if initiator.is_zombie else TagType.STUN
         )
         tag.save()
         if receiver.is_human:
