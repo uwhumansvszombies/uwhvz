@@ -9,7 +9,7 @@ from time import mktime
 from datetime import datetime
 
 from app.util import MobileSupportedView, most_recent_game
-from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode, User
+from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode, User, TagType
 
 
 class IndexView(MobileSupportedView):
@@ -97,8 +97,7 @@ class PrevGamesView(View):
         tags = Tag.objects.filter(
             initiator__game=game,
             receiver__game=game,
-            initiator__role=PlayerRole.ZOMBIE,
-            receiver__role=PlayerRole.HUMAN,
+            type=TagType.KILL,
             active=True)
 
         for tag in tags:
@@ -106,9 +105,6 @@ class PrevGamesView(View):
 
             player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
-
-            if not Player.objects.filter(game=game,code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
-                ozs.add(tag.initiator)
 
         nodes['NECROMANCER'] = {'label': "Necromancer"}
         for oz in Player.objects.filter(game=game,in_oz_pool=True):
@@ -123,6 +119,7 @@ class PrevGamesView(View):
 
         # BFS on the edge list so that we can put each node into a group based on
         # its level in the tree.
+        # This is perhaps the only time you will see a practical use of BFS
         queue = ['NECROMANCER']
         level = 0
         while queue:
