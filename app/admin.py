@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from app.models import *
+from app.models.tag import TagType
 from app.views.forms import UserCreationForm, UserChangeForm
 
 def mark_oz_bulk(ModelAdmin, request, queryset):
@@ -15,6 +16,22 @@ remove_oz_bulk.short_description = "Remove OZ"
 def get_legacy(self, instance):
     return instance.user.legacy_points
 get_legacy.short_description = 'Legacy Points'
+
+def set_stun(ModelAdmin, request, queryset):
+    queryset.update(type=TagType.STUN)
+set_stun.short_description = "Set Tag to Stun"
+
+def set_kill(ModelAdmin, request, queryset):
+    queryset.update(type=TagType.KILL)
+set_kill.short_description = "Set Tag to Kill"
+
+def set_inactive(ModelAdmin, request, queryset):
+    queryset.update(active=False)
+set_inactive.short_description = "Inactivate Tag"
+
+def set_active(ModelAdmin, request, queryset):
+    queryset.update(active=True)
+set_active.short_description = "Activate Tag"
 
 class UserAdmin(UserAdmin):
     add_form = UserCreationForm
@@ -30,7 +47,7 @@ class UserAdmin(UserAdmin):
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
     search_fields = ('user__first_name', 'user__last_name', 'user__email', 'role', 'faction__name', 'in_oz_pool')
-    list_display = ('get_full_name', 'game', 'code', 'role', 'faction', 'score', 'active', 'in_oz_pool')
+    list_display = ('get_full_name', 'game', 'code', 'role', 'faction', 'score', 'active', 'in_oz_pool','is_oz')
     ordering = ('-game__created_at', 'user__first_name')
     actions = [mark_oz_bulk,remove_oz_bulk]
 
@@ -112,8 +129,9 @@ class PurchaseAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     search_fields = ('initiator__user__first_name', 'initiator__user__last_name', 'receiver__user__first_name', 'receiver__user__last_name')
-    list_display = ('__str__', 'get_initiator_name', 'get_receiver_name', 'tagged_at', 'game', 'active')
+    list_display = ('__str__', 'type','get_initiator_name', 'get_receiver_name', 'tagged_at', 'game', 'active')
     ordering = ('-tagged_at',)
+    actions = [set_kill,set_stun,remove_tag,set_inactive,set_active]
 
     def get_initiator_name(self, obj):
         return obj.initiator.user.get_full_name()

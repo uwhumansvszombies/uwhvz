@@ -9,12 +9,13 @@ from django.views import View
 from rest_framework.utils import json
 
 from app.mail import send_tag_email, send_stun_email
-from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType, Spectator, Moderator
+from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType, Spectator, Moderator, TagType
 from app.util import most_recent_game, running_game_required, player_required, get_game_participants, game_required, \
     participant_required
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
 
-from pytz import timezone
+from pytz import timezone, utc
+from datetime import datetime
 
 
 def render_player_info(request, report_tag_form=ReportTagForm(), claim_supply_code_form=ClaimSupplyCodeForm()):
@@ -70,6 +71,10 @@ class ReportTagView(View):
 
         cleaned_data = report_tag_form.cleaned_data
         receiver_code = cleaned_data['player_code'].upper()
+        
+        if cleaned_data['datetime'].replace(tzinfo=timezone('Canada/Eastern')) > datetime.utcnow().replace(tzinfo=timezone('Canada/Eastern')):
+            report_tag_form.add_error('datetime', "You can't tag someone in the future!")
+            return render_player_info(request, report_tag_form=report_tag_form)            
 
         try:
             receiving_player = Player.objects.get(code=receiver_code, active=True)
@@ -295,12 +300,17 @@ class ZombieTreeView(View):
         tags = Tag.objects.filter(
             initiator__game=game,
             receiver__game=game,
-            initiator__role=PlayerRole.ZOMBIE,
-            receiver__role=PlayerRole.HUMAN,
+            tag.type=TagType.KILL,
             active=True)
 
         for tag in tags:
-            edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})
+            if tag.location:
+                desc = tag.location
+                if tag.description:
+                    desc = desc + ': ' + tag.description
+            else:
+                desc = tag.description
+            edges.append({'from': tag.initiator.code, 'to': tag.receiver.code, 'title': desc})
 
             player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()

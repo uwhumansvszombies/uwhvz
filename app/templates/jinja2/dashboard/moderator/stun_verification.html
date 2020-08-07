@@ -8,6 +8,47 @@
 {% block subcontent %}
 <div class="ui-grid">
     {% call card("Stun Verification") %}
+    {% if questionable_stuns %}
+    <p>The following stuns had similarities:</p>
+    <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Stun</th>
+            <th scope="col">Points</th>
+            <th scope="col">Location</th>
+            <th scope="col">Time</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for tag in questionable_stuns %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ tag.description }}">{{ tag }}</td>
+              <td>{{ tag.receiver.value(tag.tagged_at) + tag.point_modifier }}</td>
+              <td>{{ tag.location if tag.location else "N/A" }}</td>
+              <td>{{ tag.tagged_at.astimezone(tz).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+              <td class="d-flex">
+                <div class="modal fade tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ tag }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ tag.description if tag.description else "No details were given for this :(" }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    {% endif %}
       {% if unverified_stuns %}
         <p>Warning: removed stuns cannot be retrieved!</p>
         <table class="table table-striped">

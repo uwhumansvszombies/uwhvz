@@ -46,7 +46,7 @@ class Tag(models.Model):
     tagged_at: datetime = models.DateTimeField()
     location: str = models.CharField(blank=True, max_length=100)
     description: str = models.TextField(blank=True)
-    type: Enum = EnumField(enum=TagType, max_length=1)
+    type: Enum = EnumField(enum=TagType, max_length=1, default=TagType.STUN)
     
     # If the active property is set to False, then this tag is ignored.
     active: bool = models.BooleanField(default=True)

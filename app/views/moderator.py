@@ -7,7 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import Group
 
 from app.mail import send_signup_email, send_signup_reminder, send_start_email
-from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy, Tag, Faction, Modifier
+from app.models import Player, SignupInvite, SignupLocation, SupplyCode, PlayerRole, Spectator, Moderator, Purchase, Game, User, Legacy, Tag, Faction, Modifier, TagType
 from app.util import moderator_required, most_recent_game, running_game_required, get_game_participants, necromancer_required
 from app.views.forms import *
 
@@ -299,12 +299,22 @@ class StunVerificationView(View):
             initiator__game=game,
             receiver__game=game,
             active=False)
+        questionable_stuns = []
+        
+        for tag in unverified_stuns.filter(type=Tag.KILL):
+            similar_objects = Tag.objects.filter(initiator__game=game,
+            receiver__game=game, type=Tag.KILL, receiver=tag.receiver)
+            if similar_objects:
+                questionable_stuns.append(tag)
+                for similar in similar_objects:
+                    questionable_stuns.append(similar)
         tz = timezone('Canada/Eastern')
 
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
             'unverified_stuns': unverified_stuns,
+            'questionable_stuns':questionable_stuns,
             'tz':tz,
              })
 
