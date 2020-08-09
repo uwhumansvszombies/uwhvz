@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 
 from datetime import datetime
 
-from app.models import Game, Tag, PlayerRole, TagType
+from app.models import Game, Tag, PlayerRole, TagType, Player
 
 
 class Command(BaseCommand):
