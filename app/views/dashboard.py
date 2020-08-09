@@ -107,7 +107,7 @@ class PrevGamesView(View):
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
 
         nodes['NECROMANCER'] = {'label': "Necromancer"}
-        for oz in Player.objects.filter(game=game,in_oz_pool=True):
+        for oz in Player.objects.filter(game=game,is_oz=True):
             if oz not in ozs:
                 ozs.add(oz)
         for oz in ozs:

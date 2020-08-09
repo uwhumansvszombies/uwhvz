@@ -131,7 +131,7 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ('initiator__user__first_name', 'initiator__user__last_name', 'receiver__user__first_name', 'receiver__user__last_name')
     list_display = ('__str__', 'type','get_initiator_name', 'get_receiver_name', 'tagged_at', 'game', 'active')
     ordering = ('-tagged_at',)
-    actions = [set_kill,set_stun,remove_tag,set_inactive,set_active]
+    actions = [set_kill,set_stun,set_inactive,set_active]
 
     def get_initiator_name(self, obj):
         return obj.initiator.user.get_full_name()

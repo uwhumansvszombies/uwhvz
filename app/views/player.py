@@ -300,7 +300,7 @@ class ZombieTreeView(View):
         tags = Tag.objects.filter(
             initiator__game=game,
             receiver__game=game,
-            tag.type=TagType.KILL,
+            type=TagType.KILL,
             active=True)
 
         for tag in tags:
