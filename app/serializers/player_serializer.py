@@ -3,8 +3,7 @@ from app.models import Player
 from django.db import models
 from enumfields import EnumField, Enum
 from app.models.player import PlayerRole
-from app.serializers.faction_serializer import FactionSerializer
-from app.serializers.game_serializer import GameSerializer
+from app.serializers import FactionSerializer, GameSerializer
 
 class PlayerSerializer(serializers.ModelSerializer):
     roleChar = serializers.SerializerMethodField('getRole')

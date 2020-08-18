@@ -301,9 +301,9 @@ class StunVerificationView(View):
             active=False)
         questionable_stuns = []
         
-        for tag in unverified_stuns.filter(type=Tag.KILL):
+        for tag in unverified_stuns.filter(type=TagType.KILL):
             similar_objects = Tag.objects.filter(initiator__game=game,
-            receiver__game=game, type=Tag.KILL, receiver=tag.receiver)
+            receiver__game=game, type=TagType.KILL, receiver=tag.receiver)
             if similar_objects:
                 questionable_stuns.append(tag)
                 for similar in similar_objects:

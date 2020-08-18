@@ -1,6 +1,5 @@
-from app.serializers.player_serializer import PlayerSerializer
-from app.models import Player, Spectator, Moderator, Modifier, Tag, SupplyCode
-from app.models.modifier import ModifierType
+from app.serializers import PlayerSerializer, TagSerializer
+from app.models import Player, PlayerRole, Spectator, Moderator, Modifier, ModifierType, Tag, SupplyCode
 from app.api.util import *
 from app.mail import send_tag_email, send_stun_email
 from datetime import datetime
@@ -25,6 +24,47 @@ def account_info(request):
             return success(serializer.data)
         else:
             return forbidden()
+
+def view_tags(request):
+    if not request.user.is_authenticated:
+        return unauthorized()
+    
+    if request.method == "GET":
+        playerSet = Player.objects.all().filter(user=request.user).order_by('game__started_on')
+        if playerSet:
+            player = playerSet.last()
+            game = player.game
+        else:
+            return forbidden()
+
+        unverified_tags = Tag.objects.filter(
+            initiator=player,
+            initiator__game=game,
+            receiver__game=game,
+            active=False)
+
+        verified_tags = Tag.objects.filter(
+            initiator=player,
+            initiator__game=game,
+            receiver__game=game,
+            active=True)
+
+        received_tags = Tag.objects.filter(
+            receiver=player,
+            initiator__game=game,
+            receiver__game=game,
+            initiator__role=PlayerRole.HUMAN,
+            receiver__role=PlayerRole.ZOMBIE)
+        
+        unverified_list = TagSerializer(unverified_tags, many=True)
+        verified_list = TagSerializer(verified_tags, many=True)
+        received_list = TagSerializer(received_tags, many=True)
+
+        return success(body={
+            "unverified": unverified_list.data,
+            "verified": verified_list.data,
+            "received": received_list.data
+        })
 
 def stun_tag(request):
     if not request.user.is_authenticated:

@@ -41,7 +41,7 @@ Authenticates the user with the associated username. Attaches two cookies with n
 
 None
 
-#### Body parameters
+#### Body Parameters
 
 None
 
@@ -71,7 +71,7 @@ This means you had invalid cookies.
 
 None
 
-#### Body parameters
+#### Body Parameters
 
 None
 
@@ -121,7 +121,50 @@ None
 
 `403`: The user is not a player.
 
-## Stun or Tag
+## Get Tag List*
+
+`/api/v1/tag_list/`
+
+Gets all tags associated with logged in player.
+
+#### Method
+
+`GET`
+
+#### Parameters
+
+None
+
+#### Body Parameters
+
+None
+
+#### Success Response
+
+`200` - Returns a JSON object with the fields:
+
+| Name         | Type                             | Description                                             |
+| ------------ | -------------------------------- | ------------------------------------------------------- |
+| `unverified` | Array of Tag objects (see below) | A list of the unverified tags associated with a player. |
+| `verified`   | Array of Tag objects (see below) | A list of the verified tags associated with a player.   |
+| `received`   | Array of Tag objects (see below) | A list of the received tags associated with a player.   |
+
+##### Tag
+
+| Name             | Type     | Description                                                  |
+| ---------------- | -------- | ------------------------------------------------------------ |
+| `initiator_name` | string   | Name of the initiating player.                               |
+| `initiator_role` | char     | A character denoting the role of the initiating player. Should be 'H' or 'Z'. |
+| `receiver_name`  | string   | Name of the receiving player.                                |
+| `receiver_role`  | char     | A character denoting the role of the receiving player. Should be 'H' or 'Z'. |
+| `points`         | integer  | The points this particular tag is worth, depending on any modifiers plus the value of the receiving player |
+| `location`       | string   | The location of the tag given. If blank, this was not given when the tag was submitted. |
+| `time`           | datetime | A time string in ISO8601 format (Ex: 2020-08-11T19:29:25Z)   |
+| `tag_type`       | char     | A character denoting the type of tag, stun or kill. Should be 'S' or 'K', respectively. |
+
+
+
+## Stun or Tag*
 
 `/api/v1/stun_tag/`
 
@@ -158,7 +201,7 @@ None
 
 `409` - An identical stun or tag has been found. The current one is a duplicate.
 
-## Redeem a Supply Code
+## Redeem a Supply Code*
 
 `/api/v1/supply_code/`
 

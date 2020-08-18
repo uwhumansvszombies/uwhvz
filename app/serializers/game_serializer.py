@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from app.models import Game
-from app.models.game import GameState
+from app.models import Game, GameState
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
