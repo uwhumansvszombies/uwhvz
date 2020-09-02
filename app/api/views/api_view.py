@@ -1,4 +1,4 @@
-from app.serializers import PlayerSerializer, TagSerializer
+from app.serializers import PlayerSerializer, SimplePlayerSerializer, TagSerializer, SimpleModeratorSerializer, SpectatorSerializer
 from app.models import Player, PlayerRole, Spectator, Moderator, Modifier, ModifierType, Tag, SupplyCode
 from app.api.util import *
 from app.mail import send_tag_email, send_stun_email
@@ -11,6 +11,33 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 
 import json
+
+def get_player_list(request):
+    if not request.user.is_authenticated:
+        return unauthorized()
+
+    if request.method == "GET":
+        playerSet = Player.objects.all().filter(user=request.user).order_by('game__started_on')
+        if playerSet:
+            player = playerSet.last()
+            game = player.game
+        else:
+            return forbidden()
+
+        all_game_players = Player.objects.all().filter(game=game).order_by('user__first_name')
+        player_serializer = SimplePlayerSerializer(all_game_players, many=True)
+
+        mods = Moderator.objects.all().filter(game=game).order_by('user__first_name')
+        mod_serializer = SimpleModeratorSerializer(mods, many=True)
+
+        spectators = Spectator.objects.all().filter(game=game).order_by('user__first_name')
+        spectator_serializer = SpectatorSerializer(spectators, many=True)
+        
+        return success({
+            'players': player_serializer.data, 
+            'moderators': mod_serializer.data,
+            'spectators': spectator_serializer.data
+        })
 
 def account_info(request):
     if not request.user.is_authenticated:

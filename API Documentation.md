@@ -2,11 +2,11 @@
 
 # API Documentation
 
-Below is the documentation for the UWHvZ API. Endpoints will be added, and this document is subject to be expanded upon. 
+Below is the documentation for the UWHvZ API. Endpoints will be added, and this document is subject to be expanded upon.
 
-\* = requires authentication, and two cookies named `sessionid` and `csrftoken`.
+All endpoints, except the ones marked with a \*, require authentication using two cookies named  `sessionid` and `csrftoken`.
 
-## Login
+## Login*
 
 `/api/v1/auth/login/`
 
@@ -29,7 +29,7 @@ Authenticates the user with the associated username. Attaches two cookies with n
 
 `401` - Login failure, incorrect credentials.
 
-## Logout*
+## Logout
 
 `/api/v1/auth/logout/`
 
@@ -57,7 +57,7 @@ None
 
 This means you had invalid cookies.
 
-## Account Information*
+## Account Information
 
 **Note**: This endpoint is currently only built for players. Moderator and spectator information collecting may be added later.
 
@@ -121,7 +121,7 @@ None
 
 `403`: The user is not a player.
 
-## Get Tag List*
+## Get Tag List
 
 `/api/v1/tag_list/`
 
@@ -162,9 +162,68 @@ None
 | `time`           | datetime | A time string in ISO8601 format (Ex: 2020-08-11T19:29:25Z)   |
 | `tag_type`       | char     | A character denoting the type of tag, stun or kill. Should be 'S' or 'K', respectively. |
 
+#### Failure Response
 
+`401` - The user is not logged in.
 
-## Stun or Tag*
+`403` - The user is not a player.
+
+## Get Player List
+
+`/api/v1/get_player_list/`
+
+Gets all players playing in the same game as the logged in user.
+
+#### Method
+
+`GET`
+
+#### Parameters
+
+None
+
+#### Body Parameters
+
+None
+
+#### Success Response
+
+`200` - Returns a JSON object with the following fields:
+
+| Name         | Type                                  | Description                                                  |
+| ------------ | ------------------------------------- | ------------------------------------------------------------ |
+| `players`    | List of Player (see below) objects    | A list of all active players in the game, either as humans or zombies, sorted in alphabetical order by name. |
+| `moderators` | List of Moderator (see below) objects | A list of all current moderators in the game, sorted in alphabetical order by name. |
+| `spectators` | List of Spectator (see below) objects | A list of all current spectators in the game, sorted in alphabetical order by name. |
+
+##### Player
+
+| Name             | Type    | Description                                                  |
+| ---------------- | ------- | ------------------------------------------------------------ |
+| `roleChar`       | char    | One character that represents the role of the player. `H` for human, `Z` for zombie, and `S` for spectators |
+| `name`           | string  | Player's name.                                               |
+| `processedScore` | integer | If the player has chosen to share their score publicly, this will be the player's score. Otherwise, a `-1` value here means that the score is hidden. |
+
+##### Moderator
+
+| Name    | Type   | Description                                                  |
+| ------- | ------ | ------------------------------------------------------------ |
+| `name`  | string | Moderator's full name.                                       |
+| `score` | string | This can be any string up to 180 characters long, and is the moderator's made up "score". |
+
+##### Spectator
+
+| Name   | Type   | Description           |
+| ------ | ------ | --------------------- |
+| `name` | string | Spectator's full name |
+
+#### Failure Response
+
+`401` - The user is not logged in.
+
+`403` - The user is not a player.
+
+## Stun or Tag
 
 `/api/v1/stun_tag/`
 
@@ -201,7 +260,7 @@ None
 
 `409` - An identical stun or tag has been found. The current one is a duplicate.
 
-## Redeem a Supply Code*
+## Redeem a Supply Code
 
 `/api/v1/supply_code/`
 
