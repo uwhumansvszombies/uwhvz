@@ -123,7 +123,7 @@ None
 
 ## Get Tag List
 
-`/api/v1/tag_list/`
+`/api/v1/view_tags/`
 
 Gets all tags associated with logged in player.
 
@@ -160,6 +160,7 @@ None
 | `points`         | integer  | The points this particular tag is worth, depending on any modifiers plus the value of the receiving player |
 | `location`       | string   | The location of the tag given. If blank, this was not given when the tag was submitted. |
 | `time`           | datetime | A time string in ISO8601 format (Ex: 2020-08-11T19:29:25Z)   |
+| `description`    | string   | The description of the tag given. If blank, this information was not given when the tag was submitted. |
 | `tag_type`       | char     | A character denoting the type of tag, stun or kill. Should be 'S' or 'K', respectively. |
 
 #### Failure Response

@@ -50,5 +50,6 @@ class TagSerializer(serializers.ModelSerializer):
             'points',
             'location',
             'time',
+            'description',
             'tag_type']
 
