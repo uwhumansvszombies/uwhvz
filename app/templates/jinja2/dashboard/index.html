@@ -23,6 +23,90 @@
 <div class="ui-grid s-dashboard__game-info align-content-start">
   <div class="ui-grid align-content-start">
   
+  {% if emails.exclude(player_made=True) %}
+  {% call card("Mod Emails") %}
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for email in emails.exclude(player_made=True) %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+              <td>{{ email.created_at.strftime("%d/%m/%Y, %H:%M") }}</td>
+              <td class="d-flex">
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                  <i class="fas fa-info pr-1 pl-1"></i>
+                </button>
+                <div class="modal fade email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ email.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ email.data }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+  {% endcall %}
+  {% endif %}
+  
+  {% if emails.filter(player_made=True) %}
+  {% call card("Player Emails") %}
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for email in emails.filter(player_made=True) %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+              <td>{{ email.created_at.strftime("%d/%m/%Y, %H:%M") }}</td>
+              <td class="d-flex">
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                  <i class="fas fa-info pr-1 pl-1"></i>
+                </button>
+                <div class="modal fade email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ email.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ email.data }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+  {% endcall %}
+  {% endif %}
+  
     {% if not game.is_finished and participant.is_player and participant.user.legacy_points() %}
     {% call card("Legacy Tokens") %}
     

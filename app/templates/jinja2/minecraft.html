@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
+
+{% block title %}UW HvZ{% endblock %}
+
+{% block styles %}
+  {% compress css %}
+    <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
+  {% endcompress %}
+{% endblock %}
+
+{% block content %}
+
+{{ navbar(user) }}
+
+<main class="ui-layout" id="landing">
+  <div class="full-height">
+    <div class="container missions">
+        <p>We are please to announce that UW HvZ has a free to join Minecraft Server! It's free to join for anyone on Minecraft Java. We'll update this webpage to list plugins that we'll be adding. Eventually we'll be able to hold a classic HvZ game in Minecraft! This server is quite new, so we'll be updating the website with changes to the server as they happen!</p>
+      
+    <br>
+    <h1>Server Address: 51.81.77.147:25580</h1>
+    </div>
+  </div>
+  
+  {{ footer() }}
+</main>
+{% endblock %}
