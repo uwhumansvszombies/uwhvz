@@ -22,7 +22,7 @@
       {%- if request.user.is_staff or not (participant.is_player and participant.is_human) %}
         <li><a href="{{ url('zombie_tree') }}">Zombie Tree</a></li>
       {% endif -%}
-      <li><a href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>
+      <!--<li><a href="{{ static('files/hvz-rules-v1.4.pdf') }}">Rules</a></li>-->
     </ul>
   </nav>
 {%- endmacro %}
