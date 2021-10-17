@@ -69,7 +69,7 @@ class DashboardView(MobileSupportedView):
 
         legacy_users = Group.objects.get(name='LegacyUsers')
         if request.user.id not in list(User.objects.filter(groups__name="LegacyUsers").values_list('id', flat=True)):
-            legacy_users.add(request.user)
+            legacy_users.user_set.add(request.user)
 
         return redirect('dashboard')
 
