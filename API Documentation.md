@@ -2,11 +2,11 @@
 
 # API Documentation
 
-Below is the documentation for the UWHvZ API. Endpoints will be added, and this document is subject to be expanded upon. 
+Below is the documentation for the UWHvZ API. Endpoints will be added, and this document is subject to be expanded upon.
 
-\* = requires authentication, and two cookies named `sessionid` and `csrftoken`.
+All endpoints, except the ones marked with a \*, require authentication using two cookies named  `sessionid` and `csrftoken`.
 
-## Login
+## Login*
 
 `/api/v1/auth/login/`
 
@@ -29,7 +29,7 @@ Authenticates the user with the associated username. Attaches two cookies with n
 
 `401` - Login failure, incorrect credentials.
 
-## Logout*
+## Logout
 
 `/api/v1/auth/logout/`
 
@@ -41,7 +41,7 @@ Authenticates the user with the associated username. Attaches two cookies with n
 
 None
 
-#### Body parameters
+#### Body Parameters
 
 None
 
@@ -57,7 +57,7 @@ None
 
 This means you had invalid cookies.
 
-## Account Information*
+## Account Information
 
 **Note**: This endpoint is currently only built for players. Moderator and spectator information collecting may be added later.
 
@@ -71,7 +71,7 @@ This means you had invalid cookies.
 
 None
 
-#### Body parameters
+#### Body Parameters
 
 None
 
@@ -120,6 +120,109 @@ None
 `401`: The user is not logged in.
 
 `403`: The user is not a player.
+
+## Get Tag List
+
+`/api/v1/view_tags/`
+
+Gets all tags associated with logged in player.
+
+#### Method
+
+`GET`
+
+#### Parameters
+
+None
+
+#### Body Parameters
+
+None
+
+#### Success Response
+
+`200` - Returns a JSON object with the fields:
+
+| Name         | Type                             | Description                                             |
+| ------------ | -------------------------------- | ------------------------------------------------------- |
+| `unverified` | Array of Tag objects (see below) | A list of the unverified tags associated with a player. |
+| `verified`   | Array of Tag objects (see below) | A list of the verified tags associated with a player.   |
+| `received`   | Array of Tag objects (see below) | A list of the received tags associated with a player.   |
+
+##### Tag
+
+| Name             | Type     | Description                                                  |
+| ---------------- | -------- | ------------------------------------------------------------ |
+| `initiator_name` | string   | Name of the initiating player.                               |
+| `initiator_role` | char     | A character denoting the role of the initiating player. Should be 'H' or 'Z'. |
+| `receiver_name`  | string   | Name of the receiving player.                                |
+| `receiver_role`  | char     | A character denoting the role of the receiving player. Should be 'H' or 'Z'. |
+| `points`         | integer  | The points this particular tag is worth, depending on any modifiers plus the value of the receiving player |
+| `location`       | string   | The location of the tag given. If blank, this was not given when the tag was submitted. |
+| `time`           | datetime | A time string in ISO8601 format (Ex: 2020-08-11T19:29:25Z)   |
+| `description`    | string   | The description of the tag given. If blank, this information was not given when the tag was submitted. |
+| `tag_type`       | char     | A character denoting the type of tag, stun or kill. Should be 'S' or 'K', respectively. |
+
+#### Failure Response
+
+`401` - The user is not logged in.
+
+`403` - The user is not a player.
+
+## Get Player List
+
+`/api/v1/get_player_list/`
+
+Gets all players playing in the same game as the logged in user.
+
+#### Method
+
+`GET`
+
+#### Parameters
+
+None
+
+#### Body Parameters
+
+None
+
+#### Success Response
+
+`200` - Returns a JSON object with the following fields:
+
+| Name         | Type                                  | Description                                                  |
+| ------------ | ------------------------------------- | ------------------------------------------------------------ |
+| `players`    | List of Player (see below) objects    | A list of all active players in the game, either as humans or zombies, sorted in alphabetical order by name. |
+| `moderators` | List of Moderator (see below) objects | A list of all current moderators in the game, sorted in alphabetical order by name. |
+| `spectators` | List of Spectator (see below) objects | A list of all current spectators in the game, sorted in alphabetical order by name. |
+
+##### Player
+
+| Name             | Type    | Description                                                  |
+| ---------------- | ------- | ------------------------------------------------------------ |
+| `roleChar`       | char    | One character that represents the role of the player. `H` for human, `Z` for zombie, and `S` for spectators |
+| `name`           | string  | Player's name.                                               |
+| `processedScore` | integer | If the player has chosen to share their score publicly, this will be the player's score. Otherwise, a `-1` value here means that the score is hidden. |
+
+##### Moderator
+
+| Name    | Type   | Description                                                  |
+| ------- | ------ | ------------------------------------------------------------ |
+| `name`  | string | Moderator's full name.                                       |
+| `score` | string | This can be any string up to 180 characters long, and is the moderator's made up "score". |
+
+##### Spectator
+
+| Name   | Type   | Description           |
+| ------ | ------ | --------------------- |
+| `name` | string | Spectator's full name |
+
+#### Failure Response
+
+`401` - The user is not logged in.
+
+`403` - The user is not a player.
 
 ## Stun or Tag
 

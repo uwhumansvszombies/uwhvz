@@ -18,6 +18,7 @@ django-compressor = "<=2.4"
 django-querysetsequence = "*"
 django-su = "*"
 django-rest-auth = "*"
+reportlab = "*"
 
 [dev-packages]
 

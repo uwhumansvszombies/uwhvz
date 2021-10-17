@@ -10,6 +10,10 @@
 
 {% block subcontent %}
 <div class="ui-grid">
+    {% if not received_tags and not unverified_tags and not verified_tags %}
+    <h2>Go stun some zombies!</h2>
+    {% endif %}
+    
     {% if unverified_tags %}
       {% call card("Pending {}s".format(type)) %}
         <p>Please wait for a moderator to approve these. Points will be awarded after {{ type.lower() }}s are verified.</p>

@@ -20,7 +20,7 @@
         <p>Below are listed some common missions that players will experience in Humans vs Zombies. While missions will vary slightly in the weeklong, these are some generic rules that help provide a basic level of understanding. Mods may choose to vary their missions from the rules here.</p>
       <p>During the weeklong, mini-missions will last 30-60 minutes and main missions will last 1.5-3 hours.</p>
       <div class="panel-group" id="accordion1">
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion1" href="#collapse0">Note on Boss Mods</a>
@@ -46,22 +46,20 @@
     <div class="container">
     <br>
     <h1>Mission Types</h1>
-    <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">Point Capture</a>
             </h4>
           </div>
-          <div id="collapse1" class="panel-collapse collapse in">
+          <div id="collapse1" class="panel-collapse collapse">
             <div class="panel-body">
             <p>Point Captures consist of a number of different points across campus, each with a mod stationed at it. Humans and zombies can capture (“cap”) a point for their team by spending enough time at it. The other team may steal this point by spending the same length of time at the point. The time spent at a point may be cumulative. The team with enough points at the end of a predetermined length of time wins.</p>
 
           <p><i>Variant</i>: Point Neutralization. Before the other team may steal a point, they will need to first undo the capturing of the point by the original team by spending a period of time at the point. After capturing a point has been undone, the point is considered to belong to no one, just like at the start of the mission.</p></div>
           </div>
-          </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Mod Escort</a>
@@ -72,7 +70,7 @@
       <p>Humans need to transport mods between a variety of different points, some inside, and some outside buildings. The mods may or may not need to wait at each point. The mods may or may not choose to follow human instructions. Mods may have a limited number of times they may be touched by zombies ("lives"). After reaching their tag limit, the humans lose the ability to complete the escort with that mod. If all the mods in the mission die, humans lose. If humans visit every point will at least half of the mods within a time limit, they win.</p></div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Poster Tag Collection</a>
@@ -86,7 +84,7 @@
     </div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Guard Mission</a>
@@ -100,7 +98,7 @@
     </div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Tug of War</a>
@@ -112,7 +110,7 @@
     </div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Recipes</a>
@@ -124,7 +122,7 @@
     </div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Doom Train</a>
@@ -136,7 +134,7 @@
     </div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Escape</a>
@@ -150,7 +148,7 @@
     </div>
           </div>
         </div>
-        <div class="panel panel-default">
+        <div class="container">
           <div class="panel-heading">
             <h4 class="panel-title">
               <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">
@@ -234,4 +232,9 @@
     </div>
   {{ footer() }}
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ static('scripts/panel.js') }}" >
+</script>
 {% endblock %}

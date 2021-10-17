@@ -20,7 +20,7 @@ python manage.py runserver
 
 ## API Documentation
 
-The website has a public API currently under development. You can check out the documentation [here](API Documentation.md).
+The website has a public API currently under development. You can check out the documentation [here](API%20Documentation.md).
 
 ## Production Setup
 

@@ -23,6 +23,90 @@
 <div class="ui-grid s-dashboard__game-info align-content-start">
   <div class="ui-grid align-content-start">
   
+  {% if emails.exclude(player_made=True) %}
+  {% call card("Mod Emails") %}
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for email in emails.exclude(player_made=True) %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+              <td>{{ email.created_at.strftime("%d/%m/%Y, %H:%M") }}</td>
+              <td class="d-flex">
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                  <i class="fas fa-info pr-1 pl-1"></i>
+                </button>
+                <div class="modal fade email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ email.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ email.data }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+  {% endcall %}
+  {% endif %}
+  
+  {% if emails.filter(player_made=True) %}
+  {% call card("Player Emails") %}
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for email in emails.filter(player_made=True) %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+              <td>{{ email.created_at.strftime("%d/%m/%Y, %H:%M") }}</td>
+              <td class="d-flex">
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                  <i class="fas fa-info pr-1 pl-1"></i>
+                </button>
+                <div class="modal fade email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ email.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ email.data }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+  {% endcall %}
+  {% endif %}
+  
     {% if not game.is_finished and participant.is_player and participant.user.legacy_points() %}
     {% call card("Legacy Tokens") %}
     
@@ -71,7 +155,8 @@
     {% endif %}
     
 {% if game.is_signups %} {% call card("Welcome to the game!") %}
-<p>The game will begin on Friday, September 17 @ 4:00 PM, and runs 24 hours a day until the end of final mission on Sunday, September 19 @ 5:00 PM. If you have any friends who have never played before and would like to join, please tell them to sign up via our website. We’ve designed this game to be beginner-friendly, so any word-of-mouth advertising is greatly appreciated!</p> 
+
+<p>The game will begin on Monday, October 25 @ midnight, and runs 24 hours a day until the end of final mission on Friday, October 29 @ 9:00 PM. If you have any friends who have never played before and would like to join, please tell them to sign up via our website. We’ve designed this game to be beginner-friendly, so any word-of-mouth advertising is greatly appreciated!</p> 
 <p>We understand that there will likely be concerns around player safety, given the nature of gameplay. Below, please find the modifications made to the game in response to COVID-19. </p>
 <ul>
     <li><strong>All players MUST be vaccinated.</strong> Following the University of Waterloo’s COVID-19 protocols, all students, staff, alumni and campus visitors MUST submit proof of vaccination prior to entering campus. Please be sure to submit your proof of vaccination here: <a href="https://uwaterloo.ca/coronavirus/news/submit-your-proof-vaccination-today">https://uwaterloo.ca/coronavirus/news/submit-your-proof-vaccination-today</a></li>
@@ -83,15 +168,21 @@
 <p>If you have any signs or symptoms of COVID-19, DO NOT PLAY. </p>
 <p><strong>Please also note that there are some changes in rules from our typical weeklong. These changes are listed below:</strong></p>
 <ul>
-    <li>Buildings are no longer safe between 10:00AM - 4:00PM. Permanent safe zones (e.g. libraries, food establishments, washrooms, Student Life Centre - see the Rules for the full list) remain safe. Events being held on-campus are considered safe for the duration of the event plus 5 minutes before and after the official start and end time, respectively.</li>
+    <li>Buildings are once again safe from 10AM-4PM. <b>Bridges and tunnels are now included in these safe zones</b></li>
     <li>Removal of the infected human mechanic.</li>
-    <li>Removal of the unsupplied human mechanic.</li>
+    <li>As per a typical weeklong, unsupplied humans <b>will</b> be killed off on Friday before the final mission.</li>
     <li>Removal of rail and building passes as potential point rewards.</li>
     <li>Addition of sightseeing passes as potential point rewards. </li>
 </ul>
-<p>At 3:00 PM on Friday, September 17th, you will receive an email indicating whether you are beginning the game as a HUMAN or a ZOMBIE. This email will also include information relevant for the entire weekendlong, so make sure you’re checking your inbox!</p> 
+<p>At 10PM on Sunday, October 24th, you will receive an email indicating whether you are beginning the game as a HUMAN or a ZOMBIE. This email will also include information relevant for the entire weeklong, so make sure you’re checking your inbox!</p> 
 <p>Throughout the game, the moderator team will be communicating to you primarily through email. Each night, an email will be sent out including the schedule and events for the next day. Main mission details will be sent out in a separate email one hour before the main mission begins.  Additional important information will also be sent over twitter through @HVZAlertSystem, which can conveniently be found right here!</p>
 <p> If you need to rent a blaster from the Humans vs Zombie Society for use in the weeklong, you can email us at uwhumansvszombies@gmail.com for more information.</p>
+=======
+    <p>We're glad to have you with us! If you have any friends who have never played before and would like to join, please ensure they sign up by 5 PM on the day before the game. Alternatively, they can contact us at uwhumansvszombies@gmail.com via email.</p>
+    <p>At 11:00 PM the day before game start, you will receive an email indicating whether you are beginning the game as a HUMAN or a ZOMBIE. This email will also include information relevant for the entire weeklong, so make sure you’re checking your inbox!</p>
+    <p>Throughout the game, the moderator team will be communicating to you primarily through email. Each night, an email will be sent out including the schedule and events for the next day. Main Mission details will be sent out in a separate email one hour before each Main Mission begins. Our website (right here!) will also display announcements and mission details for the day.</p>
+    <p>Additional important information will also be sent over twitter through @HVZAlertSystem, which can conveniently be found right here! If you need to rent a blaster from the Humans vs Zombie Society for use in the weeklong, you can email us at uwhumansvszombies@gmail.com for more information.</p>
+
 {% endcall %} {% endif %}
 
 {% call card("System Requirements") %}

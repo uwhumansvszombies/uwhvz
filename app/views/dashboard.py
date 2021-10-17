@@ -9,7 +9,7 @@ from time import mktime
 from datetime import datetime
 
 from app.util import MobileSupportedView, most_recent_game
-from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode, User, TagType
+from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode, User, TagType, Email, RecipientGroup
 
 
 class IndexView(MobileSupportedView):
@@ -33,11 +33,18 @@ class DashboardView(MobileSupportedView):
 
     def get(self, request):
         game = most_recent_game()
-        stuns = Tag.objects.filter(initiator__user=request.user,initiator__role=PlayerRole.HUMAN,
-            receiver__role=PlayerRole.ZOMBIE,active=True).count()
-        kills = Tag.objects.filter(initiator__user=request.user,initiator__role=PlayerRole.ZOMBIE,
-            receiver__role=PlayerRole.HUMAN,active=True).count()
+        participant = request.user.participant(game)
+        stuns = Tag.objects.filter(initiator__user=request.user,type=TagType.STUN,active=True).count()
+        kills = Tag.objects.filter(initiator__user=request.user,type=TagType.KILL,active=True).count()
         codes = SupplyCode.objects.filter(claimed_by__user=request.user,active=True).count()
+        
+        if participant and participant.is_player and game.is_running:
+            if participant.is_human:
+                emails = Email.objects.filter(game=game).exclude(group=RecipientGroup.ZOMBIE)
+            elif participant.is_zombie:
+                emails = Email.objects.filter(game=game).exclude(group=RecipientGroup.HUMAN)
+        else:
+            emails = Email.objects.filter(game=game)         
 
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
         points_for_permanent = 8
@@ -46,8 +53,8 @@ class DashboardView(MobileSupportedView):
                 receiver__game=game,active=False).count()
             if unverified:
                 messages.error(request, f"There are {unverified} tags that require verification")
-        return self.mobile_or_desktop(request, {'game': game, 'participant': request.user.participant(game),
-                                                'stuns':stuns, 'kills':kills, 'codes':codes,
+        return self.mobile_or_desktop(request, {'game': game, 'participant': participant,
+                                                'stuns':stuns, 'kills':kills, 'codes':codes, 'emails':emails,
                                                 'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
 
     def post(self, request):
@@ -77,7 +84,23 @@ class DashboardView(MobileSupportedView):
 
 class MissionsView(MobileSupportedView):
     desktop_template = "missions.html"
-    mobile_template = "missions.html"
+    mobile_template = "missions.html"    
+
+    def get(self, request):
+        game = most_recent_game()
+        return self.mobile_or_desktop(request, {'game': game})
+
+class MinecraftView(MobileSupportedView):
+    desktop_template = "minecraft.html"
+    mobile_template = "minecraft.html"
+
+    def get(self, request):
+        game = most_recent_game()
+        return self.mobile_or_desktop(request, {'game': game})
+    
+class NewPlayerGuideView(MobileSupportedView):
+    desktop_template = "new_player_guide.html"
+    mobile_template = "new_player_guide.html"    
 
     def get(self, request):
         game = most_recent_game()

@@ -25,9 +25,12 @@ urlpatterns = [
     path("dashboard", views.DashboardView.as_view(), name='dashboard'),
     path("missions", views.MissionsView.as_view(), name='missions'),
     path("previous-games", views.PrevGamesView.as_view(), name='previous_games'),
+    path("guide", views.NewPlayerGuideView.as_view(), name='new_player_guide'),
+    path("minecraft", views.MinecraftView.as_view(), name='minecraft'),
 
     # Player/Game pages
     path("dashboard/player", views.PlayerInfoView.as_view(), name='player_info'),
+    path("dashboard/player-code", views.PlayerCodeView.as_view(), name='player_code'),
     path("dashboard/claim-supply-code", views.ClaimSupplyCodeView.as_view(), name='claim_supply_code'),
     path("dashboard/report-tag", views.ReportTagView.as_view(), name='report_tag'),
     path("dashboard/view-tags", views.PlayerTagView.as_view(), name='view_tags'),
