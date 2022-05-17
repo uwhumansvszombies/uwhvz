@@ -26,17 +26,6 @@ INSTALLED_APPS = [
     'django_user_agents',
     'rest_framework',
     'rest_auth',
-    'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
-    'wagtail.embeds',
-    'wagtail.sites',
-    'wagtail.users',
-    'wagtail.snippets',
-    'wagtail.documents',
-    'wagtail.images',
-    'wagtail.search',
-    'wagtail.admin',
-    'wagtail.core',
     'modelcluster',
     'taggit',
 ]
@@ -50,8 +39,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
-    'wagtail.core.middleware.SiteMiddleware',
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'uwhvz.urls'
@@ -65,9 +52,6 @@ TEMPLATES = [
             'environment': 'uwhvz.jinja2.environment',
             'extensions': [
                 'sass_processor.jinja2.ext.SassSrc',
-                'wagtail.core.jinja2tags.core',
-                'wagtail.admin.jinja2tags.userbar',
-                'wagtail.images.jinja2tags.images',
                 'compressor.contrib.jinja2ext.CompressorExtension',
             ],
             'context_processors': [
@@ -149,7 +133,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
+#WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/player'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -177,7 +161,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
+#    'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
     'compressor.finders.CompressorFinder',

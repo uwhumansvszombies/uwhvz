@@ -7,7 +7,7 @@
 <div class="ui-grid">
   <div class="ui-grid s-mobile-dashboard__player-info">
     {{ card("Code", participant.code, "ui-card--display") }}
-    {{ card("My Score", participant.score(), "ui-card--display") }}
+    {{ card("My Score", participant.shop_score(), "ui-card--display") }}
   </div>
 
   {% if participant.is_human %}
@@ -55,7 +55,110 @@
     </form>
     {% endcall %}
   {% endif %}
-  {% call card() %}
+
+{% if emails %}
+{% if emails.exclude(player_made=True) %}
+{% call card("Mod Emails") %}
+         <table>
+    <tr><td><div  style="overflow: auto; width : 100%; height : 50vh;">
+         
+         <table class="table table-striped">
+            <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Date</th>
+              <th scope="col" />
+            </tr>
+            </thead>
+            <tbody>
+            {% for email in emails.exclude(player_made=True) %}
+              <tr>
+                <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+                <td>{{ email.created_at.astimezone(pytz.timezone('Canada/Eastern')).strftime("%d/%m/%Y, %H:%M") }}</td>
+                <td class="d-flex">
+                  <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                    <i class="fas fa-info pr-1 pl-1"></i>
+                  </button>
+                  <div class="modal email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">{{ email.name }}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          {% autoescape off %}
+                          {{ email.data }}
+                          {% endautoescape %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+          </div></td></tr>
+  </table>
+{% endcall %}
+{% endif %}
+
+{% if emails.exclude(player_made=False) %}
+{% call card("Player Emails") %}
+           <table>
+      <tr><td><div  style="overflow: auto; width : 100%; height : 50vh;">
+ 
+           <table class="table table-striped">
+              <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col" />
+              </tr>
+              </thead>
+              <tbody>
+              {% for email in emails.exclude(player_made=False) %}
+                <tr>
+                  <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+                  <td>{{ email.created_at.astimezone(pytz.timezone('Canada/Eastern')).strftime("%d/%m/%Y, %H:%M") }}</td>
+                  <td class="d-flex">
+                    <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                      <i class="fas fa-info pr-1 pl-1"></i>
+                    </button>
+                    <div class="modal email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">{{ email.name }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            {% autoescape off %}
+                            {{ email.data }}
+                            {% endautoescape %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+             </tbody>
+           </table>
+
+           </div></td></tr>
+</table>
+{% endcall %}
+{% endif %}
+{% endif %}
+
+{% call card() %}
     <a class="twitter-timeline" height="500" href="https://twitter.com/HVZAlertSystem?ref_src=twsrc%5Etfw">Tweets by HVZAlertSystem</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   {% endcall %}
 </div>

@@ -33,6 +33,10 @@ def set_active(ModelAdmin, request, queryset):
     queryset.update(active=True)
 set_active.short_description = "Activate Tag"
 
+def set_signup_human(ModelAdmin, request, queryset):
+    queryset.update(participant_role = ParticipantRole.HUMAN)
+set_signup_human.short_description = "Set Signup Role to Human"
+
 class UserAdmin(UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
@@ -62,9 +66,9 @@ class PlayerAdmin(admin.ModelAdmin):
   
 @admin.register(Legacy)
 class LegacyAdmin(admin.ModelAdmin):
-    search_fields = ('user', 'time','value')
-    list_display = ('user', 'time', 'value')
-    ordering = ('time', 'user')
+    search_fields = ('user__first_name', 'user__last_name', 'user__email', 'time','value')
+    list_display = ('user','time','details', 'value')
+    ordering = ('-time', 'user')
     
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
@@ -170,7 +174,7 @@ class SignupInviteAdmin(admin.ModelAdmin):
     search_fields = ('email', 'game__name', 'signup_location__name')
     list_display = ('email', 'game', 'signup_location', 'participant_role', 'used_at')
     ordering = ('-game__created_at',)
-
+    actions = [set_signup_human]
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
@@ -205,5 +209,19 @@ class ModifierAdmin(admin.ModelAdmin):
 class FactionAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(Email)
+class EmailAdmin(admin.ModelAdmin):
+    search_fields = ('group', 'player_made','game__name', 'name', 'data')
+    list_display = ('__str__', 'group', 'game','name','player_made', 'created_at')
+    ordering = ('-created_at',)
+    actions = []
+
+    def game(self, obj):
+        return obj.initiator.game
+
+    game.short_description = 'Game'
+ 
+    def has_delete_permission(self, request, obj=None):
+         return True
 
 #admin.site.disable_action('delete_selected')

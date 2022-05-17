@@ -22,13 +22,32 @@
   </ul>
 </header>
 
+{% if IS_SU %}
+<style>
+    #django-su-warning {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        color: white;
+        background-color: red;
+        text-align: center;
+        font-size: 25px;
+        z-index: 5000;
+    }
+</style>
+<div id="django-su-warning">
+    WARNING: You have assumed the identity of another account! Click <a class="ui-title-bar__link" href="{{ url('su_logout') }}">HERE</a> to log out of this account and return to your own.
+</div>
+{% endif %}
+
+
 {{ sidebar(request, game, participant, user) }}
 
 <main class="ui-layout ui-layout--dashboard">
   <section class="container ui-layout__item">
     {% if messages %}
       {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
         {{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>

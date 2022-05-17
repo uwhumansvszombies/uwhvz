@@ -3,11 +3,25 @@ from datetime import datetime
 from pytz import timezone
 
 
+class ChangeCodeForm(forms.Form):
+    code = forms.CharField(
+        label="Change Code",
+        min_length=2,
+        max_length=9,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. A1B2C3'
+            }
+        )
+    )
+
+
 class ReportTagForm(forms.Form):
     player_code = forms.CharField(
-        label="Other Player's Code",
-        min_length=6,
-        max_length=6,
+        label="Other Player's Code (normally 6 characters)",
+        min_length=2,
+        max_length=9,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -57,8 +71,8 @@ class ReportTagForm(forms.Form):
 class ClaimSupplyCodeForm(forms.Form):
     code = forms.CharField(
         label="Supply Code",
-        min_length=6,
-        max_length=6,
+        min_length=1,
+        max_length=9,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',

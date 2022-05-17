@@ -43,7 +43,7 @@
               <td>{{ sale.buyer }}</td>
               <td>{{ sale.details }}</td>
               <td>{{ sale.cost }}</td>
-              <td>{{ sale.time.date() }}</td>
+              <td>{{ sale.time.astimezone(tz).strftime("%Y-%m-%d %H:%M") }}</td>
           {% endif %}
         {% endfor %}
       </table>

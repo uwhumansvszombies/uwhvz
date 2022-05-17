@@ -31,6 +31,7 @@ urlpatterns = [
     # Player/Game pages
     path("dashboard/player", views.PlayerInfoView.as_view(), name='player_info'),
     path("dashboard/player-code", views.PlayerCodeView.as_view(), name='player_code'),
+    path("dashboard/change-code", views.ChangeCodeView.as_view(), name='change_code'),
     path("dashboard/claim-supply-code", views.ClaimSupplyCodeView.as_view(), name='claim_supply_code'),
     path("dashboard/report-tag", views.ReportTagView.as_view(), name='report_tag'),
     path("dashboard/view-tags", views.PlayerTagView.as_view(), name='view_tags'),

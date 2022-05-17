@@ -25,7 +25,7 @@ function initClock(id, endtime) {
   function updateClock() {
     var t = getTimeRemaining(endtime);
     
-    days.innerHTML = ('0' + t.days);
+    days.innerHTML = (String(t.days)).slice(-2);
     hours.innerHTML = ('0' + t.hours).slice(-2);
     minutes.innerHTML = ('0' + t.minutes).slice(-2);
     seconds.innerHTML = ('0' + t.seconds).slice(-2);

@@ -10,7 +10,7 @@ class RecipientGroup(Enum):
     HUMAN = 'H'
     ZOMBIE = 'Z'
     ALL = 'A'
-
+    VOLUNTEER = 'V'
 
 class EmailManager(models.Manager):
     def create_email(self, name: str, data : str, group: RecipientGroup, game: Game, **extra_fields) -> 'Email':
@@ -23,7 +23,7 @@ class Email(models.Model):
     id: uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     game: Game = models.ForeignKey(Game, on_delete=models.PROTECT)
     name: str = models.CharField(max_length=256)
-    data: str = models.CharField(max_length=32768)
+    data: str = models.TextField(blank=True)
     group: Enum = EnumField(enum=RecipientGroup, max_length=1)
     player_made: bool = models.BooleanField(default=False)
 

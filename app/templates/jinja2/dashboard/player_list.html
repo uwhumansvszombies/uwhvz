@@ -9,6 +9,31 @@
 {% block pagesubtitle %}View Player List{% endblock %}
 
 {% block subcontent %}
+{% call card("Moderator List") %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      {%- if participant.is_moderator %}
+      <th scope="col">Email</th>
+      {% endif -%}
+      <th scope="col">Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in moderators %}
+    <tr>
+      <td scope="col">{% if m.character_name %}{{ m.character_name }}{% else %}{{ m.user.get_full_name() }}{% endif %}</td>
+      {%- if participant.is_moderator %}
+      <td scope="col">{{ m.user.email }}</td>
+      {% endif -%}
+      <td scope="col">{% if m.score %}{{ m.score }}{% else %}N/A{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endcall %}
+
 {% call card("Player List") %}
 <table class="table table-striped">
   <thead>
@@ -17,7 +42,6 @@
       {%- if participant.is_moderator %}
       <th scope="col">Email</th>
       {% endif -%}
-      <th scope="col">Role</th>
       <th scope="col">Score</th>
     </tr>
   </thead>

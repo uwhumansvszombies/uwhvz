@@ -7,7 +7,7 @@
   <aside class="ui-sidebar" id="side-nav">
     <nav class="ui-menu">
       <ul class="ui-menu__section">
-        <li><a href="{{ url('dashboard') }}">Home</a></li>
+        <li><a href="{{ url('dashboard') }}">Home{% if game.is_running %} / Emails{% endif %}</a></li>
       </ul>
     </nav>
 

@@ -8,6 +8,8 @@
   {% compress css %}
     <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
   {% endcompress %}
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous">
 {% endblock %}
 
 {% block content %}
@@ -96,8 +98,8 @@
         },
         1: {
           color: {
-            background: '#82CFFD',
-            border: '#82CFFD'
+            background: '#0855CF',
+            border: '#0855CF'
           },
           font: {
             color: '#fff'
@@ -105,8 +107,8 @@
         },
         2: {
           color: {
-            background: '#60AFFE',
-            border: '#60AFFE'
+            background: '#4841d9',
+            border: '#4841d9'
           },
           font: {
             color: '#fff'
@@ -114,16 +116,50 @@
         },
         3: {
           color: {
-            background: '#436EEE',
-            border: '#436EEE'
+            background: '#632299',
+            border: '#632299'
+          },
+          font: {
+              color: '#fff'
           },
         },
         4: {
           color: {
-            background: '#9F79EE',
-            border: '#9F79EE'
+            background: '#9F20D4',
+            border: '#9F20D4'
           },
-        }
+          font: {
+              color: '#fff'
+          },
+        },
+        5: {
+           color: {
+            background: '#D528C9',
+            border: '#D528C9'
+           },
+           font: {
+               color: '#fff'
+           },
+         },
+         6: {
+            color: {
+             background: '#D7308D',
+             border: '#D7308D'
+            },
+            font: {
+                color: '#fff'
+            },
+          },
+         7: {
+            color: {
+             background: '#D93857',
+             border: '#D93857'
+            },
+            font: {
+                color: '#fff'
+            },
+          },
+
       }
     };
     network = new vis.Network(container, data, options);

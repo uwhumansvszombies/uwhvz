@@ -47,13 +47,26 @@
         {% elif game.is_running %}
         <h1 class="start">The game has now begun.</h1>
         {% elif True %}
-        <h1 class="start">Stay safe during the pandemic!</h1>
-        <h1 class="start">Join our Minecraft Server!</h1>
+        <h1 class="start">Stay tuned for the announcement of our next game!</h1>
         {% else %}
         <h1 class="start">The game is now over.</h1>
         {% endif %}
       </div>
     </div>
+    <div class="container">
+           <div class="panel-heading">
+             <h1>
+               <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">What is HvZ?</a>
+             </h1>
+           </div>
+           <div id="collapse1" class="panel-collapse collapse">
+             <div class="panel-body">
+                <p>Humans vs. Zombies is a giant game of tag consisting of two teams, Humans with only one life and Zombies with many. Zombies have to try to tag all Human players while Humans can defend themselves with Nerf blasters and socks to survive against the growing enemy. Each team must accomplish missions to bring their side victory.
+UWHvZ puts on one weeklong game per term, multiple weekend minigames, and an annual open invitational game where players visit from other schools. We also have a general meeting per term.
+This group will be kept updated with news regarding games being run and club activities. If you are interested in helping with the club, joining the moderator team, or any other inquiries, please send an email to uwhumansvszombies@gmail.com and we will reply as soon as possible.</p>
+           </div>
+      </div>
+
   </section>
   <section class="ui-layout__item" id="mailing-list">
     <div id="mc_embed_signup">
@@ -90,6 +103,7 @@
     <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
   </section>
 
+{% if game.is_signups %}
   <section class="ui-layout__item" id="signup-schedule">
     <div class="ui-section">
       <h1>Signups Schedule</h1>
@@ -119,6 +133,7 @@
       </table>
     </div>
   </section>
+{% endif %}
 
   {{ footer() }}
 

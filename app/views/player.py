@@ -12,9 +12,10 @@ from app.mail import send_tag_email, send_stun_email
 from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierType, Spectator, Moderator, TagType, Email, RecipientGroup
 from app.util import most_recent_game, running_game_required, player_required, get_game_participants, game_required, \
     participant_required
-from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm
+from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm, ChangeCodeForm
 
 from pytz import timezone, utc
+import pytz
 from datetime import datetime
 
 import io
@@ -23,21 +24,39 @@ from reportlab.platypus import Table, TableStyle, SimpleDocTemplate
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib.pagesizes import letter
+from pdfrw import PdfReader, PdfWriter, PageMerge
 
 pdfmetrics.registerFont(TTFont('VeraBd', 'VeraBd.ttf'))
 
 
-def render_player_info(request, report_tag_form=ReportTagForm(), claim_supply_code_form=ClaimSupplyCodeForm()):
+def render_player_info(request, change_code_form = ChangeCodeForm(), report_tag_form=ReportTagForm(), claim_supply_code_form=ClaimSupplyCodeForm()):
     template_name = "mobile/dashboard/player.html" if request.user_agent.is_mobile else "dashboard/player.html"
 
     game = most_recent_game()
     participant = request.user.participant(game)
     team_score = sum([p.score() for p in Player.objects.filter(game=game, role=participant.role)])
-
+   
+    emails = Email.objects.filter(game=game)#.exclude(group=RecipientGroup.HUMAN)
+    if participant and participant.is_player:
+        if participant.is_human:
+            emails = emails.exclude(group=RecipientGroup.ZOMBIE)
+        elif participant.is_zombie:
+            emails = emails.exclude(group=RecipientGroup.HUMAN)
+        elif participant:
+            emails = Email.objects.filter(game=game)
+        else:
+            emails = None
+    if emails:
+        emails.order_by("-created_at")
+        if not request.user.groups.filter(name='LegacyUsers').exists() and not request.user.groups.filter(name='Volunteers').exists():
+            emails = emails.exclude(group=RecipientGroup.VOLUNTEER)
     return render(request, template_name, {
         'game': game,
+        'emails': emails,
+        'pytz': pytz,
         'participant': participant,
         'team_score': team_score,
+        'change_code_form': change_code_form,
         'report_tag_form': report_tag_form,
         'claim_supply_code_form': claim_supply_code_form,
     })
@@ -46,12 +65,13 @@ def render_player_info(request, report_tag_form=ReportTagForm(), claim_supply_co
 @method_decorator(login_required, name='dispatch')
 class PlayerCodeView(View):
     def get(self, request):
+        watermark = "app/static/files/cardunderlay.pdf"
         player = request.user.participant(most_recent_game())
         # Create a file-like buffer to receive PDF data.
         buffer = io.BytesIO()
     
         # Create the PDF object, using the buffer as its "file."
-        p = SimpleDocTemplate(buffer, topMargin=1)
+        p = SimpleDocTemplate(buffer, topMargin=70,bottomMargin=0)
         width, height = letter # Save these for later
     
         elements = []
@@ -66,14 +86,24 @@ class PlayerCodeView(View):
         
         elements.append(table)
         p.build(elements)            
-    
+        
+        wmark = PageMerge().add(PdfReader(watermark).pages[0])[0]
+        buffer.seek(0)
+        trailer = PdfReader(buffer)
+        buffer.close()
+        for page in trailer.pages:
+            PageMerge(page).add(wmark, prepend=True).render()
+        
+        buffer = io.BytesIO()
+        PdfWriter(buffer, trailer=trailer).write()
+        buffer.seek(0)
         # Close the PDF object cleanly, and we're done.
+        #If this was on a client instead of server, we wouldn't use a buffer.
         #p.showPage()
         #p.save()
     
         # FileResponse sets the Content-Disposition header so that browsers
         # present the option to save the file.
-        buffer.seek(0)
         return FileResponse(buffer, filename=f'{request.user.first_name}_code.pdf')
 
 
@@ -98,6 +128,29 @@ class PlayerInfoView(View):
         return render_player_info(request)
 
 
+@method_decorator(game_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
+class ChangeCodeView(View):
+    def get(self, request):
+        return redirect('dashboard')
+    
+    def post(self, request):
+        change_code_form = ChangeCodeForm(request.POST)
+        if not change_code_form.is_valid():
+            messages.error(request, "Codes must be between 2 and 9 characters.")
+            return redirect('dashboard') 
+        cleaned_data = change_code_form.cleaned_data
+        game = most_recent_game()
+        if Player.objects.filter(game=game,code=cleaned_data['code']).exists():
+            messages.error(request, "That code is already in use.")
+            return redirect('dashboard')
+        player = request.user.participant(game)
+        player.code = cleaned_data['code']
+        player.save()
+        messages.success(request,f"You have successfully changed your code to {cleaned_data['code']}")
+        return redirect('dashboard')
+
+
 @method_decorator(running_game_required, name='dispatch')
 @method_decorator(player_required, name='dispatch')
 class ReportTagView(View):
@@ -120,15 +173,16 @@ class ReportTagView(View):
             return render_player_info(request, report_tag_form=report_tag_form)            
 
         try:
-            receiving_player = Player.objects.get(code=receiver_code, active=True)
+            receiving_player = Player.objects.get(code=receiver_code, game=game, active=True)
         except ObjectDoesNotExist:
             report_tag_form.add_error('player_code', "No player with that code exists.")
             return render_player_info(request, report_tag_form=report_tag_form)
 
         tag_modifier_amount = 0
         try:
-            tag_modifier = Modifier.objects.get(faction=initiating_player.faction, modifier_type=ModifierType.TAG)
-            tag_modifier_amount = tag_modifier.modifier_amount
+            if initiating_player.is_human:
+                tag_modifier = Modifier.objects.get(faction=initiating_player.faction, modifier_type=ModifierType.TAG)
+                tag_modifier_amount = tag_modifier.modifier_amount
         except ObjectDoesNotExist:
             pass
 
@@ -205,11 +259,13 @@ class PlayerListView(View):
         game = most_recent_game()
         participant = request.user.participant(game)
         participants = get_game_participants(game).order_by('user__first_name')
+        moderators = Moderator.objects.filter(game=game, active=True)
 
         return render(request, self.template_name, {
             'game': game,
             'participant': participant,
             'participants': participants,
+            'moderators': moderators,
         })
 
 @method_decorator(running_game_required, name='dispatch')
@@ -238,8 +294,10 @@ class PlayerTagView(View):
             receiver=participant,
             initiator__game=game,
             receiver__game=game,
-            initiator__role=PlayerRole.HUMAN,
-            receiver__role=PlayerRole.ZOMBIE)
+            type=TagType.STUN,
+            #initiator__role=PlayerRole.HUMAN,
+            #receiver__role=PlayerRole.ZOMBIE
+            )
 
 
         type = "Stun" if participant.is_human else "Tag"
@@ -339,6 +397,7 @@ class ZombieTreeView(View):
         player_codes = {}
         nodes = {}
         edges = []
+        tag_descs = {}
         # Since we don't want repeated instances of OZs, we use a set instead of a list.
         ozs = set()
 
@@ -355,24 +414,47 @@ class ZombieTreeView(View):
                     desc = desc + ': ' + tag.description
             else:
                 desc = tag.description
-            edges.append({'from': tag.initiator.code, 'to': tag.receiver.code, 'title': desc})
-
+            edges.append({'from': tag.initiator.code, 'to': tag.receiver.code,}) # 'title': desc}) #This is from when edges used to hold descriptions
+            tag_descs[tag.receiver.code] = desc
+            
             player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
 
-            if not Player.objects.filter(game=game,code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
-                ozs.add(tag.initiator)
+            #if not Player.objects.filter(game=game,code=tag.initiator.code, role=PlayerRole.HUMAN).exists():
+            #    ozs.add(tag.initiator)
 
-        nodes['NECROMANCER'] = {'label': "Necromancer"}
-        for oz in Player.objects.filter(game=game,in_oz_pool=True):
+        nodes['NECROMANCER'] = {'label': "Necromancer",'title':"The original OZ"}
+        for oz in Player.objects.filter(game=game,is_oz=True):
             if oz not in ozs:
                 ozs.add(oz)
+        
+        oz_codes = []
         for oz in ozs:
             edges.append({'from': 'NECROMANCER', 'to': oz.code})
             player_codes[oz.code] = oz.user.get_full_name()
-
+            oz_codes.append(oz.code)
+        
         for code, name in player_codes.items():
             nodes[code] = {'label': name}
+            if code in oz_codes:
+                nodes[code]['title'] = 'OZ'
+            if code in tag_descs:
+                desc = tag_descs[code]
+                if desc.strip():
+                    desc = desc.split()
+                    desc.reverse()
+                    to_write = ['']
+                    while desc:
+                        curr_len = len(to_write[-1])
+                        next_word = desc.pop()
+                        if curr_len + len(next_word) <= 100:
+                            to_write[-1] += ' ' + next_word
+                        else:
+                            to_write[-1] += "</br>"
+                            to_write.append(next_word)
+                    nodes[code]['title'] = ''.join(to_write)
+                else:
+                    nodes[code]['title'] = ':/'
 
         # BFS on the edge list so that we can put each node into a group based on
         # its level in the tree.

@@ -8,7 +8,7 @@
     <div class="col-lg-4 mx-auto">
       {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible show" role="alert">
           {{ message }}
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -64,7 +64,7 @@
     </div>
   </div>
 
-  <div class="modal fade" id="waiverModal" tabindex="-1" role="dialog" aria-labelledby="waiverModal" aria-hidden="true">
+  <div class="modal" id="waiverModal" tabindex="-1" role="dialog" aria-labelledby="waiverModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -80,6 +80,7 @@
           <p>I acknowledge that my email address will be released to the mod team and other players, and that I may receive e-mails from Humans vs. Zombies during the game.</p>
           <p>I acknowledge that Humans vs. Zombies may take and share photos of me during the game.</p>
           <p>I have read and understood the rules set out for this game, and agree to abide to them.</p>
+          <p>I have completed the <a href="https://covid-19.ontario.ca/self-assessment/">Ontario COVID-19 self assessment</a> and certify that, based on my answers, I do not need to self-isolate or get tested.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-dismiss="modal">Dismiss</button>

@@ -11,7 +11,7 @@
 {% block subcontent %}
 <div class="ui-grid">
     {% if not received_tags and not unverified_tags and not verified_tags %}
-    <h2>Go stun some zombies!</h2>
+    <h2>Go {{"stun some zombies" if participant.is_human else "tag some humans"}}!</h2>
     {% endif %}
     
     {% if unverified_tags %}
@@ -38,7 +38,7 @@
                   <i class="fas fa-info"></i>
                 </button>
 
-                <div class="modal fade tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
+                <div class="modal tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -86,7 +86,7 @@
                   <i class="fas fa-info"></i>
                 </button>
 
-                <div class="modal fade tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
+                <div class="modal tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -110,7 +110,7 @@
     {% endif %}
 
     {% if received_tags %}
-      {% call card("Received {}s".format(type)) %}
+      {% call card("Received Stuns".format(type)) %}
         <table class="table table-striped">
           <thead>
           <tr>
@@ -119,6 +119,7 @@
             <th scope="col">Location</th>
             <th scope="col">Time</th>
             <th scope="col">Verified</th>
+            <th scope="col">Still Alive</th>
             <th scope="col" />
           </tr>
           </thead>
@@ -130,12 +131,13 @@
               <td>{{ tag.location if tag.location else "N/A" }}</td>
               <td>{{ tag.tagged_at.astimezone(tz).strftime("%Y-%m-%d %H:%M:%S") }}</td>
               <td>{{ "Yes" if tag.active else "No" }}</td>
+              <td>{{ "Yes" if tag.initiator.is_human else "No" }}</td>
               <td>
                 <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".tag-{{ tag.id }}-details">
                   <i class="fas fa-info"></i>
                 </button>
 
-                <div class="modal fade tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
+                <div class="modal tag-{{ tag.id }}-details" tabindex="-1" role="dialog" aria-labelledby="tagDetailModal" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">

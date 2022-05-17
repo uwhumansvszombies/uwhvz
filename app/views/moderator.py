@@ -15,6 +15,8 @@ from datetime import datetime
 from pytz import utc, timezone
 from random import sample
 
+from smtplib import SMTPException
+
 def get_text(file):
     x = open(file,'r')
     s = ''.join(x)
@@ -64,10 +66,10 @@ class GameStartView(View):
         if not 'Online' in list(SignupLocation.objects.filter(game=game).values_list('name', flat=True)):
             SignupLocation.objects.create_signup_location('Online', game)
 
-        volunteers = Group.objects.get(name='Volunteer').item_set.all()
+        volunteers = Group.objects.get(name='Volunteers').item_set.all()
         for volunteer in volunteers:
             if volunteer.email != 'volunteer@email.com':
-                volunteer.groups.remove("Volunteer")
+                volunteer.groups.remove("Volunteers")
 
         legacy_users = Group.objects.get(name='LegacyUsers').item_set.all()
         for user in legacy_users:
@@ -161,11 +163,11 @@ class ManageGameView(View):
 
         elif cd['recipients'] == "Volunteers and Legacy":
             recipients = list(User.objects \
-                .filter(game=game, is_active=True, groups__name="Volunteer") \
-                .values_list('user__email', flat=True))
+                .filter(player__game=game, is_active=True, groups__name="Volunteers") \
+                .values_list('email', flat=True))
             recipients.extend(list(User.objects \
-                .filter(game=game, is_active=True, groups__name="LegacyUsers") \
-                .values_list('user__email', flat=True)))
+                .filter(player__game=game, is_active=True, groups__name="LegacyUsers") \
+                .values_list('email', flat=True)))
             subject_set = '[hvz-volunteers]'
 
         if email_mods:
@@ -191,8 +193,11 @@ class ManageGameView(View):
 
             if html_email:
                 msg.content_subtype = "html"
-
-            msg.send()
+            print(msg) 
+            try:
+                msg.send()
+            except SMTPException as e:
+                messages.error('There was an error sending an email: ', e)
 
         if cd['recipients'] == "All":
             email = Email.objects.create_email(f"{subject_set} {cd['subject']}",cd['message'],RecipientGroup.ALL,game)
@@ -205,7 +210,9 @@ class ManageGameView(View):
             messages.success(request, "You've sent an email to all humans.")
         elif cd['recipients'] == "Self":
             messages.success(request, "You've sent an email to yourself.")
-
+        elif cd['recipients'] == "Volunteers and Legacy":
+            messages.success(request, "You've sent an email to all Legacy and Volunteer Players.")
+            email = Email.objects.create_email(f"{subject_set} {cd['subject']}",cd['message'],RecipientGroup.VOLUNTEER,game)
         if not email_mods:
             messages.warning(request, "You didn't include mods on the email sent.")
         if not email_spectators:
@@ -303,13 +310,15 @@ class StunVerificationView(View):
             active=False)
         questionable_stuns = []
         
-        for tag in unverified_stuns.filter(type=TagType.KILL):
+        for tag in unverified_stuns:
             similar_objects = Tag.objects.filter(initiator__game=game,
-            receiver__game=game, type=TagType.KILL, receiver=tag.receiver)
+            receiver__game=game, receiver=tag.receiver,type=tag.type,
+            initiator=tag.initiator)
             if similar_objects:
-                questionable_stuns.append(tag)
                 for similar in similar_objects:
-                    questionable_stuns.append(similar)
+                    if tag != similar:
+                        questionable_stuns.append((tag,similar))
+                        #questionable_stuns.append(similar)
         tz = timezone('Canada/Eastern')
 
         return render(request, self.template_name, {
@@ -388,7 +397,7 @@ class ManageLegacyView(View):
         points_for_permanent = 8
         token_transactions = Legacy.objects.all().order_by('user__first_name')
 
-        for user in User.objects.all():
+        for user in User.objects.all().order_by('first_name'):
             if user.legacy_points():
                 all_legacies.append(user)
                 if sum(Legacy.objects.filter(user=user,value__gt=0).values_list('value', flat=True)) >= points_for_permanent:
@@ -410,11 +419,13 @@ class ManageLegacyView(View):
         legacy_form = AddLegacyForm(request.POST)
         if not legacy_form.is_valid():
             return self.render_manage_legacy(request, add_legacy_form=legacy_form)
+        
 
         game = most_recent_game()
         cleaned_data = legacy_form.cleaned_data
+        leg_user = User.objects.get(id=cleaned_data['legacy_user'])
         legacy_points, legacy_user, legacy_details = int(cleaned_data['legacy_points']),\
-            User.objects.get(id=cleaned_data['legacy_user']), cleaned_data['legacy_details']
+            leg_user, cleaned_data['legacy_details']
 
 
         if legacy_points < 0 and -1*(legacy_points) > legacy_user.legacy_points():
@@ -422,7 +433,7 @@ class ManageLegacyView(View):
             return self.render_manage_legacy(request, add_legacy_form=legacy_form)
 
         Legacy.objects.create_legacy(user=legacy_user,value=legacy_points,details=legacy_details)
-
+        
         if legacy_points > 0:
             messages.success(request, f"Succesfully gave {legacy_points} tokens to {legacy_user.get_full_name()}.")
         else:
@@ -490,12 +501,28 @@ class ManagePlayersView(View):
     def render_manage_players(self, request, mod_signup_player_form=ModeratorSignupPlayerForm(), signup_loc_form=AddSignupForm()):
         game = most_recent_game()
         participants = get_game_participants(game).order_by('user__first_name')
+        players = Player.objects.filter(game=game, active=True)
+        humans = players.filter(role=PlayerRole.HUMAN)
+        zombies = players.filter(role=PlayerRole.ZOMBIE)
+        
         locations = SignupLocation.objects.filter(game=game)
+        
+        minimum_score_threshold = 5
+        supplied=0
+        for human in humans:
+              if human.score() >= minimum_score_threshold:
+                  supplied +=1
+
+        total_stuns = Tag.objects.filter(type=TagType.STUN,initiator__game=game,receiver__game=game,active=True).count()
 
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
             'participants': participants,
+            'humans': humans,
+            'supplied': supplied,
+            'zombies': zombies,
+            'total_stuns': total_stuns,
             'signup_locations': locations,
             'mod_signup_player_form': mod_signup_player_form,
             'signup_loc_form': signup_loc_form,
@@ -562,6 +589,7 @@ class ManageShopView(View):
             'participant': request.user.participant(game),
             'all_sales': all_sales,
             'make_sale_form': make_sale_form,
+            'tz': timezone('Canada/Eastern'),
         })
 
     def post(self, request):
@@ -680,8 +708,10 @@ class EmailTemplatesView(View):
             send_start_email(request, request.user.participant(game), game)
             messages.success(request, f"Game Start email sent to {request.user.email}.")
         if 'send_reminder' in request.POST:
+            player_emails = list(Player.objects.filter(game=game, active=True).values_list('user__email', flat=True))
             for invite in SignupInvite.objects.filter(game=game,used_at__isnull=True):
-                send_signup_reminder(request, invite, game)
+                if not invite in player_emails:
+                    send_signup_reminder(request, invite, game)
             messages.success(request, f"Reminder emails sent to {SignupInvite.objects.filter(game=game,used_at__isnull=True).count()} people.")
         if 'send_start' in request.POST:
             recipients = Player.objects.filter(game=game, active=True)
@@ -794,12 +824,12 @@ class ManageFactionsView(View):
                 if (faction == ''):
                     player_object.faction = None
                     player_object.save()
-                    messages.success(request, f"Updated player faction successfully.")
+                    messages.success(request, f"Updated the faction of {player_object.user.get_full_name()} successfully.")
                 else:
                     faction_object = Faction.objects.get(id=faction, game=game)
                     player_object.faction = faction_object
                     player_object.save()
-                    messages.success(request, f"Updated player faction successfully.")
+                    messages.success(request, f"Updated the faction of {player_object.user.get_full_name()} successfully.")
             except:
                 messages.error(request, f"There was an error in setting the players faction.")
         elif 'add-modifier' in request.POST:

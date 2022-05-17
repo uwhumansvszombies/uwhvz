@@ -51,7 +51,8 @@
     {% endcall %}
     {% endif %}
     
-  {% if game.is_running %}
+  {% if game.is_running or user.is_superuser %}
+  
   {% call card("Impersonate User") %}
       <p>Important: to exit an impersonation, change your url to uwhvz.uwaterloo.ca/su</p>
        <div class="ui-form-group">
@@ -121,7 +122,7 @@
 
 
 {% if game.is_running %}
-<div class="modal fade" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
+<div class="modal" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -144,7 +145,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="EndGameModal" tabindex="-1" role="dialog" aria-labelledby="EndGameModal" aria-hidden="true">
+<div class="modal" id="EndGameModal" tabindex="-1" role="dialog" aria-labelledby="EndGameModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

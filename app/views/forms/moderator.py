@@ -12,18 +12,18 @@ def get_signup_locations():
     return ((x.id, x) for x in SignupLocation.objects.filter(game=most_recent_game()))
 
 def get_players():
-    return ((x.id, f'{str(x)} - {x.shop_score()}') for x in Player.objects.filter(game=most_recent_game()))
+    return ((x.id, f'{str(x)} - {x.shop_score()}') for x in Player.objects.filter(game=most_recent_game()).order_by('user__first_name'))
 
 def get_users():
-    return ((x.id, f'{x.get_full_name()} - {x.email}') for x in User.objects.filter(is_active=True))
+    return ((x.id, f'{x.get_full_name()} - {x.email}') for x in User.objects.filter(is_active=True).order_by('first_name'))
 
 def get_factions():
     choices = [(u'', u'----------')]
-    choices.extend([(x.id, x) for x in Faction.objects.filter(game=most_recent_game())])
+    choices.extend([(x.id, x) for x in Faction.objects.filter(game=most_recent_game()).order_by('name')])
     return choices
 
 def get_users_legacy():
-    users = User.objects.filter(is_active=True).order_by('-user_legacy','first_name').distinct()
+    users = User.objects.filter(is_active=True).order_by('first_name').distinct()
     return ((x.id, f'{x.get_full_name()}, {x.email} - {x.legacy_points()}') for x in users)
 
 def get_months():
@@ -115,8 +115,8 @@ class ModMessageForm(forms.Form):
 class GenerateSupplyCodeForm(forms.Form):
     code = forms.CharField(
         label="Supply Code ID",
-        min_length=6,
-        max_length=6,
+        min_length=1,
+        max_length=7,
         required=False,
         widget=forms.TextInput(
             attrs={
@@ -128,7 +128,6 @@ class GenerateSupplyCodeForm(forms.Form):
     value = forms.IntegerField(
         label="Value",
         initial=5,
-        min_value=0,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',

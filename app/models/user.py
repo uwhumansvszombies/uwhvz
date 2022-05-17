@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         """
         if not email:
             raise ValueError("The given email must be set.")
-        email = self.normalize_email(email)
+        email = self.normalize_email(email).lower()
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
@@ -120,3 +120,5 @@ class User(AbstractBaseUser, PermissionsMixin):
             return sum([legacy.value for legacy in self.user_legacy.all()])
         else:
             return 0
+    def has_legacy(self) ->bool:
+        return self.user_legacy.all().exists()

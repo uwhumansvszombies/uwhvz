@@ -36,7 +36,7 @@ class PlayerManager(models.Manager):
 
 
 class Player(Participant):
-    code: str = models.CharField(max_length=6)
+    code: str = models.CharField(max_length=9)
     role: Enum = EnumField(enum=PlayerRole, max_length=1)
     in_oz_pool: bool = models.BooleanField(default=False)
     is_oz: bool = models.BooleanField(null=True,default=False)
@@ -94,7 +94,7 @@ class Player(Participant):
 
         #self.active = False
         self.role = PlayerRole.ZOMBIE
-        self.point_modifier = -1*self.shop_score() #player should have effectively zero points
+        #self.point_modifier = -1*self.shop_score() #player should have effectively zero points
         self.save()
         return #Player.objects.create_player(self.user, self.game, PlayerRole.ZOMBIE, code=self.code)
 

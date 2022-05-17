@@ -7,10 +7,11 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 from time import mktime
 from datetime import datetime
+import pytz
 
 from app.util import MobileSupportedView, most_recent_game
 from app.models import Game, Tag, Player, PlayerRole, SignupLocation, Legacy, SupplyCode, User, TagType, Email, RecipientGroup
-
+from app.views.forms import ChangeCodeForm
 
 class IndexView(MobileSupportedView):
     desktop_template = "index.html"
@@ -31,20 +32,27 @@ class DashboardView(MobileSupportedView):
     desktop_template = "dashboard/index.html"
     mobile_template = "mobile/dashboard/index.html"
 
-    def get(self, request):
+    def get(self, request, change_code_form=ChangeCodeForm()):
         game = most_recent_game()
         participant = request.user.participant(game)
         stuns = Tag.objects.filter(initiator__user=request.user,type=TagType.STUN,active=True).count()
         kills = Tag.objects.filter(initiator__user=request.user,type=TagType.KILL,active=True).count()
         codes = SupplyCode.objects.filter(claimed_by__user=request.user,active=True).count()
-        
-        if participant and participant.is_player and game.is_running:
+
+        emails = Email.objects.filter(game=game)
+        if participant and participant.is_player:
             if participant.is_human:
-                emails = Email.objects.filter(game=game).exclude(group=RecipientGroup.ZOMBIE)
+                emails = emails.exclude(group=RecipientGroup.ZOMBIE)
             elif participant.is_zombie:
-                emails = Email.objects.filter(game=game).exclude(group=RecipientGroup.HUMAN)
-        else:
-            emails = Email.objects.filter(game=game)         
+                emails = emails.exclude(group=RecipientGroup.HUMAN)
+            elif participant:
+                emails = Email.objects.filter(game=game)
+            else:
+                emails = None
+        if emails:
+            emails.order_by("-created_at")
+            if not request.user.groups.filter(name='LegacyUsers').exists() and not request.user.groups.filter(name='Volunteers').exists():
+                emails = emails.exclude(group=RecipientGroup.VOLUNTEER)
 
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
         points_for_permanent = 8
@@ -53,8 +61,8 @@ class DashboardView(MobileSupportedView):
                 receiver__game=game,active=False).count()
             if unverified:
                 messages.error(request, f"There are {unverified} tags that require verification")
-        return self.mobile_or_desktop(request, {'game': game, 'participant': participant,
-                                                'stuns':stuns, 'kills':kills, 'codes':codes, 'emails':emails,
+        return self.mobile_or_desktop(request, {'game': game, 'participant': participant, 'change_code_form': change_code_form,
+                                                'stuns':stuns, 'kills':kills, 'codes':codes, 'emails':emails.order_by("-created_at") if emails else None, 'pytz':pytz,
                                                 'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
 
     def post(self, request):
@@ -114,6 +122,7 @@ class PrevGamesView(View):
         player_codes = {}
         nodes = {}
         edges = []
+        tag_descs = {}
         # Since we don't want repeated instances of OZs, we use a set instead of a list.
         ozs = set()
 
@@ -124,21 +133,50 @@ class PrevGamesView(View):
             active=True)
 
         for tag in tags:
+            if tag.location:
+                desc = tag.location
+                if tag.description:
+                    desc = desc + ': ' + tag.description
+            else:
+                desc = tag.description
             edges.append({'from': tag.initiator.code, 'to': tag.receiver.code})
+            tag_descs[tag.receiver.code] = desc
 
             player_codes[tag.initiator.code] = tag.initiator.user.get_full_name()
             player_codes[tag.receiver.code] = tag.receiver.user.get_full_name()
 
-        nodes['NECROMANCER'] = {'label': "Necromancer"}
+        nodes['NECROMANCER'] = {'label': "Necromancer",'title':"Necromancer"}
         for oz in Player.objects.filter(game=game,is_oz=True):
             if oz not in ozs:
                 ozs.add(oz)
+        oz_codes = []
         for oz in ozs:
             edges.append({'from': 'NECROMANCER', 'to': oz.code})
             player_codes[oz.code] = oz.user.get_full_name()
+            oz_codes.append(oz.code)
 
         for code, name in player_codes.items():
             nodes[code] = {'label': name}
+            if code in oz_codes:
+                nodes[code]['title'] = 'OZ'
+            if code in tag_descs:
+                desc = tag_descs[code]
+                if desc.strip():
+                    desc = desc.split()
+                    desc.reverse()
+                    to_write = ['']
+                    while desc:
+                        curr_len = len(to_write[-1])
+                        next_word = desc.pop()
+                        if curr_len + len(next_word) <= 100:
+                            to_write[-1] += ' ' + next_word
+                        else:
+                            to_write[-1] += "</br>"
+                            to_write.append(next_word)
+                    nodes[code]['title'] = ''.join(to_write)
+                    #nodes[code]['title'] = '<span style="display: -webkit-box;word-wrap:break-word;word-break: break-all;overflow-x: auto;">' + ''.join(to_write) + '</span>'
+                else:
+                    nodes[code]['title'] = ':/'
 
         # BFS on the edge list so that we can put each node into a group based on
         # its level in the tree.
@@ -151,7 +189,6 @@ class PrevGamesView(View):
                 node_id = queue.pop(0)
                 popped.append(node_id)
                 nodes[node_id]['group'] = level
-
             children = []
             while popped:
                 node_id = popped.pop(0)

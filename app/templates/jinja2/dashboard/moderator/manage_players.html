@@ -77,6 +77,10 @@
   </div>
 
   {% call card("Player List", class="align-self-start") %}
+    <p>Total humans: {{ humans.count() }}</p>
+    <p>Supplied humans: {{ supplied }}</p>
+    <p>Total zombies: {{ zombies.count() }}</p>
+    <p>Total stuns: {{ total_stuns }}</p>
     <table class="table table-striped">
       <thead>
         <tr>
