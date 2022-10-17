@@ -66,14 +66,14 @@ class GameStartView(View):
         if not 'Online' in list(SignupLocation.objects.filter(game=game).values_list('name', flat=True)):
             SignupLocation.objects.create_signup_location('Online', game)
 
-        volunteers = Group.objects.get(name='Volunteers').item_set.all()
-        for volunteer in volunteers:
+        volunteers = Group.objects.get(name='Volunteers').user_set
+        for volunteer in volunteers.all():
             if volunteer.email != 'volunteer@email.com':
-                volunteer.groups.remove("Volunteers")
+                volunteers.remove(volunteer)
 
-        legacy_users = Group.objects.get(name='LegacyUsers').item_set.all()
-        for user in legacy_users:
-            user.groups.remove("LegacyUsers")
+        legacy_users = Group.objects.get(name='LegacyUsers').user_set
+        for user in legacy_users.all():
+            legacy_users.remove(user)
 
         messages.success(request, f"The Game \"{game_title}\" is open for signups.")
         return redirect('manage_game')
@@ -88,6 +88,12 @@ class GameSetView(View):
         try:
             game.started_on = utc.localize(datetime.now())
             game.save()
+            
+            is_oz = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
+
+            for oz in is_oz:
+                oz.role=PlayerRole.ZOMBIE
+                oz.save()
 
             messages.success(request, f"The Game \"{game.name}\" has started.")
             return redirect('manage_game')
@@ -226,9 +232,14 @@ class ManageOZView(View):
 
     def get(self, request, oz_shuffle_form=OZShuffleForm()):
         game = most_recent_game()
-        players = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
-        forced_oz = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE).order_by('user__first_name')
-        max_value = Player.objects.filter(game=most_recent_game()).exclude(role=PlayerRole.ZOMBIE).distinct().count()
+        players = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name') # to remove after corrections; same as is_oz
+        forced_oz = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE).order_by('user__first_name') # to remove after corrections; same as legacy_oz
+        
+        in_pool = Player.objects.filter(game=game, in_oz_pool=True).exclude(role=PlayerRole.ZOMBIE, is_oz=True).order_by('user__first_name')
+        legacy_oz = Player.objects.filter(game=game, role=PlayerRole.ZOMBIE).order_by('user__first_name')
+        is_oz = Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name')
+
+        max_value = Player.objects.filter(game=game).exclude(role=PlayerRole.ZOMBIE).distinct().count()
         return render(request, self.template_name, {
             'game': game,
             'total_players': max_value,
@@ -236,10 +247,28 @@ class ManageOZView(View):
             'players': players,
             'forced_oz':forced_oz,
             'oz_shuffle_form':oz_shuffle_form,
+            'in_pool':in_pool,
+            'legacy_oz':legacy_oz,
+            'is_oz':is_oz
         })
 
     def post(self, request):
         game = most_recent_game()
+        in_pool_all = Player.objects.filter(game=game, in_oz_pool=True).order_by('user__first_name')
+        
+        for oz in in_pool_all:
+            if str(oz.id) + "-add" in request.POST:
+                oz.is_oz=True
+                oz.save()
+                messages.success(request, f"Added {oz.user.get_full_name()} to starting OZs")
+                return redirect('manage_oz')
+            if str(oz.id) + "-remove" in request.POST:
+                oz.is_oz=False
+                oz.save()
+                messages.success(request, f"Removed {oz.user.get_full_name()} from starting OZs")
+                return redirect('manage_oz')
+
+        # These 5 lines to be deleted (we hope)
         if 'set_oz' in request.POST:
             for oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
                 oz.role=PlayerRole.ZOMBIE
@@ -255,15 +284,16 @@ class ManageOZView(View):
 
         to_make_ozs = sample(set(players),cd['amount'])
 
-        for old_oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
-            old_oz.is_oz=False
-            old_oz.save()
+        #for old_oz in Player.objects.filter(game=game, is_oz=True).exclude(role=PlayerRole.ZOMBIE).order_by('user__first_name'):
+        #    old_oz.is_oz=False
+        #    old_oz.save()
 
         for oz in to_make_ozs:
             oz.is_oz=True
             oz.save()
+            messages.success(request, f"Added {oz.user.get_full_name()} to starting OZs")
 
-        messages.success(request, "Succesfully updated OZ list.")
+        #messages.success(request, "Succesfully updated OZ list.")
 
         return redirect('manage_oz')
 
@@ -394,7 +424,7 @@ class ManageLegacyView(View):
 
         all_legacies = []
         permanent_status = []
-        points_for_permanent = 8
+        points_for_permanent = 6
         token_transactions = Legacy.objects.all().order_by('user__first_name')
 
         for user in User.objects.all().order_by('first_name'):
@@ -456,7 +486,9 @@ class ManageModsView(View):
         if mod_id in list(Moderator.objects.filter(game=game).values_list('id', flat=True)):
             messages.error(request, "That mod already exists in this game")
             return redirect('manage_staff')
-
+        if mod_id in list(Player.objects.filter(game=game).values_list('id', flat=True)):
+            messages.error(request, "That mod is a player in this game")
+            return redirect('manage_staff')
         mod = User.objects.get(id=mod_id)
 
         Moderator.objects.create_moderator(user=mod, game=game)
@@ -565,12 +597,16 @@ class GenerateSupplyCodesView(View):
         })
 
     def post(self, request):
+        game = most_recent_game()
         make_codes_form = GenerateSupplyCodeForm(request.POST)
         if not make_codes_form.is_valid():
             return self.get(request, make_codes_form=make_codes_form)
         cd = make_codes_form.cleaned_data
+        
+        if cd['code'].upper() in list(SupplyCode.objects.filter(game=game).values_list('code', flat=True)):
+            messages.error(request,  f"A supply code of the value \"{cd['code']}\" already exists in this game.")
+            return redirect('generate_supply_codes')
 
-        game = most_recent_game()
         supply_code = SupplyCode.objects.create_supply_code(game, cd['value'], cd['code'])
         messages.success(request, f"Generated new supply code \"{supply_code}\".")
         return redirect('generate_supply_codes')

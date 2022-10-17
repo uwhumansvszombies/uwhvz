@@ -2,6 +2,7 @@
 {% from "components/player_sidebar.html" import player_sidebar %}
 {% from "components/staff_sidebar.html" import staff_sidebar %}
 {% from "components/volunteer_sidebar.html" import volunteer_sidebar %}
+{% from "components/strong_volunteer_sidebar.html" import strong_volunteer_sidebar %}
 
 {% macro sidebar(request, game, participant, user) -%}
   <aside class="ui-sidebar" id="side-nav">
@@ -17,6 +18,10 @@
 
     {% if user.is_volunteer and game.is_signups %}
       {{ volunteer_sidebar(request) }}
+    {% endif %}
+
+    {% if user.is_staff %}
+      {{ strong_volunteer_sidebar(request) }}
     {% endif %}
 
     {% if participant.is_moderator or user.is_staff %}

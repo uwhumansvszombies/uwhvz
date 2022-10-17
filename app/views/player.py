@@ -360,13 +360,30 @@ class MessagePlayersView(View):
                 .filter(game=game, active=True) \
                 .values_list('user__email', flat=True)))
 
-        EmailMultiAlternatives(
-            subject=f"{subject_set} Message from {request.user.get_full_name()}",
-            body=cd['message'],
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[],
-            bcc=recipients
-        ).send()
+        # Gmail has a limit of 100 recipients at a time.
+        # Hence we send multiple emails, in batches of 100.
+        for i in range(0, len(recipients), 100):
+            msg = EmailMultiAlternatives(
+                subject=f"{subject_set} Message from {request.user.get_full_name()}",
+                body=cd['message'],
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[],
+                bcc=recipients[i:i + 100]
+            )
+
+            print(msg)
+            try:
+                msg.send()
+            except SMTPException as e:
+                messages.error('There was an error sending an email: ', e)
+
+        #EmailMultiAlternatives(
+        #    subject=f"{subject_set} Message from {request.user.get_full_name()}",
+        #    body=cd['message'],
+        #    from_email=settings.DEFAULT_FROM_EMAIL,
+        #    to=[],
+        #    bcc=recipients
+        #).send()
 
         if cd['recipients'] == "All":
             email = Email.objects.create_email(f"{subject_set} Message from {request.user.get_full_name()}",cd['message'],RecipientGroup.ALL,game,player_made=True)

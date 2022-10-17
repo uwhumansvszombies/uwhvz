@@ -55,7 +55,8 @@ class DashboardView(MobileSupportedView):
                 emails = emails.exclude(group=RecipientGroup.VOLUNTEER)
 
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
-        points_for_permanent = 8
+        # Only spot this variable exists/is used
+        points_for_permanent = 6
         if game.is_running and (request.user.is_superuser or (request.user.participant(game) and request.user.participant(game).is_moderator)):
             unverified = Tag.objects.filter(initiator__game=game,
                 receiver__game=game,active=False).count()

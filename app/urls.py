@@ -18,6 +18,7 @@ urlpatterns = [
     path("accounts/signup/", views.UnrestrictedUserSignupView.as_view(), name='unrestricted_user_signup'),
     path("dashboard/game-signup", views.GameSignupView.as_view(), name='game_signup'),
     path("dashboard/volunteer/signup-players", views.SignupPlayersView.as_view(), name='signup_players'),
+    path("dashboard/strong_volunteer/signup-players", views.BetterSignupPlayersView.as_view(), name='better_signup_players'),
     path("signup/<uuid:signup_invite>", views.signup, name='signup'),
     path("game-signup/<uuid:signup_invite>", views.TokenRequiredGameSignupView.as_view(), name='token_game_signup'),
 
