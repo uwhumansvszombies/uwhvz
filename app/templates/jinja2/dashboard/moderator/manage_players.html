@@ -62,12 +62,9 @@
         <td class="align-middle" scope="col">{{ location.signupinvite_set.values_list('email', flat=True).distinct().count() }}</td>
         <td class="align-middle" scope="col">{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
         <td scope="col" style="width: 40px">
-          <form class="mb-0" action="{{ url('manage_signup')}}" method="post">
-            {{ csrf_input }}
-            <button name="{{location.id}}-remove" type="submit" class="btn btn-danger">
+            <button class="btn btn-danger" data-toggle="modal" data-target="#DeleteLocationModal-{{location.id}}">
               <i class="fas fa-trash"></i>
             </button>
-          </form>
         </td>
       </tr>
       {% endfor %}
@@ -106,4 +103,31 @@
     </table>
   {% endcall %}
 </div>
+
+{% for location in signup_locations %}
+<div class="modal" id="DeleteLocationModal-{{location.id}}" tabindex="-1" role="dialog" aria-labelledby="DeleteLocationModal-{{location.id}}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure about killing all humans?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The will delete {{location.name}}. This is an <b>irreversible</b> change. Are you sure you want to do this?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <button name="{{location.id}}-remove" type="submit" class="btn btn-danger">
+        <form class="mb-0" action="{{ url('manage_signup')}}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-danger" value="Yes, Delete {{location.name}}">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
 {% endblock %}
