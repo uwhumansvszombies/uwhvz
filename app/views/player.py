@@ -13,6 +13,8 @@ from app.models import Player, PlayerRole, Tag, SupplyCode, Modifier, ModifierTy
 from app.util import most_recent_game, running_game_required, player_required, get_game_participants, game_required, \
     participant_required
 from app.views.forms import ReportTagForm, ClaimSupplyCodeForm, MessagePlayersForm, ChangeCodeForm
+from string import ascii_letters, digits
+from re import search
 
 from pytz import timezone, utc
 import pytz
@@ -143,6 +145,9 @@ class ChangeCodeView(View):
         game = most_recent_game()
         if Player.objects.filter(game=game,code=cleaned_data['code']).exists():
             messages.error(request, "That code is already in use.")
+            return redirect('dashboard')
+        if search("[^a-zA-Z0-9]",cleaned_data['code']):
+            messages.error(request, "Your code must be alphanumeric.")
             return redirect('dashboard')
         player = request.user.participant(game)
         player.code = cleaned_data['code']
