@@ -54,17 +54,26 @@
   {% if game.is_running or user.is_superuser %}
   
   {% call card("Impersonate User") %}
-      <p>Important: to exit an impersonation, change your url to uwhvz.uwaterloo.ca/su</p>
+      <p>If you need to, you can exist an impersonation with uwhvz.uwaterloo.ca/su</p>
        <div class="ui-form-group">
         <form class="mb-0" action="{{ url('su_login') }}" method="get">
           {{ csrf_input }}
           <input type="submit" class="btn btn-primary" value="Impersonate!">
         </form>
       </div>
-    {% endcall %}
+  {% endcall %}
+  {% endif %}
+    
+    {% if game.is_running %}
     
     {% call card("End Game") %}
       <p>This will immediately end the game. Do not accidentally press this if you don't actually want the game to end.</p>
+       <div class="ui-form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="archive" name="archive" checked>
+          <label class="custom-control-label ui-label" for="archive">Archive this game and make the zombie tree public</label>
+        </div>
+      </div>
        <div class="ui-form-group">
        <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#EndGameModal" {% if not user.is_superuser %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>End Game{% endif %}</button>
       </div>
