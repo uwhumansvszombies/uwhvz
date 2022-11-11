@@ -109,10 +109,15 @@ class GameEndView(View):
     def post(self, request):
         game = most_recent_game()
         try:
+            archive = request.POST.get('archive', 'off') == 'on'
             game.ended_on = utc.localize(datetime.now())
             game.ended_by = request.user
+            game.include_summary = archive
             game.save()
-            messages.success(request, f"The Game \"{game.name}\" has ended.")
+            if archive:
+                messages.success(request, f"The Game \"{game.name}\" has ended and was archived.")
+            else:
+                messages.success(request, f"The Game \"{game.name}\" has ended but was not archived.")
             return redirect('manage_game')
         except:
             messages.error(request, f"There was an error with the ending of the game \"{game.name}\"")
