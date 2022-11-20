@@ -20,7 +20,7 @@ class IndexView(MobileSupportedView):
     def get(self, request):
         game = most_recent_game()
         signups = SignupLocation.objects.filter(game=game).exclude(name='Online')
-        if game.started_on:
+        if game and game.started_on:
             for_js = int(mktime(game.started_on.timetuple())) * 1000
         else:
             for_js = int(mktime(datetime.utcnow().timetuple())) * 1000
