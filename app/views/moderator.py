@@ -74,6 +74,10 @@ class GameStartView(View):
         legacy_users = Group.objects.get(name='LegacyUsers').user_set
         for user in legacy_users.all():
             legacy_users.remove(user)
+        
+        Email.objects.create_email("Signup Email (Visible only to Mods) - sent to players",get_text('app/templates/jinja2/email/signup.html'),RecipientGroup.ALL,game,visible=False)
+        Email.objects.create_email("Signup Reminder Email (Visible only to Mods) - sent to players",get_text('app/templates/jinja2/email/signup_reminder.html'),RecipientGroup.ALL,game,visible=False)
+        Email.objects.create_email("Game Start Email (Visible only to Mods) - sent to players",get_text('app/templates/jinja2/email/game_start.html'),RecipientGroup.ALL,game,visible=False)
 
         messages.success(request, f"The Game \"{game_title}\" is open for signups.")
         return redirect('manage_game')
