@@ -38,7 +38,7 @@ def render_player_info(request, change_code_form = ChangeCodeForm(), report_tag_
     participant = request.user.participant(game)
     team_score = sum([p.score() for p in Player.objects.filter(game=game, role=participant.role)])
    
-    emails = Email.objects.filter(game=game)#.exclude(group=RecipientGroup.HUMAN)
+    emails = Email.objects.filter(game=game,visible=True)#.exclude(group=RecipientGroup.HUMAN)
     if participant and participant.is_player:
         if participant.is_human:
             emails = emails.exclude(group=RecipientGroup.ZOMBIE)
