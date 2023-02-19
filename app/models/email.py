@@ -26,6 +26,7 @@ class Email(models.Model):
     data: str = models.TextField(blank=True)
     group: Enum = EnumField(enum=RecipientGroup, max_length=1)
     player_made: bool = models.BooleanField(default=False)
+    visible: bool = models.BooleanField(default=True)
 
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     modified_at: datetime = models.DateTimeField(auto_now=True)
