@@ -39,7 +39,7 @@ class DashboardView(MobileSupportedView):
         kills = Tag.objects.filter(initiator__user=request.user,type=TagType.KILL,active=True).count()
         codes = SupplyCode.objects.filter(claimed_by__user=request.user,active=True).count()
 
-        emails = Email.objects.filter(game=game)
+        emails = Email.objects.filter(game=game,visible=True)
         if participant and participant.is_player:
             if participant.is_human:
                 emails = emails.exclude(group=RecipientGroup.ZOMBIE)
