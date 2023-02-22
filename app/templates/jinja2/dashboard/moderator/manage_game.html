@@ -11,7 +11,7 @@
   <div class="ui-grid align-content-start">
   {% if game.is_finished %}
     {% call card("Start Game") %}
-    <p>Choose a game name and select the day you want the game to start at. The game will always start at midnight.</p>
+    <p>Choose a game name and select the day you want the game to start at. The game will always start at midnight. This is usually a Monday.</p>
       <div class="ui-form-group">
         <form class="mb-0" action="{{ url('game_start') }}" method="post" role="form">
           {{ csrf_input }}
