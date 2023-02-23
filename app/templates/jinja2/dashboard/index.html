@@ -198,30 +198,7 @@
     {% endif %}
     
 {% if game.is_signups %} {% call card("Welcome to the game!") %}
-
-<p>The game will begin on Monday, October 24 @ midnight, and runs 24 hours a day until the end of final mission on Friday, October 28 @ 9:00 PM. If you have any friends who have never played before and would like to join, please tell them to sign up via our website. We’ve designed this game to be beginner-friendly, so any word-of-mouth advertising is greatly appreciated!</p> 
-<p>We understand that there will likely be concerns around player safety, given the nature of gameplay. Below, please find the modifications made to the game in response to COVID-19. </p>
-<ul>
-<!--    <li><strong>All players MUST be vaccinated.</strong> Following the University of Waterloo’s COVID-19 protocols, all students, staff, alumni and campus visitors MUST submit proof of vaccination prior to entering campus. Please be sure to submit your proof of vaccination here: <a href="https://uwaterloo.ca/coronavirus/news/submit-your-proof-vaccination-today">https://uwaterloo.ca/coronavirus/news/submit-your-proof-vaccination-today</a>. If you are not a student at UWaterloo, please email us proof of your vaccination status at uwhumansvszombies@gmail.com.</li> -->
-<li><strong>Face masks while playing.</strong> While the University of Waterloo has suspended its face mask requirement as of June 30th, we do encourage players to wear face masks especially when physical distancing is not possible. If players choose to wear a face mask, it should cover your nose, mouth, and chin, but not your upper half of your face and not be for purely aesthetic use, as to comply with our requirements from Campus Police. </li>
-<!-- <li><strong>Mandating face masks while playing.</strong> Yes, even when you’re outside. Masks should be covering your nose, mouth, and chin. Bandanas are not acceptable masks. This is in conjunction with our no-face-covering rule, which is still required from us by Campus Police. As such, your face mask should cover your nose, mouth, chin, but not obstruct the upper half of your face.</li> -->
-    <li><strong>Recommending all players to maintain physical distancing as much as possible.</strong> Again, we can’t control what you do. But we ask you to consider physical distancing with other players wherever possible.</li>
-    <li><strong>Requiring a COVID-19 self-assessment prior to gameplay.</strong> The first time you sign into the website, you will be greeted with a screen asking you to complete the Ontario COVID-19 self-assessment.</li>
-</ul>
-<p>If you have any signs or symptoms of COVID-19, DO NOT PLAY. </p>
-<p><strong>Please also note that there are some changes in rules from our typical weeklong. These changes are listed below:</strong></p>
-<ul>
-    <li>Buildings are once again safe from 10AM-4PM. <b>Bridges and tunnels are <i>not</i> safe zones!</b></li>
-    <li>Removal of the infected human mechanic.</li>
-    <li>As per a typical weeklong, unsupplied humans <b>will</b> be killed off on Friday before the final mission.</li>
-    <li>Rail and building passes are reinstated as potential point rewards.</li>
-</ul>
-=======
-    <p>We're glad to have you with us! If you have any friends who have never played before and would like to join, please ensure they sign up by 5 PM on the day before the game. Alternatively, they can contact us at uwhumansvszombies@gmail.com via email.</p>
-    <p>At 11:00 PM the day before game start, you will receive an email indicating whether you are beginning the game as a HUMAN or a ZOMBIE. This email will also include information relevant for the entire weeklong, so make sure you’re checking your inbox!</p>
-    <p>Throughout the game, the moderator team will be communicating to you primarily through email. Each night, an email will be sent out including the schedule and events for the next day. Main Mission details will be sent out in a separate email one hour before each Main Mission begins. Our website (right here!) will also display announcements and mission details for the day.</p>
-    <p>Additional important information will also be sent over twitter through @HVZAlertSystem, which can conveniently be found right here! If you need to rent a blaster from the Humans vs Zombie Society for use in the weeklong, you can email us at uwhumansvszombies@gmail.com for more information.</p>
-
+{{ dashboard_welcome }}
 {% endcall %} {% endif %}
 
 {% call card("System Requirements") %}
