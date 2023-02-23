@@ -661,16 +661,24 @@ class EmailTemplatesView(View):
 
     def render_email_templates(self, request):
         game = most_recent_game()
+        
+        # This makes the new email templates backwards compatible
+        
+        if not Email.objects.filter(name="Signup Email (Visible only to Mods) - sent to players",game=game).exists():
+            Email.objects.create_email("Signup Email (Visible only to Mods) - sent to players",get_text('app/templates/jinja2/email/signup.html'),RecipientGroup.ALL,game,visible=False)
+        
+        if not Email.objects.filter(name="Signup Reminder Email (Visible only to Mods) - sent to players",game=game).exists():
+            Email.objects.create_email("Signup Reminder Email (Visible only to Mods) - sent to players",get_text('app/templates/jinja2/email/signup_reminder.html'),RecipientGroup.ALL,game,visible=False)
+        
+        if not Email.objects.filter(name="Game Start Email (Visible only to Mods) - sent to players",game=game).exists():
+            Email.objects.create_email("Game Start Email (Visible only to Mods) - sent to players",get_text('app/templates/jinja2/email/game_start.html'),RecipientGroup.ALL,game,visible=False)
 
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
-            'signup_email_form': SignupEmailForm(initial={'signup_email_html': get_text('app/templates/jinja2/email/signup.html'),
-                                                          'signup_email_txt': get_text('app/templates/jinja2/email/signup.txt') }),
-            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':get_text('app/templates/jinja2/email/signup_reminder.html'),
-                                                             'reminder_email_txt':get_text('app/templates/jinja2/email/signup_reminder.txt')}),
-            'start_email_form':StartEmailForm(initial={'start_email_html':get_text('app/templates/jinja2/email/game_start.html'),
-                                                       'start_email_txt':get_text('app/templates/jinja2/email/game_start.txt')})
+            'signup_email_form': SignupEmailForm(initial={'signup_email_html': Email.objects.get(name="Signup Email (Visible only to Mods) - sent to players",game=game)}),
+            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':Email.objects.get(name="Signup Reminder Email (Visible only to Mods) - sent to players",game=game)}),
+            'start_email_form':StartEmailForm(initial={'start_email_html':Email.objects.get(name="Game Start Email (Visible only to Mods) - sent to players",game=game)})
         })
 
     def get(self, request):
@@ -688,14 +696,11 @@ class EmailTemplatesView(View):
             cd = signup_email_form.cleaned_data
 
             try:
-                f = open('app/templates/jinja2/email/signup.html','w')
-                f.write(cd['signup_email_html'])
-                f.close()
-                SignupEmailForm().fields['signup_email_html'].initial = cd['signup_email_html']
-                f = open('app/templates/jinja2/email/signup.txt','w')
-                f.write(cd['signup_email_txt'])
-                f.close()
-                SignupEmailForm().fields['signup_email_txt'].initial=cd['signup_email_txt']
+                e = Email.objects.get(name="Signup Email (Visible only to Mods) - sent to players",game=game)
+                e.data = cd['signup_email_html']
+                e.save()
+                            
+                #SignupEmailForm().fields['signup_email_html'].initial = cd['signup_email_html'] ## is this still needed?
             except:
                 messages.error(request, "There was an error updating the signup email.")
                 return redirect('email_templates')
@@ -711,14 +716,10 @@ class EmailTemplatesView(View):
             cd = reminder_email_form.cleaned_data
 
             try:
-                f = open('app/templates/jinja2/email/signup_reminder.html','w')
-                f.write(cd['reminder_email_html'])
-                f.close()
-                ReminderEmailForm().fields['reminder_email_html'].initial=cd['reminder_email_html']
-                f = open('app/templates/jinja2/email/signup_reminder.txt','w')
-                f.write(cd['reminder_email_txt'])
-                f.close()
-                ReminderEmailForm().fields['reminder_email_txt'].initial=cd['reminder_email_txt']
+                e = Email.objects.get(name="Signup Reminder Email (Visible only to Mods) - sent to players",game=game)
+                e.data = cd['reminder_email_html']
+                e.save()
+                #ReminderEmailForm().fields['reminder_email_html'].initial=cd['reminder_email_html'] ## is this still needed?
             except:
                 messages.error(request, "There was an error updating the reminder email.")
                 return redirect('email_templates')
@@ -734,14 +735,10 @@ class EmailTemplatesView(View):
             cd = start_email_form.cleaned_data
 
             try:
-                f = open('app/templates/jinja2/email/game_start.html','w')
-                f.write(cd['start_email_html'])
-                f.close()
+                e = Email.objects.get(name="Game Start Email (Visible only to Mods) - sent to players",game=game)
+                e.data = cd['start_email_html']
+                e.save()
                 StartEmailForm().fields['start_email_html'].initial=cd['start_email_html']
-                f = open('app/templates/jinja2/email/game_start.txt','w')
-                f.write(cd['start_email_txt'])
-                f.close()
-                StartEmailForm().fields['start_email_txt'].initial=cd['start_email_txt']
             except:
                 messages.error(request, "There was an error updating the game start email.")
                 return redirect('email_templates')
