@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from enumfields import EnumField
 
-from app.models import ParticipantRole, SignupLocation, Player, User, PlayerRole, Faction, ModifierType
+from app.models import ParticipantRole, SignupLocation, Player, User, PlayerRole, Faction, ModifierType, Email
 from app.util import most_recent_game
 
 from datetime import datetime, date
@@ -314,7 +314,6 @@ class AddLegacyForm(forms.Form):
 class SignupEmailForm(forms.Form):
     signup_email_html = forms.CharField(
         label="Signup Email - HTML",
-        initial=get_text('app/templates/jinja2/email/signup.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
@@ -322,75 +321,42 @@ class SignupEmailForm(forms.Form):
         )
     )
 
-    signup_email_txt = forms.CharField(
-        label="Signup Email - txt",
-        initial=get_text('app/templates/jinja2/email/signup.txt'),
-        widget=forms.Textarea(
-            attrs={
-                'class': 'ui-input',
-            }
-        )
-    )
-    def get_initial(self):
-        return {'signup_email_html': get_text('app/templates/jinja2/email/signup.html'),
-                'signup_email_txt': get_text('app/templates/jinja2/email/signup.txt')}
+    #def get_initial(self):
+    #    return {'signup_email_html': get_text('app/templates/jinja2/email/signup.html')}
 
-    def __init__(self, *args, **kwargs):
-        super(SignupEmailForm, self).__init__(*args, **kwargs)
-        self.initial['signup_email_html'] = get_text('app/templates/jinja2/email/signup.html')
-        self.initial['signup_email_txt'] = get_text('app/templates/jinja2/email/signup.txt')
+    #def __init__(self, *args, **kwargs):
+    #    super(SignupEmailForm, self).__init__(*args, **kwargs)
+    #    self.initial['signup_email_html'] = get_text('app/templates/jinja2/email/signup.html')
 
 class ReminderEmailForm(forms.Form):
     reminder_email_html = forms.CharField(
         label="Reminder Email - HTML",
-        initial=get_text('app/templates/jinja2/email/signup_reminder.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
             }
         )
     )
-    reminder_email_txt = forms.CharField(
-        label="Reminder Email - txt",
-        initial=get_text('app/templates/jinja2/email/signup_reminder.txt'),
-        widget=forms.Textarea(
-            attrs={
-                'class': 'ui-input',
-            }
-        )
-    )
-    def __init__(self, *args, **kwargs):
-            kwargs.update(initial={
-                'reminder_email_html': get_text('app/templates/jinja2/email/signup_reminder.html'),
-                'reminder_email_txt': get_text('app/templates/jinja2/email/signup_reminder.txt')
-            })
-            super(ReminderEmailForm, self).__init__(*args, **kwargs)
+    #def __init__(self, *args, **kwargs):
+    #        kwargs.update(initial={
+    #            'reminder_email_html': get_text('app/templates/jinja2/email/signup_reminder.html')
+    #        })
+    #        super(ReminderEmailForm, self).__init__(*args, **kwargs)
 
 class StartEmailForm(forms.Form):
     start_email_html = forms.CharField(
         label="Game Start Email - HTML",
-        initial=get_text('app/templates/jinja2/email/game_start.html'),
         widget=forms.Textarea(
             attrs={
                 'class': 'ui-input',
             }
         )
     )
-    start_email_txt = forms.CharField(
-        label="Game Start Email - txt",
-        initial=get_text('app/templates/jinja2/email/game_start.txt'),
-        widget=forms.Textarea(
-            attrs={
-                'class': 'ui-input',
-            }
-        )
-    )
-    def __init__(self, *args, **kwargs):
-            kwargs.update(initial={
-                'start_email_html': get_text('app/templates/jinja2/email/game_start.html'),
-                'start_email_txt': get_text('app/templates/jinja2/email/game_start.txt')
-            })
-            super(StartEmailForm, self).__init__(*args, **kwargs)
+    #def __init__(self, *args, **kwargs):
+    #        kwargs.update(initial={
+    #            'start_email_html': get_text('app/templates/jinja2/email/game_start.html')
+    #        })
+    #        super(StartEmailForm, self).__init__(*args, **kwargs)
 
 class AddPlayerToFactionForm(forms.Form):
     player = forms.ChoiceField(

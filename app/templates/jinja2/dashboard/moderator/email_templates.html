@@ -120,13 +120,13 @@
       </div>
       <div class="modal-body">
         <p>A game start email will send to all players who are signed up. <b>The game should be started prior to pressing this button.</b> This is irreversible. You should almost never have to use this twice.</p>
-        <p>Please ensure you have changed both the HTML <i>and</i> the txt files!</p>
+        <p>Please ensure you have changed the HTML file!</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
         <form class="mb-0" action="{{ url('email_templates') }}" method="post">
           {{ csrf_input }}
-          <input type="submit" class="btn btn-primary" value="Send Reminder Email" name="send_start">
+          <input type="submit" class="btn btn-primary" value="Send Start Email" name="send_start">
         </form>
       </div>
     </div>

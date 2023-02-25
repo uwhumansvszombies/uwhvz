@@ -39,7 +39,7 @@ class DashboardView(MobileSupportedView):
         kills = Tag.objects.filter(initiator__user=request.user,type=TagType.KILL,active=True).count()
         codes = SupplyCode.objects.filter(claimed_by__user=request.user,active=True).count()
 
-        emails = Email.objects.filter(game=game)
+        emails = Email.objects.filter(game=game,visible=True)
         if participant and participant.is_player:
             if participant.is_human:
                 emails = emails.exclude(group=RecipientGroup.ZOMBIE)
@@ -53,9 +53,15 @@ class DashboardView(MobileSupportedView):
             emails.order_by("-created_at")
             if not request.user.groups.filter(name='LegacyUsers').exists() and not request.user.groups.filter(name='Volunteers').exists():
                 emails = emails.exclude(group=RecipientGroup.VOLUNTEER)
-
+        
+        ## Okay so this is super janky and we really need an object that can handle just general storage of text so we can update stuff as we like.
+        ## But seeing as that isn't around right now... we're going to use the email object instead.
+        if not Email.objects.filter("Dashboard Welcome (Visible only to Mods)",game=game).exists():
+            Email.objects.create_email("Dashboard Welcome (Visible only to Mods)",'Please check back later for info regarding the game start!',RecipientGroup.ALL,game,visible=False)
+        dashboard_welcome = Email.objects.get("Dashboard Welcome (Visible only to Mods)",game=game).data
+        
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
-        # Only spot this variable exists/is used
+        # Only spot this variable exists/is used. This should probably be moved to config/settings.
         points_for_permanent = 6
         if game.is_running and (request.user.is_superuser or (request.user.participant(game) and request.user.participant(game).is_moderator)):
             unverified = Tag.objects.filter(initiator__game=game,
@@ -64,14 +70,14 @@ class DashboardView(MobileSupportedView):
                 messages.error(request, f"There are {unverified} tags that require verification")
         return self.mobile_or_desktop(request, {'game': game, 'participant': participant, 'change_code_form': change_code_form,
                                                 'stuns':stuns, 'kills':kills, 'codes':codes, 'emails':emails.order_by("-created_at") if emails else None, 'pytz':pytz,
-                                                'points_accu':points_accu, 'points_for_permanent':points_for_permanent})
+                                                'points_accu':points_accu, 'points_for_permanent':points_for_permanent, 'dashboard_welcome':dashboard_welcome})
 
     def post(self, request):
         game = most_recent_game()
 
         if "pts" in request.POST:
             player = request.user.participant(game)
-            player.point_modifier = 15
+            player.point_modifier = 15 # This should also be moved to config or settings
             player.save()
             Legacy.objects.create_legacy(user=request.user,value=-1,details=f'Started {game} game with 15 points.')
             messages.success(request, "You will now start the game with 15 points.")
