@@ -38,6 +38,17 @@ def get_text(file):
 def get_modifier_types():
     return ((x, str(x)) for x in ModifierType)
 
+class PlayerSearchForm(forms.Form):
+    search_code = forms.CharField(
+        label="Search By Code",
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'Enter Player Code'
+            }
+        ),
+        strip=True)
+
 class ModeratorSignupPlayerForm(forms.Form):
     email = forms.EmailField(
         label="Email",

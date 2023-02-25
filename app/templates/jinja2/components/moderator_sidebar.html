@@ -12,6 +12,7 @@
     <ul class="ui-menu__section collapse{% if "/moderator" in request.path %} show{% endif %}" data-parent="#side-nav" id="mod-actions">
       <li><a href="{{ url('manage_game') }}">Manage Game</a></li>
       <li><a href="{{ url('manage_players') }}">Manage Players</a></li>
+      <li><a href="{{ url('player_search') }}">Player Search</a></li>
       <li><a href="{{ url('manage_factions') }}">Manage Factions</a><li>
       {% if game.is_signups %}
         <li><a href="{{ url('manage_oz') }}">Manage OZ Pool</a></li>

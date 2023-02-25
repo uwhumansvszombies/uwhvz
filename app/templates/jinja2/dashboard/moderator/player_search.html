@@ -1,0 +1,91 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Player Search{% endblock %}
+
+{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
+{% block pagesubtitle %}Player Search{% endblock %}
+
+
+{% block subcontent %}
+    {% call card('Player Search', class='align-self-start') %}
+        {% with search_input="" %}
+            <form action="player-search" method="post">
+                {{ csrf_input }}
+                {{ search_form }}
+                <input class="btn btn-primary" type="submit" value="Search"/>
+            </form>
+        {% endwith %}
+        {% if player %}
+            <h3 class="faction-name">Results for Code: {{ input_code }}</h3>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Code</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Faction</th>
+                      <th scope="col">Shop Score</th>
+                      <th scope="col">True Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td scope="col">
+                          {% if player.is_moderator and player.character_name %}
+                              {{ player.character_name }}
+                          {% else %}
+                              {{ player.user.get_full_name() }}
+                          {% endif %}</td>
+                      <td scope="col">{{ player.user.email }}</td>
+                      <td scope="col">{% if player.is_player %}{{ player.code }}{% else %}N/A{% endif %}</td>
+                      <td scope="col">{% if player.is_player %}{{ player.role }}{% else %}{{ player.type }}{% endif %}</td>
+                      <td scope="col">{% if player.is_player and player.faction %}{{ player.faction.name }}{% else %}N/A{% endif %}</td>
+                      {% if player.is_player %}
+                        <td scope="col">{{ player.shop_score() }}</td>
+                        <td scope="col">{{ player.score() }}</td>
+                      {% else %}
+                        <td scope="col">N/A</td>
+                        <td scope="col">{{ player.score if player.is_moderator and player.score else 'N/A' }}</td>
+                      {% endif %}
+                    </tr>
+                  </tbody>
+                </table>
+                <span>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Supply Code</th>
+                          <th scope="col">Code Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for code in supplycode_set %}
+                            <tr>
+                                <td>{{ code.code }}</td>
+                                <td>{{ code.value }}</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Store Purchase</th>
+                          <th scope="col">Purchase Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for purchase in purchase_set %}
+                            <tr>
+                                <td>{{ purchase.details }}</td>
+                                <td>{{ purchase.time if purchase.time else 'Unknown' }}</td>
+                            </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                </span>
+        {% endif %}
+    {% endcall %}
+{% endblock %}

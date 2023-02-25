@@ -586,6 +586,40 @@ class ManagePlayersView(View):
 
 
 @method_decorator(moderator_required, name='dispatch')
+class PlayerSearchView(View):
+    template_name = "dashboard/moderator/player_search.html"
+
+    def render_player_search(self, request, search_code=None, search_form=PlayerSearchForm()):
+        game = most_recent_game()
+        query_results = None
+        purchase_set = None
+        supplycode_set = None
+        if search_code:
+            query_results = Player.objects.filter(game=game, code=search_code)
+            purchase_set = query_results[0].buyer_name.filter(active=True)
+            supplycode_set = query_results[0].supplycode_set.all()
+        return render(request, self.template_name, {
+            'game': game,
+            'participant': request.user.participant(game),
+            'input_code': search_code,
+            'player': query_results[0] if query_results else None,
+            'search_form': search_form,
+            'purchase_set': purchase_set if purchase_set else [],
+            'supplycode_set': supplycode_set if supplycode_set else []
+        })
+
+    def get(self, request, search_code=None):
+        return self.render_player_search(request, search_code)
+
+    def post(self, request, **kwargs):
+        player_search_form = PlayerSearchForm(request.POST)
+        code = player_search_form.data.get('search_code')
+        if code:
+            return self.render_player_search(request, code)
+        return redirect('player_search')
+
+
+@method_decorator(moderator_required, name='dispatch')
 @method_decorator(running_game_required, name='dispatch')
 class GenerateSupplyCodesView(View):
     template_name = "dashboard/moderator/generate_supply_codes.html"

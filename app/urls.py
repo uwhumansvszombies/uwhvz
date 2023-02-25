@@ -55,6 +55,7 @@ urlpatterns = [
          name='manage_signup'),
     path("dashboard/moderator/manage-oz", views.ManageOZView.as_view(), name='manage_oz'),
     path("dashboard/moderator/manage-players", views.ManagePlayersView.as_view(), name='manage_players'),
+    path("dashboard/moderator/player-search", views.PlayerSearchView.as_view(), name='player_search'),
     path("dashboard/moderator/manage-shop", views.ManageShopView.as_view(), name='manage_shop'),
     path("dashboard/moderator/stun-verification", views.StunVerificationView.as_view(), name='stun_verification'),
     path("dashboard/moderator/delete-factions", views.DeleteFactionsView.as_view(), name="delete_factions"),
