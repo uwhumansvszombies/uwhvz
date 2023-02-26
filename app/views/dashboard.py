@@ -56,9 +56,9 @@ class DashboardView(MobileSupportedView):
         
         ## Okay so this is super janky and we really need an object that can handle just general storage of text so we can update stuff as we like.
         ## But seeing as that isn't around right now... we're going to use the email object instead.
-        if not Email.objects.filter("Dashboard Welcome (Visible only to Mods)",game=game).exists():
+        if not Email.objects.filter(name="Dashboard Welcome (Visible only to Mods)",game=game).exists():
             Email.objects.create_email("Dashboard Welcome (Visible only to Mods)",'Please check back later for info regarding the game start!',RecipientGroup.ALL,game,visible=False)
-        dashboard_welcome = Email.objects.get("Dashboard Welcome (Visible only to Mods)",game=game).data
+        dashboard_welcome = Email.objects.get(name="Dashboard Welcome (Visible only to Mods)",game=game).data
         
         points_accu = sum(Legacy.objects.filter(user=request.user,value__gt=0).values_list('value', flat=True))
         # Only spot this variable exists/is used. This should probably be moved to config/settings.
