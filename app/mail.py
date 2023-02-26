@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from app.models import Email
+from app.util import most_recent_game
 
 
 def _send_mail_template(request, plaintext_template, html_template, subject, recipient, context=None):
@@ -26,6 +27,8 @@ def _dynamic_send_mail_template(request, email_object, subject, recipient, conte
     msg.content_subtype = "html"
     try:
         return msg.send()
+    except:
+        print("An Error Occurred in Dynamic Email Send Code")
 
 
 def send_signup_email(request, signup_invite, game):
