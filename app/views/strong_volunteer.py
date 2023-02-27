@@ -9,10 +9,10 @@ from string import ascii_letters, digits, punctuation
 
 from app.mail import send_signup_email
 from app.models import SignupInvite, SignupLocation, User, Player, PlayerRole
-from app.util import volunteer_required, most_recent_game, signups_game_required
+from app.util import volunteer_required, most_recent_game, signups_game_required, running_game_required
 from .forms import StrongVolunteerSignupPlayerForm
 
-
+@method_decorator(running_game_required, name='dispatch')
 class BetterSignupPlayersView(View):
     template_name = "dashboard/strong_volunteer/signup_players.html"
 

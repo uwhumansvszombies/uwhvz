@@ -20,7 +20,7 @@
       {{ volunteer_sidebar(request) }}
     {% endif %}
 
-    {% if user.is_staff %}
+    {% if user.is_staff and game.is_running %}
       {{ strong_volunteer_sidebar(request) }}
     {% endif %}
 
