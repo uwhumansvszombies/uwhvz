@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template import Template
 from django.template.loader import render_to_string
+from jinja2 import Environment, BaseLoader
+
 from app.models import Email
 from app.util import most_recent_game
 
@@ -17,9 +20,11 @@ def _send_mail_template(request, plaintext_template, html_template, subject, rec
     )
 
 def _dynamic_send_mail_template(request, email_object, subject, recipient, context=None):
+    body_temp = Template(email_object.data)
+    body = body_temp.render(context, request)
     msg = EmailMultiAlternatives(
                 subject=subject,
-                body=render_to_string(email_object.data,context,request),
+                body=body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 to=[],
                 bcc=[recipient]
@@ -32,22 +37,22 @@ def _dynamic_send_mail_template(request, email_object, subject, recipient, conte
 
 
 def send_signup_email(request, signup_invite, game):
-    _dynamic_send_mail_template(
-        request,
-        Email.objects.get(name="Signup Email (Visible only to Mods) - sent to players",game=most_recent_game()),
-        "Welcome to HvZ!",
-        signup_invite.email,
-        {'signup_invite': signup_invite, 'game': game}
-    )
+    # _dynamic_send_mail_template(
+    #     request,
+    #     Email.objects.get(name="Signup Email (Visible only to Mods) - sent to players",game=game),
+    #     "Welcome to HvZ!",
+    #     signup_invite.email,
+    #     {'signup_invite': signup_invite}
+    # )
     
-    #_send_mail_template(
-    #    request,
-    #    "email/signup.txt",
-    #    "email/signup.html",
-    #    "Welcome to HvZ",
-    #    signup_invite.email,
-    #    {'signup_invite': signup_invite, 'game': game}
-    #)
+    _send_mail_template(
+       request,
+       "email/signup.txt",
+       "email/signup.html",
+       "Welcome to HvZ",
+       signup_invite.email,
+       {'signup_invite': signup_invite, 'game': game}
+    )
 
 
 def send_signup_reminder(request, signup_invite, game):
