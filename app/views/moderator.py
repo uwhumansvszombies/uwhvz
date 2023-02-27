@@ -712,9 +712,9 @@ class EmailTemplatesView(View):
         return render(request, self.template_name, {
             'game': game,
             'participant': request.user.participant(game),
-            'signup_email_form': SignupEmailForm(initial={'signup_email_html': Email.objects.get(name="Signup Email (Visible only to Mods) - sent to players",game=game)}),
-            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':Email.objects.get(name="Signup Reminder Email (Visible only to Mods) - sent to players",game=game)}),
-            'start_email_form':StartEmailForm(initial={'start_email_html':Email.objects.get(name="Game Start Email (Visible only to Mods) - sent to players",game=game)})
+            'signup_email_form': SignupEmailForm(initial={'signup_email_html': Email.objects.get(name="Signup Email (Visible only to Mods) - sent to players",game=game).data}),
+            'reminder_email_form':ReminderEmailForm(initial={'reminder_email_html':Email.objects.get(name="Signup Reminder Email (Visible only to Mods) - sent to players",game=game).data}),
+            'start_email_form':StartEmailForm(initial={'start_email_html':Email.objects.get(name="Game Start Email (Visible only to Mods) - sent to players",game=game).data})
         })
 
     def get(self, request):
@@ -774,7 +774,7 @@ class EmailTemplatesView(View):
                 e = Email.objects.get(name="Game Start Email (Visible only to Mods) - sent to players",game=game)
                 e.data = cd['start_email_html']
                 e.save()
-                StartEmailForm().fields['start_email_html'].initial=cd['start_email_html']
+                #StartEmailForm().fields['start_email_html'].initial=cd['start_email_html']
             except:
                 messages.error(request, "There was an error updating the game start email.")
                 return redirect('email_templates')
