@@ -34,7 +34,7 @@ def _dynamic_send_mail_template(request, email_object, subject, recipient, conte
 def send_signup_email(request, signup_invite, game):
     _dynamic_send_mail_template(
         request,
-        Email.objects.get("Signup Email (Visible only to Mods) - sent to players",game=most_recent_game()),
+        Email.objects.get(name="Signup Email (Visible only to Mods) - sent to players",game=most_recent_game()),
         "Welcome to HvZ!",
         signup_invite.email,
         {'signup_invite': signup_invite, 'game': game}
@@ -53,7 +53,7 @@ def send_signup_email(request, signup_invite, game):
 def send_signup_reminder(request, signup_invite, game):
     _dynamic_send_mail_template(
         request,
-        Email.objects.get("Signup Reminder Email (Visible only to Mods) - sent to players",game=most_recent_game()),
+        Email.objects.get(name="Signup Reminder Email (Visible only to Mods) - sent to players",game=most_recent_game()),
         "[ACTION REQUIRED] UW HvZ - Uncompleted Game Signup",
         signup_invite.email,
         {'signup_invite': signup_invite, 'game': game}
@@ -71,7 +71,7 @@ def send_signup_reminder(request, signup_invite, game):
 def send_start_email(request, participant, game):
     _dynamic_send_mail_template(
         request,
-        Email.objects.get("Game Start Email (Visible only to Mods) - sent to players",game=most_recent_game()),
+        Email.objects.get(name="Game Start Email (Visible only to Mods) - sent to players",game=most_recent_game()),
         "UW HvZ - Game Start!",
         participant.user.email,
         {'participant': participant, 'game': game}
