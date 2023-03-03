@@ -11,6 +11,7 @@ class RecipientGroup(Enum):
     ZOMBIE = 'Z'
     ALL = 'A'
     VOLUNTEER = 'V'
+    USER = "U"
 
 class EmailManager(models.Manager):
     def create_email(self, name: str, data : str, group: RecipientGroup, game: Game, **extra_fields) -> 'Email':

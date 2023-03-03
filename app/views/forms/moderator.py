@@ -91,10 +91,24 @@ class ModMessageForm(forms.Form):
     recipients = forms.ChoiceField(
         label="Recipients",
         choices=[("All", "All"), ("Humans", "Humans"), ("Zombies", "Zombies"),
-                 ("Volunteers and Legacy", "Volunteers and Legacy"), ("Self", "Self")],
+                 ("Volunteers and Legacy", "Volunteers and Legacy"), ("Self", "Self"), ("Specific User", "Specific User")],
         widget=forms.Select(
             attrs={
                 'class': 'custom-select',
+                'id': 'recipient-select'
+            }
+        )
+    )
+
+    code = forms.CharField(
+        label="Player Code",
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'Player Code',
+                'id': 'player-code-input',
+                'rows': '1'
             }
         )
     )

@@ -336,6 +336,7 @@ class MessagePlayersView(View):
 
     def post(self, request):
         game = most_recent_game()
+        # Retrieve the user who is sending the message
         participant = request.user.participant(game)
         message_players_form = MessagePlayersForm(request.POST, player=participant)
         if not message_players_form.is_valid():

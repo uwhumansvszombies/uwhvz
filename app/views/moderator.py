@@ -177,7 +177,6 @@ class ManageGameView(View):
                 .filter(game=game, active=True, role=PlayerRole.HUMAN) \
                 .values_list('user__email', flat=True))
             subject_set = '[hvz-humans]'
-
         elif cd['recipients'] == "Volunteers and Legacy":
             recipients = list(User.objects \
                 .filter(player__game=game, is_active=True, groups__name="Volunteers") \
@@ -186,6 +185,17 @@ class ManageGameView(View):
                 .filter(player__game=game, is_active=True, groups__name="LegacyUsers") \
                 .values_list('email', flat=True)))
             subject_set = '[hvz-volunteers]'
+        elif cd['recipients'] == "Specific User":
+            if not cd['code'] or cd['code'] == "":
+                messages.error(request, "No player code provided for direct message")
+                return redirect('manage_game')
+            subject_set = '[hvz-direct-message]'
+            recipients = list(Player.objects.filter(
+                game=game,
+                active=True,
+                code=cd['code']).values_list(
+                'user__email',
+                flat=True))
 
         if email_mods:
             recipients.extend(list(Moderator.objects \
@@ -230,6 +240,9 @@ class ManageGameView(View):
         elif cd['recipients'] == "Volunteers and Legacy":
             messages.success(request, "You've sent an email to all Legacy and Volunteer Players.")
             email = Email.objects.create_email(f"{subject_set} {cd['subject']}",cd['message'],RecipientGroup.VOLUNTEER,game)
+        elif cd['recipients'] == "Specific User":
+            messages.success(request, "You've sent an email to the user with code: " + str(cd['code']))
+            Email.objects.create_email(f"{subject_set} {cd['subject']}", cd['message'], RecipientGroup.USER, game)
         if not email_mods:
             messages.warning(request, "You didn't include mods on the email sent.")
         if not email_spectators:

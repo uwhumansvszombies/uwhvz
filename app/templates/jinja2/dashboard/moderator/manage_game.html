@@ -3,6 +3,21 @@
 
 {% block title %}Mod Dashboard &mdash; Manage Game{% endblock %}
 
+{% block scripts %}
+    <script>
+        document.getElementById('player-code-input').style.display = "none";
+        $(document).ready(function(){
+            $('#recipient-select').on('change', function() {
+                if (this.value === "Specific User") {
+                    $("#player-code-input").show();
+                } else {
+                    $("#player-code-input").hide();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
 {% block pagesubtitle %}Manage Game{% endblock %}
 
