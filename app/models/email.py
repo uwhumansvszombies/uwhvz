@@ -28,6 +28,7 @@ class Email(models.Model):
     group: Enum = EnumField(enum=RecipientGroup, max_length=1)
     player_made: bool = models.BooleanField(default=False)
     visible: bool = models.BooleanField(default=True)
+    target_player_code: str = models.CharField(default="", max_length=256)  # target_player code when group is 'User'
 
     created_at: datetime = models.DateTimeField(auto_now_add=True)
     modified_at: datetime = models.DateTimeField(auto_now=True)

@@ -242,7 +242,8 @@ class ManageGameView(View):
             email = Email.objects.create_email(f"{subject_set} {cd['subject']}",cd['message'],RecipientGroup.VOLUNTEER,game)
         elif cd['recipients'] == "Specific User":
             messages.success(request, "You've sent an email to the user with code: " + str(cd['code']))
-            Email.objects.create_email(f"{subject_set} {cd['subject']}", cd['message'], RecipientGroup.USER, game)
+            Email.objects.create_email(f"{subject_set} {cd['subject']}", cd['message'], RecipientGroup.USER, game,
+                                       target_player_code=cd['code'], player_made=False)
         if not email_mods:
             messages.warning(request, "You didn't include mods on the email sent.")
         if not email_spectators:

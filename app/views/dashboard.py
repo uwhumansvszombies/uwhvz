@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
 from django.views import View
@@ -49,6 +50,12 @@ class DashboardView(MobileSupportedView):
                 emails = Email.objects.filter(game=game)
             else:
                 emails = None
+            # Exclude direct message emails not intended for this user
+            emails = emails.exclude(~Q(target_player_code=participant.code), group=RecipientGroup.USER)
+        else:
+            # If not a participant, exclude direct emails
+            emails = emails.exclude(group=RecipientGroup.USER)
+
         if emails:
             emails.order_by("-created_at")
             if not request.user.groups.filter(name='LegacyUsers').exists() and not request.user.groups.filter(name='Volunteers').exists():
