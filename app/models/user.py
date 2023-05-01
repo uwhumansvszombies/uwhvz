@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 
 
 class UserManager(BaseUserManager):
@@ -17,7 +18,7 @@ class UserManager(BaseUserManager):
         """
         if not email:
             raise ValueError("The given email must be set.")
-        email = self.normalize_email(email)
+        email = self.normalize_email(email).lower()
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
@@ -38,7 +39,9 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser = True.")
 
         return self._create_user(email, password, **extra_fields)
-
+    
+    #def get_by_natural_key(self, email):
+    #    return self.get(email__iexact=email)
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
@@ -113,3 +116,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.moderator_set.get(game=game, active=True)
 
         return None
+    
+    def legacy_points(self) -> int:
+        if self.user_legacy:
+            return sum([legacy.value for legacy in self.user_legacy.all()])
+        else:
+            return 0
+    def has_legacy(self) ->bool:
+        return self.user_legacy.all().exists()

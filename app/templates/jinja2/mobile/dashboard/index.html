@@ -6,7 +6,22 @@
 {% block subcontent %}
 
 <div class="ui-grid">
-  {% call card("System Requirements") %}
+{% if game.is_signups %}
+   {% if not participant %}
+     <div class="alert alert-warning show">
+       You haven't signed up for the {{ game }} game.If you wish to join,
+     <a href="{{ url('game_signup') }}">you can sign up here</a>. 
+    </div>
+   {% else %}
+     <div class="alert alert-success show">
+       You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}.{% endif %}
+     {% if participant.is_moderator %} You're a mod!{% endif %}
+     {% if participant.is_spectator %} You're signed up as a spectator!{% endif %}
+     </div>
+   {% endif %}
+ {% endif %}
+
+{% call card("System Requirements") %}
     <p>Currently, this website is fully supported by <b>Chrome</b>, <b>Firefox</b>, and <b>Microsoft Edge</b>. If you are not using one of these browsers, you may experience some technical issues.</p>
   {% endcall %}
   {% call card() %}

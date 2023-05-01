@@ -1,10 +1,9 @@
 #landing {
   height: auto;
-  display: block;
-  position: relative;
+  display: block; position: relative;
   background: color(ink);
   color: color(sky);
-  
+
   .ui-layout__item {
     width: 100%;
     height: 100%;
@@ -25,57 +24,6 @@
 
   .logo--club {
     width: 30vw;
-  }
-}
-
-#landing-nav {
-  width: 100%;
-  height: 5rem;
-  position: absolute;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  z-index: z-index(header);
-
-  nav {
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    margin-left: 2rem;
-
-    ul {
-      padding: 0;
-      margin: 0;
-      list-style: none;
-    }
-
-    li {
-      margin: 0 spacing();
-      display: inline;
-    }
-
-    a {
-      display: inline-block;
-      font-size: 1.25rem;
-      line-height: 1;
-      font-family: ff('heading');
-    }
-  }
-
-  .sitelogo {
-    margin-left: 2rem;
-  }
-
-  .actions {
-    margin-right: 1rem;
-    display: flex;
-    justify-content: space-between;
-
-    .btn {
-      margin: 0 spacing(tighter);
-    }
   }
 }
 
@@ -121,12 +69,47 @@
   }
 }
 
+#mailing-list {
+  background: color(light);
+  font-family: ff('body');
+
+  #mc_embed_signup {
+    width: 50%;
+  }
+}
+
 .start {
   font-size: 3rem;
   line-height: 1.25;
 }
 
-footer {
-  padding: 2em 0 3em 0;
-  text-align: center;
+.full-height {
+  min-height: 100vh;
 }
+
+.ui-layout {
+  padding-top: 6rem;
+}
+
+footer {
+  padding: 2em 0;
+  text-align: center;
+
+  .privacy-policy {
+    color: #bfbfbf;
+    text-decoration: underline;
+  }
+}
+
+
+.panel-heading  a:before {
+   font-family: 'Glyphicons Halflings';
+   content: "\e114";
+   float: right;
+   transition: all 0.5s;
+}
+.panel-heading.active a:before {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+} 

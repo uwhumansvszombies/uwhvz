@@ -16,9 +16,11 @@
   <![endif]-->
 </head>
 <body>
-<p>You’re receiving this email because you’ve requested to sign up for the UW Humans vs Zombies {{ game }} game but are <strong>not yet eligible to play.</strong></p>
-<p>This will take 30 seconds. Please finish signing up here: {{ signup_url }}.</p>
-<p>Sincerely,</p>
+<p>Hello!</p>
+<p>You’re receiving this email because you’ve requested to sign up for the UW Humans vs Zombies {{ game }} game but you <strong>don't yet have an account on our website and you need one to be able to play!</strong></p>
+<p>Even though the game has already started, you can still join by using the link below!</p>
+<p>This takes 30 seconds and can be done either directly on our website or using the link here: {{ site_url }}{{ url('signup', args=[signup_invite.id]) }}.</p>
+<p>We look forward to seeing you in the game!</p>
 <p> The UW HvZ Website</p>
 </body>
 </html>

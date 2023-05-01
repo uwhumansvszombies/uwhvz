@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
+
+{% block title %}UW HvZ &mdash; Game Archives{% endblock %}
+
+{% block styles %}
+  {% compress css %}
+    <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
+  {% endcompress %}
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" integrity="sha256-iq5ygGJ7021Pi7H5S+QAUXCPUfaBzfqeplbg/KlEssg=" crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+
+{{ navbar(user) }}
+
+<main class="full-height ui-layout" id="landing">
+  <nav class="d-lg-none game-select-mobile">
+    <h1>Select a Game</h1>
+    <ul class="prev-games-list">
+    {% for prev_game in prev_games %}
+      <li><div class="ui-form-group pt-2">
+      <form class="mb-0" action="{{ url('previous_games') }}" method="post">
+          {{ csrf_input }}
+          <input class="previous-game font-weight-light btn" type="submit" value="{{prev_game.name}}" name="{{ prev_game.name }}">
+        </form>
+
+      </div></li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <aside class="d-none d-lg-block ui-sidebar" id="side-nav">
+    <nav class="ui-menu">
+      <ul class="prev-games-list">
+      {% for prev_game in prev_games %}
+        <li><div class="ui-form-group pt-2">
+        <form class="mb-0" action="{{ url('previous_games') }}" method="post">
+            {{ csrf_input }}
+            <input class="previous-game font-weight-light btn" type="submit" value="{{prev_game.name}}" name="{{ prev_game.name }}">
+          </form>
+
+        </div></li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </aside>
+
+
+  <section class="game-summary" id="intro">
+    <h1 class="prev-games-title">{{ game_rendering }} Game Zombie Tree</h1>
+    <div id="zombie-tree"></div>
+    {{ footer() }}
+  </section>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js" integrity="sha256-JuQeAGbk9rG/EoRMixuy5X8syzICcvB0dj3KindZkY0=" crossorigin="anonymous"></script>
+  <script>
+    var container = document.getElementById('zombie-tree');
+
+    var data = {
+      nodes: {{ nodes|safe }},
+      edges: {{ edges|safe }},
+    };
+
+    var options = {
+      nodes: {
+        shape: 'ellipse',
+        size: 20,
+        font: {
+          size: 16,
+          color: '#000',
+        },
+        borderWidth: 1
+      },
+      edges: {
+        width: 1.5,
+        arrows: {
+          to: {
+            enabled: true,
+            scaleFactor: 0.75,
+            type: 'arrow'
+          },
+        },
+      },
+      groups: {
+        0: {
+          color: {
+            background: '#009ACD',
+            border: '#009ACD'
+          },
+          font: {
+            color: '#fff'
+          }
+        },
+        1: {
+          color: {
+            background: '#0855CF',
+            border: '#0855CF'
+          },
+          font: {
+            color: '#fff'
+          }
+        },
+        2: {
+          color: {
+            background: '#4841d9',
+            border: '#4841d9'
+          },
+          font: {
+            color: '#fff'
+          }
+        },
+        3: {
+          color: {
+            background: '#632299',
+            border: '#632299'
+          },
+          font: {
+              color: '#fff'
+          },
+        },
+        4: {
+          color: {
+            background: '#9F20D4',
+            border: '#9F20D4'
+          },
+          font: {
+              color: '#fff'
+          },
+        },
+        5: {
+           color: {
+            background: '#D528C9',
+            border: '#D528C9'
+           },
+           font: {
+               color: '#fff'
+           },
+         },
+         6: {
+            color: {
+             background: '#D7308D',
+             border: '#D7308D'
+            },
+            font: {
+                color: '#fff'
+            },
+          },
+         7: {
+            color: {
+             background: '#D93857',
+             border: '#D93857'
+            },
+            font: {
+                color: '#fff'
+            },
+          },
+         8: {
+            color: {
+             background: '#E04D36',
+             border: '#E04D36'
+            },
+            font: {
+                color: '#fff'
+            },
+          },
+
+      }
+    };
+    network = new vis.Network(container, data, options);
+  </script>
+{% endblock %}

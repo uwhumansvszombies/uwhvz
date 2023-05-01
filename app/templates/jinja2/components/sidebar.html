@@ -2,12 +2,13 @@
 {% from "components/player_sidebar.html" import player_sidebar %}
 {% from "components/staff_sidebar.html" import staff_sidebar %}
 {% from "components/volunteer_sidebar.html" import volunteer_sidebar %}
+{% from "components/strong_volunteer_sidebar.html" import strong_volunteer_sidebar %}
 
 {% macro sidebar(request, game, participant, user) -%}
   <aside class="ui-sidebar" id="side-nav">
     <nav class="ui-menu">
       <ul class="ui-menu__section">
-        <li><a href="{{ url('dashboard') }}">Home</a></li>
+        <li><a href="{{ url('dashboard') }}">Home{% if game.is_running %} / Emails{% endif %}</a></li>
       </ul>
     </nav>
 
@@ -19,8 +20,12 @@
       {{ volunteer_sidebar(request) }}
     {% endif %}
 
+    {% if user.is_staff and game.is_running %}
+      {{ strong_volunteer_sidebar(request) }}
+    {% endif %}
+
     {% if participant.is_moderator or user.is_staff %}
-      {{ moderator_sidebar(request, game) }}
+      {{ moderator_sidebar(request, game, user) }}
     {% endif %}
 
     {% if user.is_staff %}

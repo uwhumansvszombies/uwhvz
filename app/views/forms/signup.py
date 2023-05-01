@@ -1,5 +1,18 @@
 from django import forms
+import django.contrib.auth.forms as authforms
+from app.models import User
 
+class UserCreationForm(authforms.UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ('email',)
+
+class UserChangeForm(authforms.UserChangeForm):
+
+    class Meta:
+        model = User
+        fields = ('email',)
 
 class UserSignupForm(forms.Form):
     first_name = forms.CharField(

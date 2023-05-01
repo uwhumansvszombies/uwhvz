@@ -1,18 +1,51 @@
 #landing-mobile {
+  height: auto;
   width: 100%;
-  height: 100%;
   display: block;
   position: relative;
-  background: rgba(color(ink), 0.95);
+  background: color(ink);
   color: color(sky);
   text-align: center;
+
+  h1 {
+    font-family: ff('title');
+    color: color(sky);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
 }
 
-#landing-logo {
-  max-width: 20rem;
-  margin: 0 auto;
+.landing-logo {
+  max-width: 90vw;
+  margin: 0 auto 5rem auto;
 }
 
 .s-mobile-dashboard__player-info {
   grid-template-columns: 1fr 1fr;
 }
+
+#signup-schedule-mobile {
+  background: color(ink, light);
+  transform: skewY(-3deg) translateY(-3rem);
+
+  .ui-section {
+    transform: skewY(3deg);
+  }
+
+  .table-dark {
+    background: color(ink);
+    color: color(sky);
+    border-color: color(ink) !important;
+    width: 50px;
+
+    th, td {
+      padding: spacing(looser);
+    }
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5em;
+  }
+}
+

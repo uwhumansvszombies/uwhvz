@@ -25,27 +25,47 @@
             {% endfor %}
             </div>
           {% endfor %}
-        
-        <div class="ui-form-group pt-2 text-center">
+
+        <div class="ui-form-group pt text-center">
           <input type="submit" value="Signup" class="btn btn-block btn-primary">
         </div>
       </form>
     {% endcall %}
     {% call card("Signup Locations") %}
+    <form action="{{ url('manage_signup') }}" method="post" novalidate>
+      {{ csrf_input }}
+      <table><tr><td scope="col">Add location: </td>
+       {% for field in signup_loc_form %}
+        <td scope="col">
+          {{ field }}
+        </td>
+      {% endfor %}
+       <td scope="col"><div class="ui-form-group">
+         <input class="btn btn-block btn-primary" type="submit" value="Add" name="add">
+      </div></td>
+      </tr></table>
+    </form>
+
     <table class="table table-striped">
       <thead>
       <tr>
         <th scope="col">Signup Location</th>
         <th scope="col">Emails sent</th>
         <th scope="col">Emails acted on</th>
+        <th scope="col"></th>
       </tr>
       </thead>
       <tbody>
       {% for location in signup_locations %}
       <tr>
-        <td scope="col">{{ location.name }}</td>
-        <td scope="col">{{ location.signupinvite_set.values_list('email', flat=True).distinct().count() }}</td>
-        <td scope="col">{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
+        <td class="align-middle" scope="col">{{ location.name }}</td>
+        <td class="align-middle" scope="col">{{ location.signupinvite_set.values_list('email', flat=True).distinct().count() }}</td>
+        <td class="align-middle" scope="col">{{ location.signupinvite_set.filter(used_at__isnull=False).count() }}</td>
+        <td scope="col" style="width: 40px">
+            <button class="btn btn-danger" data-toggle="modal" data-target="#DeleteLocationModal-{{location.id}}">
+              <i class="fas fa-trash"></i>
+            </button>
+        </td>
       </tr>
       {% endfor %}
       </tbody>
@@ -54,13 +74,19 @@
   </div>
 
   {% call card("Player List", class="align-self-start") %}
+    <p>Total humans: {{ humans.count() }}</p>
+    <p>Supplied humans: {{ supplied }}</p>
+    <p>Total zombies: {{ zombies.count() }}</p>
+    <p>Total stuns: {{ total_stuns }}</p>
     <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Email</th>
+          <th scope="col">Code</th>
           <th scope="col">Role</th>
-          <th scope="col">Score</th>
+          <th scope="col">Shop Score</th>
+          <th scope="col">True Score</th>
         </tr>
       </thead>
       <tbody>
@@ -68,12 +94,40 @@
         <tr>
           <td scope="col">{% if p.is_moderator and p.character_name %}{{ p.character_name }}{% else %}{{ p.user.get_full_name() }}{% endif %}</td>
           <td scope="col">{{ p.user.email }}</td>
+          <td scope="col">{% if p.is_player %}{{ p.code }}{% else %}N/A{% endif %}</td>
           <td scope="col">{% if p.is_player %}{{ p.role }}{% else %}{{ p.type }}{% endif %}</td>
-          {%- if p.is_player %}<td scope="col">{{ p.score() }}</td>{% else %}<td scope="col">N/A</td>{% endif -%}
+          {%- if p.is_player %}<td scope="col">{{ p.shop_score() }}</td><td scope="col">{{ p.score() }}</td>{% else %}<td scope="col">N/A</td><td scope="col">{{ p.score if p.is_moderator and p.score else 'N/A' }}</td>{% endif -%}
         </tr>
         {% endfor %}
       </tbody>
     </table>
   {% endcall %}
 </div>
+
+{% for location in signup_locations %}
+<div class="modal" id="DeleteLocationModal-{{location.id}}" tabindex="-1" role="dialog" aria-labelledby="DeleteLocationModal-{{location.id}}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure about killing all humans?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The will delete {{location.name}}. This is an <b>irreversible</b> change. Are you sure you want to do this?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <button name="{{location.id}}-remove" type="submit" class="btn btn-danger">
+        <form class="mb-0" action="{{ url('manage_signup')}}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-danger" value="Yes, Delete {{location.name}}">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
 {% endblock %}

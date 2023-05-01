@@ -1,4 +1,4 @@
-{% macro moderator_sidebar(request, game) -%}
+{% macro moderator_sidebar(request, game, user) -%}
   <nav class="ui-menu">
     <a class="ui-menu__header-link" href="#mod-actions" data-target="#mod-actions" data-toggle="collapse" aria-expanded="false">
       <header class="ui-menu__header">
@@ -12,13 +12,21 @@
     <ul class="ui-menu__section collapse{% if "/moderator" in request.path %} show{% endif %}" data-parent="#side-nav" id="mod-actions">
       <li><a href="{{ url('manage_game') }}">Manage Game</a></li>
       <li><a href="{{ url('manage_players') }}">Manage Players</a></li>
+      <li><a href="{{ url('player_search') }}">Player Search</a></li>
+      <li><a href="{{ url('manage_factions') }}">Manage Factions</a><li>
       {% if game.is_signups %}
         <li><a href="{{ url('manage_oz') }}">Manage OZ Pool</a></li>
       {% endif %}
       {% if game.is_running %}
         <li><a href="{{ url('generate_supply_codes') }}">Create Supply Codes</a></li>
+        <li><a href="{{ url('manage_shop') }}">Manage Shop</a></li>
+        <li><a href="{{ url('stun_verification') }}">Stun Verification</a></li>
       {% endif %}
-      <li><a href="/cms">Write News Posts (Wagtail)</a></li>
+      {% if user.is_superuser %}
+        <li><a href="{{ url('manage_staff') }}">Mods/Volunteers</a></li>
+        <li><a href="{{ url('manage_legacy') }}">Legacy Tokens</a></li>
+        <li><a href="{{ url('email_templates') }}">Game Emails</a></li>
+      {% endif %}
     </ul>
   </nav>
 {%- endmacro %}

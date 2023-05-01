@@ -9,10 +9,24 @@
 <div class="ui-grid s-dashboard__generate-supply">
   <div class="ui-grid align-content-start">
     {% call card("Generate Supply Codes", class="text-center") %}
-      <form method="post">
+      <form action="{{ url('generate_supply_codes') }}" method="post" novalidate>
         {{ csrf_input }}
+        
+        {% for field in make_codes_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+            {% endfor %}
+            </div>
+          {% endfor %}
+      
         <div class="ui-form-group pt-2">
-          <input type="submit" value="Generate Supply Codes" class="btn btn-block btn-primary">
+          <input type="submit" value="Generate Supply Code" class="btn btn-block btn-primary">
         </div>
       </form>
     {% endcall %}
@@ -21,10 +35,13 @@
   <div class="ui-grid">
     {% call card("Unclaimed Codes") %}
       <table class="table table-striped">
+      <tr><td>Code ID</td><td>Value</td></tr>
+      
         {% for code in supply_codes %}
           {% if code.claimed_by is none %}
             <tr>
               <td>{{ code.code }}</td>
+              <td>{{ code.value }}</td>
             </tr>
           {% endif %}
         {% endfor %}

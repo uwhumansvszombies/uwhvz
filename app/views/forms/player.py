@@ -1,11 +1,27 @@
 from django import forms
+from datetime import datetime
+from pytz import timezone
+
+
+class ChangeCodeForm(forms.Form):
+    code = forms.CharField(
+        label="Change Code",
+        min_length=2,
+        max_length=9,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'ui-input',
+                'placeholder': 'e.g. A1B2C3'
+            }
+        )
+    )
 
 
 class ReportTagForm(forms.Form):
     player_code = forms.CharField(
-        label="Other Player's Code",
-        min_length=6,
-        max_length=6,
+        label="Other Player's Code (normally 6 characters)",
+        min_length=2,
+        max_length=9,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',
@@ -13,16 +29,19 @@ class ReportTagForm(forms.Form):
             }
         )
     )
+    now = datetime.now().replace(tzinfo=timezone('Canada/Eastern'))
     datetime = forms.SplitDateTimeField(
         label="Date/Time",
         widget=forms.SplitDateTimeWidget(
             date_attrs={
                 'class': 'ui-input',
-                'type': 'date'
+                'type': 'date',
+                'placeholder': "{}".format(now.strftime("%Y-%m-%d"))
             },
             time_attrs={
                 'class': 'ui-input',
-                'type': 'time'
+                'type': 'time',
+                'placeholder': "{}".format(now.strftime("%H:%M"))
             }
         )
     )
@@ -52,8 +71,8 @@ class ReportTagForm(forms.Form):
 class ClaimSupplyCodeForm(forms.Form):
     code = forms.CharField(
         label="Supply Code",
-        min_length=6,
-        max_length=6,
+        min_length=1,
+        max_length=9,
         widget=forms.TextInput(
             attrs={
                 'class': 'ui-input',

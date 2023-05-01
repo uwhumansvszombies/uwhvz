@@ -6,19 +6,31 @@ ALLOWED_HOSTS = ['*']
 SITE_URL = 'https://uwhvz.uwaterloo.ca'
 
 ADMINS = [
-    ('Tristan Ohlson', 'tsohlson@gmail.com'),
-    ('Tiffany Yeung', 'tiffanynwyeung@gmail.com'),
-
+    ('UW HvZ', 'uwhumansvszombies@gmail.com'),
+    ('Jake Rempel', 'jake.rem@telus.net')
 ]
 
 SERVER_EMAIL = 'uwhumansvszombies@gmail.com'
 DEFAULT_FROM_EMAIL = 'uwhumansvszombies@gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
+
+## GMAIL CONNECTION
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'uwhumansvszombies@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_PASSWORD']
+EMAIL_HOST_PASSWORD = os.environ['GMAIL_PASSWORD']
 EMAIL_PORT = 587
+
+## MAILJET CONNECTION
+#EMAIL_HOST = 'in-v3.mailjet.com'
+#EMAIL_HOST_USER = # THIS IS DEPRECATED 
+#EMAIL_HOST_PASSWORD = # THIS IS DEPRECATED 
+#EMAIL_PORT = 587
+
+# MAILCHIMP CREDENTIALS
+MAILCHIMP_API_KEY = os.environ['MAILCHIMP_API'] 
+MAILCHIMP_DATA_CENTER = "us16"
+MAILCHIMP_EMAIL_LIST_ID = "3fb33ac197"
 
 DATABASES = {
     'default': {

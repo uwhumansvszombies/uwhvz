@@ -44,6 +44,16 @@ def moderator_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
         return actual_decorator(function)
     return actual_decorator
 
+def necromancer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    def _is_necromancer(user):
+        game = most_recent_game()
+        return user.is_superuser
+
+    actual_decorator = user_passes_test(_is_necromancer, login_url=login_url, redirect_field_name=redirect_field_name)
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
 
 def volunteer_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     def _is_volunteer(user):

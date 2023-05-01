@@ -1,0 +1,69 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Manage OZs{% endblock %}
+
+{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
+{% block pagesubtitle %}Manage OZs{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid">
+  {% call card("OZ List") %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Locked OZ?</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for oz in forced_oz %}
+        <tr>
+          <td scope="col">{{ oz }}</td>
+          <td scope="col">{{ oz.user.email }}</td>
+          <td scope="col">&#10004;</td>
+        </tr>
+        {% endfor %}
+        {% for p in players %}
+        <tr>
+          <td scope="col">{{ p }}</td>
+          <td scope="col">{{ p.user.email }}</td>
+          <td scope="col"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endcall %}
+  
+    {% call card("Change OZs") %}
+    <p>This will randomly select the given number of OZs from anyone in the OZ pool. Those chosen will be listed with the locked OZs above, but replace any non-locked OZs. For example: if there are 4 locked OZs and you select 5 random OZs, hitting "shuffle" will give you 9 OZs.</p>
+    <p>Note: Locked OZs can be removed by the Necro going in to their player settings and manually removing their "zombie" function. BUT legacy players can force their role to be zombies, so don't remove a locked OZ once you set them unless you're certain they didn't set it themselves!</p>
+    <p>Also, because of this function, legacy players may in fact deduce that they are selected as OZs if you lock in the OZ settings before the game. It is therefore advisable to only set your OZs right before the game starts</p>
+    <p>There are currently {{ total_players }} players in this game.</p>
+    <form action="{{ url('manage_oz') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in oz_shuffle_form %}
+        <div class="ui-form-group">
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Shuffle!">
+      </div>
+    </form>
+    {% endcall %}
+    {% call card("Set OZs") %}
+    <p>This will set the currently listed OZs to all be locked OZs. Any OZ that is not set as locked at the game start will not start as a zombie.</p>
+      <form action="{{ url('manage_oz') }}" method="post" novalidate>
+      {{ csrf_input }}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Set OZs" name="set_oz">
+      </div>
+    </form>
+    {% endcall %}
+  </div>
+{% endblock %}

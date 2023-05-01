@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
 
 {% block title %}UW HvZ{% endblock %}
 
@@ -8,57 +10,100 @@
   {% endcompress %}
 {% endblock %}
 
+{% block extrahead %}
+<meta name="description" content="The official website for the survival tag game Humans vs Zombies at the University of Waterloo">
+<meta name="keywords" content="Humans vs Zombies,HvZ,Waterloo,UWHvZ,Club,Watsfic">
+{% endblock %}
+
 {% block content %}
-<header id="landing-nav">
-  <a href="/" class="sitelogo">{{ svg('site-logo-dark') }}</a>
-  <nav>
-    <ul>
-      <li><a class="text-light" href="#signup-schedule">Signup Schedule</a></li>
-      <li><a class="text-light" href="{{ static('files/hvz-rules-v1.3.pdf') }}">Rules</a></li>
-    </ul>
-  </nav>
-  <div class="actions">
-  {% if user.is_authenticated %}
-    <a class="btn btn-outline-primary" href="{{ url('logout') }}">Logout</a>
-    <a class="btn btn-primary" href="{{ url('player_info') }}">Go to dashboard</a>
-  {% else %}
-    <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
-  {% endif %}
-  </div>
-</header>
+
+{{ navbar(user) }}
+
 <main class="ui-layout" id="landing">
   <section class="ui-layout__item" id="intro">
     <div class="ui-section">
       {{ svg('club-logo') }}
       <div class="ui-section__content">
         {% if game.is_signups %}
-          <h1 class="start">The game begins in</h1>
-          <div class="js-countdown" id="countdown">
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="days"></span>
-              <p class="js-countdown__text">Days</p>
-            </div>
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="hours"></span>
-              <p class="js-countdown__text">Hours</p>
-            </div>
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="minutes"></span>
-              <p class="js-countdown__text">Minutes</p>
-            </div>
-            <div class="js-countdown__block">
-              <span class="js-countdown__num" id="seconds"></span>
-              <p class="js-countdown__text">Seconds</p>
-            </div>
+        <h1 class="start">The game begins in</h1>
+        <div class="js-countdown" id="countdown">
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="days"></span>
+            <p class="js-countdown__text">Days</p>
           </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="hours"></span>
+            <p class="js-countdown__text">Hours</p>
+          </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="minutes"></span>
+            <p class="js-countdown__text">Minutes</p>
+          </div>
+          <div class="js-countdown__block">
+            <span class="js-countdown__num" id="seconds"></span>
+            <p class="js-countdown__text">Seconds</p>
+          </div>
+        </div>
         {% elif game.is_running %}
-          <h1 class="start">The game has now begun.</h1>
+        <h1 class="start">The game has now begun.</h1>
+        {% elif True %}
+        <h1 class="start">Stay tuned for the announcement of our next game!</h1>
         {% else %}
-          <h1 class="start">The game is now over.</h1>
+        <h1 class="start">The game is now over.</h1>
         {% endif %}
       </div>
     </div>
+    <div class="container">
+           <div class="panel-heading">
+             <h1>
+               <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">What is HvZ?</a>
+             </h1>
+           </div>
+           <div id="collapse1" class="panel-collapse collapse">
+             <div class="panel-body">
+                <p>Humans vs. Zombies is a giant game of tag consisting of two teams, Humans with only one life and Zombies with many. Zombies have to try to tag all Human players while Humans can defend themselves with Nerf blasters and socks to survive against the growing enemy. Each team must accomplish missions to bring their side victory.
+UWHvZ puts on one weeklong game per term, multiple weekend minigames, and an annual open invitational game where players visit from other schools. We also have a general meeting per term.
+This group will be kept updated with news regarding games being run and club activities. If you are interested in helping with the club, joining the moderator team, or any other inquiries, please send an email to uwhumansvszombies@gmail.com and we will reply as soon as possible.</p>
+           </div>
+      </div>
+
   </section>
+  <section class="ui-layout__item" id="mailing-list">
+    <div id="mc_embed_signup">
+      <form action="https://facebook.us16.list-manage.com/subscribe/post?u=08527a0cbafe6eb4fdbd42660&amp;id=e5788694bc" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+        <div id="mc_embed_signup_scroll">
+          <h1>Join our Mailing List!</h1>
+          <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+          <div class="mc-field-group">
+            <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+            </label>
+            <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+          </div>
+          <div class="mc-field-group">
+            <label for="mce-FNAME">First Name  <span class="asterisk">*</span>
+            </label>
+            <input type="text" value="" name="FNAME" class="" id="mce-FNAME">
+          </div>
+          <div class="mc-field-group">
+            <label for="mce-LNAME">Last Name  <span class="asterisk">*</span>
+            </label>
+            <input type="text" value="" name="LNAME" class="" id="mce-LNAME">
+          </div>
+          <div id="mce-responses" class="clear">
+            <div class="response" id="mce-error-response" style="display:none"></div>
+            <div class="response" id="mce-success-response" style="display:none"></div>
+          </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_08527a0cbafe6eb4fdbd42660_e5788694bc" tabindex="-1" value=""></div>
+          <div class="clear">
+            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button bg-primary">
+          </div>
+        </div>
+      </form>
+    </div>
+    <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+  </section>
+
+{% if game.is_signups %}
   <section class="ui-layout__item" id="signup-schedule">
     <div class="ui-section">
       <h1>Signups Schedule</h1>
@@ -74,40 +119,28 @@
           </tr>
         </thead>
         <tbody>
+          {% for signup in signups %}
           <tr>
-            <th>MC 3rd Floor</th>
-            <td>10am–5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
+            <th>{{ signup.name }}</th>
+            <td>{{ signup.mon_hours if signup.mon_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.tues_hours if signup.tues_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.wed_hours if signup.wed_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.thurs_hours if signup.thurs_hours != '' else 'N/A' }}</td>
+            <td>{{ signup.fri_hours if signup.fri_hours != '' else 'N/A' }}</td>
           </tr>
-          <tr>
-            <th>STC Lobby</th>
-            <td>10am–5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-          </tr>
-          <tr>
-            <th>DC Foyer</th>
-            <td>10am–5pm</td>
-            <td>N/A</td>
-            <td>N/A</td>
-            <td>10am-5pm</td>
-            <td>10am-5pm</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
   </section>
-  <footer>
-    <p>&copy; UWaterloo Humans vs Zombies Society <time>2017</time> &ndash; <time>2018</time>.</p>
-  </footer>
+{% endif %}
+
+  {{ footer() }}
+
 </main>
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static('scripts/countdown.js') }}"></script>
+<script src="{{ static('scripts/countdown.js') }}" deadline={{for_js}}>
+</script>
 {% endblock %}

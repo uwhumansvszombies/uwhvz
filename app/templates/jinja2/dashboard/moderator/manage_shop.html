@@ -1,0 +1,53 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Manage Shop{% endblock %}
+{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
+{% block pagesubtitle %}Manage Shop{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid s-dashboard__generate-supply">
+  <div class="ui-grid align-content-start">
+    {% call card("Make Sale", class="text-center") %}
+      <form action="{{ url('manage_shop') }}" method="post" novalidate>
+        {{ csrf_input }}
+        
+        {% for field in make_sale_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+            {% endfor %}
+            </div>
+          {% endfor %}
+      
+        <div class="ui-form-group pt-2">
+          <input type="submit" value="Make Sale" class="btn btn-block btn-primary">
+        </div>
+      </form>
+    {% endcall %}
+  </div>
+  
+  <div class="ui-grid">
+    {% call card("Purchases") %}
+      <table class="table table-striped">
+      <tr><td>Buyer</td><td>Purchase</td><td>Cost</td><td>Day</td></tr>
+      
+        {% for sale in all_sales %}
+          {% if sale.active %}
+            <tr>
+              <td>{{ sale.buyer }}</td>
+              <td>{{ sale.details }}</td>
+              <td>{{ sale.cost }}</td>
+              <td>{{ sale.time.astimezone(tz).strftime("%Y-%m-%d %H:%M") }}</td>
+          {% endif %}
+        {% endfor %}
+      </table>
+    {% endcall %}
+  </div>
+</div>
+{% endblock %}

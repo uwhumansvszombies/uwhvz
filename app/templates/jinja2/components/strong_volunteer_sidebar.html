@@ -1,0 +1,16 @@
+{% macro strong_volunteer_sidebar(request) -%}
+  <nav class="ui-menu">
+    <a class="ui-menu__header-link" href="#strong_volunteer-actions" data-target="#strong_volunteer-actions" data-toggle="collapse" aria-expanded="{% if "/moderator" in request.path %}true{% else %}false{% endif %}">
+      <header class="ui-menu__header">
+        <h1 class="ui-menu__title">Strong Volunteer Actions</h1>
+        <div class="ui-menu__icon">
+          <span aria-hidden="true" class="oi oi-plus"></span>
+          <span aria-hidden="true" class="oi oi-minus"></span>
+        </div>
+      </header>
+    </a>
+    <ul class="ui-menu__section collapse" data-parent="#side-nav" id="strong_volunteer-actions">
+      <li><a href="{{ url('better_signup_players') }}">Better Signup Players</a></li>
+    </ul>
+  </nav>
+{%- endmacro %}

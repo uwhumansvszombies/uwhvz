@@ -1,0 +1,39 @@
+{% macro navbar(user) -%}
+<div id="landing-nav">
+  <nav class="navbar navbar-expand-lg navbar-dark ui-title-bar--mobile">
+    <a class="navbar-brand mr-lg-4 ml-lg-2" href="/">{{ svg('site-logo-dark') }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon" aria-hidden="true"></span>
+    </button>
+
+    <div class="justify-content-end collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item mr-lg-2"><a class="text-light nav-link" href="{{ url('new_player_guide') }}">New Player     Guide</a></li>
+        <div class="dropdown">
+            <button class="dropbtn">Rules</button>
+            <div class="dropdown-content">
+            <a class="text-light nav-link" href="{{ static('files/hvz-rules-v1.6.pdf') }}">Weeklong Rules</a>
+            <!--<a class="text-light nav-link" href="{{ static('files/Rulebook-vWKND.pdf') }}">Weekend Rules</a> --> 
+            </div>
+        </div>
+        <!--<li class="nav-item mr-lg-2"><a class="text-light nav-link" href="{{ static('files/hvz-rules-v1.4.pdf') }}">Weeklong Rules</a></li>
+        <li class="nav-item mr-lg-2"><a class="text-light nav-link" href="{{ static('files/Rulebook-vWKND.pdf') }}">Weekend Rules</a></li>
+        <li class="nav-item mr-lg-2"><a class="text-light nav-link" href="{{ url('new_player_guide') }}">New Player Guide</a></li>-->
+        <li class="nav-item mr-lg-2"><a class="text-light nav-link" href="{{ url('missions') }}">Common Mission Types</a></li>
+        <li class="nav-item mr-lg-2"><a class="text-light nav-link" href="{{ url('previous_games') }}">Game Archives</a></li>
+        <li class="nav-item mr-lg-2"><a class="text-light nav-link" href="https://uwhvz.myspreadshop.com">Merch!</a></li>
+        <!--<li class="nav-item mr-lg-2"><a class="text-light nav-link" href="{{ url('minecraft') }}">Minecraft</a></li>-->
+        </ul>
+      <div style="display: flex; justify-content: flex-end" class="action my-2 my-lg-0">
+      {% if user.is_authenticated %}
+        <a class="btn btn-outline-primary mr-2" href="{{ url('logout') }}">Logout</a>
+        <a class="btn btn-primary" href="{{ url('player_info') }}">Dashboard</a>
+      {% else %}
+        <a class="btn btn-outline-primary mr-2" href="{{ url('unrestricted_user_signup') }}">Create Account</a>
+        <a class="btn btn-primary" href="{{ url('login') }}">Login</a>
+      {% endif %}
+      </div>
+    </div>
+  </nav>
+</div>
+{%- endmacro %}

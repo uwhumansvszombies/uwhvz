@@ -18,6 +18,7 @@ class ModeratorManager(models.Manager):
 
 class Moderator(Participant):
     character_name: str = models.CharField("Character name", max_length=180, blank=True, null=True)
+    score: str = models.CharField("Moderator 'score'. Can include letters.", max_length=180, blank=True, null=True)
 
     objects = ModeratorManager()
 

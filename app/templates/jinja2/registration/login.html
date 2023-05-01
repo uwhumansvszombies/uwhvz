@@ -8,7 +8,7 @@
 <div class="row">
   <div class="col-lg-4 mx-auto">
     {% if form.errors %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible show" role="alert">
       Your username and password didn't match. Please try again.
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -18,14 +18,14 @@
     
     {% if next %}
     {% if user.is_authenticated %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible show" role="alert">
       Your account doesn't have access to this page. To proceed, please login with an account that has access.
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     {% else %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible show" role="alert">
       Please login to see this page.
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>

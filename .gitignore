@@ -124,3 +124,12 @@ node_modules
 *.sqlite3
 /static/
 /media/
+
+production.py
+development.py
+common.py
+app_game
+db-old-feb-2022
+git_pull.sh
+*.csv
+*.wsgi

@@ -1,0 +1,99 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Mod Dashboard &mdash; Manage Players{% endblock %}
+
+{% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
+{% block pagesubtitle %}Manage Players{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid">
+  <div class="ui-grid s-dashboard__signup-players">
+    {% call card("Add Volunteer to " + game.name, id="card--add-volunteer") %}
+      <form action="{{ url('manage_volunteers') }}" method="post" novalidate>
+        {{ csrf_input }}
+
+        {% for field in add_volunteer_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+            {% endfor %}
+            </div>
+          {% endfor %}
+        
+        <div class="ui-form-group pt text-center">
+          <input type="submit" value="Add Volunteer" class="btn btn-block btn-primary">
+        </div>
+      </form>
+    {% endcall %}
+    {% call card("Add Moderator to " + game.name, id="card--add-moderator") %}
+      <form action="{{ url('manage_mods') }}" method="post" novalidate>
+        {{ csrf_input }}
+
+        {% for field in add_mod_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+            {% endfor %}
+            </div>
+          {% endfor %}
+        
+        <div class="ui-form-group pt text-center">
+          <input type="submit" value="Add Mod" class="btn btn-block btn-primary">
+        </div>
+      </form>
+    {% endcall %}
+  </div>
+
+  <div class="ui-grid s-dashboard__signup-players">
+  {% call card("Current Volunteers") %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for volunteer in all_volunteers %}
+      <tr>
+        <td scope="col">{{ volunteer.get_full_name() }}</td>
+        <td scope="col">{{ volunteer.email }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endcall %}
+  
+  {% call card("Current Moderators") %}
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for mod in all_mods %}
+      <tr>
+        <td scope="col">{{ mod.user.get_full_name() }}</td>
+        <td scope="col">{{ mod.user.email }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% endcall %}
+    </div>
+    
+</div>
+{% endblock %}

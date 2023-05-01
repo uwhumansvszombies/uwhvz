@@ -1,0 +1,135 @@
+{% from "components/card.html" import card %}
+{% extends "dashboard/base.html" %}
+
+{% block title %}Necro Dashboard &mdash; Email Template Modification{% endblock %}
+{% block pagetitle %}{{ game }} &mdash; Necro Actions{% endblock %}
+{% block pagesubtitle %}Email Template Modification{% endblock %}
+
+{% block subcontent %}
+<div class="ui-grid">
+  {% call card("Warning on altering emails") %}
+  <p>Anything in double curly brackets is code that will be evaluated when the emails are sent. Do not try to change the code or add new parts with curly brackets unless you're certain you know what you're doing. You have been warned. It's recommended you only change the &lt;body&gt; of the html code.</p>
+  <p>Also, a brief note on html code if you don't know how it works: use the &lt;p&gt; to start a paragraph, and &lt;/p&gt; to end a paragraph. Using &lt;b&gt; and &lt;i&gt; will bold or italicize text, respectively. Hitting enter won't start a new paragraph - only &lt;p&gt; will. If you need a space in the email for some reason, insert a break with &lt;br&gt;. It's recommended you plug html code into a viewer just to be sure you know what it'll look like before you use it.</p>
+  {% endcall %}
+  
+  
+  
+    {% call card("Signup Email") %}
+    <form action="{{ url('email_templates') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in signup_email_form %}
+        <div class="ui-form-group">
+        <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Save" name="change_signup">
+      </div>
+    </form>
+    {% endcall %}
+    
+    {% call card("Reminder Email") %}
+      <form action="{{ url('email_templates') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in reminder_email_form %}
+        <div class="ui-form-group">
+        <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Save" name="change_reminder">
+      </div>
+    </form>
+      <div class="ui-form-group">
+        <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#ReminderModal">Send Reminder Email</button>
+      </div>
+    {% endcall %}
+    
+    {% call card("Game Start Email") %}
+      <form action="{{ url('email_templates') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in start_email_form %}
+        <div class="ui-form-group">
+        <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Save" name="change_start">
+      </div>
+    </form>
+    <p>Note: You can also send a game start email through the message players tab if you like!</p>
+    <table><tr><td>
+       <div class="ui-form-group">
+        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Test Start Email" name="test_start">
+        </form>
+      </div>
+      </td><td>
+      <div class="ui-form-group">
+        <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#StartModal">Send Start Email</button>
+      </div>
+    </td></tr></table>
+    {% endcall %}
+</div>
+
+<div class="modal" id="ReminderModal" tabindex="-1" role="dialog" aria-labelledby="ReminderModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure you want to send a reminder email?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>A reminder email will send to all players who haven't followed their link. This is irreversible. Do not spam it.</p>
+        <p>Please ensure you have changed both the HTML <i>and</i> the txt files!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Send Reminder Email" name="send_reminder">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="StartModal" tabindex="-1" role="dialog" aria-labelledby="StartModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure you want to send a game start email?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>A game start email will send to all players who are signed up. <b>The game should be started prior to pressing this button.</b> This is irreversible. You should almost never have to use this twice.</p>
+        <p>Please ensure you have changed the HTML file!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <form class="mb-0" action="{{ url('email_templates') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Send Start Email" name="send_start">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

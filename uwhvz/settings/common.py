@@ -13,6 +13,7 @@ if not os.path.exists(MEDIA_DIR):
 
 INSTALLED_APPS = [
     'app',
+    'django_su',  # must be before ``django.contrib.admin``    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -23,17 +24,8 @@ INSTALLED_APPS = [
     'compressor',
     'svg',
     'django_user_agents',
-    'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
-    'wagtail.embeds',
-    'wagtail.sites',
-    'wagtail.users',
-    'wagtail.snippets',
-    'wagtail.documents',
-    'wagtail.images',
-    'wagtail.search',
-    'wagtail.admin',
-    'wagtail.core',
+    'rest_framework',
+    'rest_auth',
     'modelcluster',
     'taggit',
 ]
@@ -47,8 +39,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
-    'wagtail.core.middleware.SiteMiddleware',
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'uwhvz.urls'
@@ -62,9 +52,6 @@ TEMPLATES = [
             'environment': 'uwhvz.jinja2.environment',
             'extensions': [
                 'sass_processor.jinja2.ext.SassSrc',
-                'wagtail.core.jinja2tags.core',
-                'wagtail.admin.jinja2tags.userbar',
-                'wagtail.images.jinja2tags.images',
                 'compressor.contrib.jinja2ext.CompressorExtension',
             ],
             'context_processors': [
@@ -72,6 +59,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_su.context_processors.is_su',
             ],
         },
     },
@@ -94,6 +82,45 @@ WSGI_APPLICATION = 'uwhvz.wsgi.application'
 
 USER_AGENTS_CACHE = 'default'
 
+#************
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+	'applogfile': {
+        'level':'DEBUG',
+        'class':'logging.handlers.RotatingFileHandler',
+        'filename': os.path.join(BASE_DIR, 'uwhvz.log'),
+        'maxBytes': 1024*1024*15, # 15MB
+        'backupCount': 10,
+    	},
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+	'uwhvz': {
+            'handlers': ['applogfile',],
+            'level': 'DEBUG',
+        },
+    }
+}
+
+#************
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -102,10 +129,11 @@ AUTH_PASSWORD_VALIDATORS = []
 AUTH_USER_MODEL = 'app.User'
 
 AUTHENTICATION_BACKENDS = (
+    'django_su.backends.SuBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
-WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
+#WAGTAIL_FRONTEND_LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/player'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -133,7 +161,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
+#    'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
     'compressor.finders.CompressorFinder',
@@ -153,6 +181,11 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
 # If set to True then user signups will be restricted to those who have a signup token.
 # If set to False then users will be able to signup freely without token.
-TOKEN_RESTRICTED_SIGNUPS = True
+TOKEN_RESTRICTED_SIGNUPS = False

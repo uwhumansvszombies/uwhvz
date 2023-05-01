@@ -11,8 +11,18 @@
 {% block subcontent %}
 <div class="ui-grid s-dashboard__index">
   <div class="ui-grid">
-    {{ card("My Code", participant.code, "ui-card--display") }}
-    {{ card("My Score", participant.score(), "ui-card--display") }}
+    <div class="ui-card ui-card--display">
+    <div class="ui-card__header">
+      <h1 class="ui-card__title">My Code</h1>
+    </div>
+    <div class="ui-card__header">
+      <h1 class="ui-card__title"><a href="{{ url('player_code') }}">Carry-card PDF</a></h1>
+    </div>
+    <div class="ui-card__content">{{ participant.code }}
+    </div>
+  </div>
+
+    {{ card("My Score", participant.shop_score(), "ui-card--display") }}
     {{ card("Team", participant.role, "ui-card--display") }}
     {{ card("Team Score", team_score, "ui-card--display") }}
   </div>
@@ -42,9 +52,9 @@
     </form>
   {% endcall %}
 
-  {% if participant.is_human %}
     <div class="ui-grid align-content-start">
-      {% call card("Redeem Supply Code") %}
+     {% if participant.is_human %}
+     {% call card("Redeem Supply Code") %}
       <form action="{{ url('claim_supply_code') }}" method="post" novalidate>
         {{ csrf_input }}
 
@@ -62,6 +72,7 @@
         </div>
       </form>
     {% endcall %}
+    {% endif %}
 
     {% if participant.has_faction %}
       {% call card("Faction Information") %}
@@ -69,7 +80,16 @@
         {% if participant.faction.description %}{{ participant.faction.description|safe }}{% endif %}
       {% endcall %}
     {% endif %}
+    
+    {% call card("Toggle Score Visibility") %}
+      <form class="mb-0" action="{{ url('player_info') }}" method="post">
+      <label class="switch">
+        {{ csrf_input }}
+        <input type="checkbox" onChange="this.form.submit()" {% if participant.is_player and participant.is_score_public %}checked{% endif %} id="is_score_public" name="is_score_public">
+        <span class="slider round"></span>
+      </label>
+      </form>
+     {% endcall %}
+      
     </div>
-  {% endif %}
-</div>
 {% endblock %}

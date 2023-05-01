@@ -1,6 +1,8 @@
-You're receiving this email because you've requested to sign up for the UW Humans vs Zombies {{ game }} game but are **not yet eligible to play.**
+You're receiving this email because you've requested to sign up for the UW Humans vs Zombies {{ game }} game but are **not yet eligible to play!**
 
-This will take 30 seconds. Please finish signing up here: {{ signup_url }}.
+Even though the game has already started, you can still join by using the link below!
+
+This takes 30 seconds - please finish signing up here: {{ site_url }}{{ url('signup', args=[signup_invite.id]) }}.
 
 Sincerely, 
 The UW HvZ Website

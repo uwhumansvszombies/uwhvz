@@ -7,24 +7,82 @@
 {% block pagesubtitle %}Manage OZs{% endblock %}
 
 {% block subcontent %}
-<div class="ui-grid s-dashboard__manage-oz">
-  {% call card("OZ List") %}
+<div class="ui-grid">
+  <p>There are currently {{ total_players }} players and {{legacy_oz.count() + is_oz.count()}} OZs in this game.</p>
+  {% call card("OZ Pool") %}
     <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Email</th>
+          <th scope="col">Legacy Tokens</th>
+          <th scope="col">Change OZ Status</th>
         </tr>
       </thead>
       <tbody>
-        {% for p in players %}
+      <tr><td colspan="4" align="center">Legacy Tokens Used</td></tr>
+      {% for oz in legacy_oz %}
         <tr>
-          <td scope="col">{{ p }}</td>
-          <td scope="col">{{ p.user.email }}</td>
+          <td scope="col">{{ oz }}</td>
+          <td scope="col">{{ oz.user.email }}</td>
+          <td scope="col">{{ oz.user.legacy_points() if oz.user.legacy_points() < 6 else "∞"}}</td>
+          <td scope="col"><i>N/A</i></td>
         </tr>
         {% endfor %}
-      </tbody>
+      <tr><td colspan="4" align="center">Set to Start as OZ</td></tr>
+      {% for oz in is_oz %}
+        <tr>
+          <td scope="col">{{ oz }}</td>
+          <td scope="col">{{ oz.user.email }}</td>
+          <td scope="col">{{ oz.user.legacy_points() if oz.user.legacy_points() < 6 else "∞"}}</td>
+          <td scope="col">
+           <form class="mb-0" action="{{ url('manage_oz')}}" method="post">
+             {{ csrf_input }}
+               <button name="{{oz.id}}-remove" type="submit" class="btn btn-block btn-primary">
+                 Remove from OZs
+               </button>
+           </form>
+          </td>
+        </tr>
+      {% endfor %}
+      <tr><td colspan="4" align="center">Not Currently Starting as OZ</td></tr>
+      {% for oz in in_pool %}
+        <tr>
+          <td scope="col">{{ oz }}</td>
+          <td scope="col">{{ oz.user.email }}</td>
+          <td scope="col">{{ oz.user.legacy_points() if oz.user.legacy_points() < 6 else "∞"}}</td>
+          <td scope="col">
+           <form class="mb-0" action="{{ url('manage_oz')}}" method="post">
+             {{ csrf_input }}
+               <button name="{{oz.id}}-add" type="submit" class="btn btn-block btn-primary">
+                 Add to OZs 
+               </button>
+           </form>
+        </td>
+        </tr>
+      {% endfor %}
+     </tbody>
     </table>
   {% endcall %}
-</div>
+  
+    {% call card("Pick Random OZs") %}
+    <p>This will randomly select the given number of OZs from anyone in the OZ pool. Those chosen will be changed to "is OZ".</p>
+    <p>Note: the Necro may manually remove people from the OZ pool on the site back end. They may also remove legacy players who have toggled themselves as OZs. <i>However</i>, it is strongly advised that the Necro consult with legacy players if they feel the need to do this.</p>
+    <p>We (the previous web developers and Necros of UW HvZ) generally recommend 10-20 OZs. Smaller games will need more OZs and larger games will need less, due to the exponential growth of the zombie tree.</p>
+    <form action="{{ url('manage_oz') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in oz_shuffle_form %}
+        <div class="ui-form-group">
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Shuffle!">
+      </div>
+    </form>
+    {% endcall %}
+  </div>
 {% endblock %}

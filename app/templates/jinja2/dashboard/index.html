@@ -15,25 +15,220 @@
     </div>
   {% else %}
     <div class="alert alert-success show">
-      You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}. {% endif %}
+      You're signed up for the {{ game }} game! {% if participant.is_player %} Your code is: {{ participant.code }}.{% endif %}
+    {% if participant.is_moderator %} You're a mod!{% endif %}
+    {% if participant.is_spectator %} You're signed up as a spectator!{% endif %}
     </div>
   {% endif %}
 {% endif %}
 
 <div class="ui-grid s-dashboard__game-info align-content-start">
   <div class="ui-grid align-content-start">
-    {% call card("System Requirements") %}
-      <p>Currently, this website is fully supported by <b>Chrome</b>, <b>Firefox</b>, and <b>Microsoft Edge</b>. If you are not using one of these browsers, you may experience some technical issues.</p>
+  {% if emails %}  
+  {% if emails.exclude(player_made=True) %}
+  {% call card("Mod Emails") %}
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for email in emails.exclude(player_made=True) %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+              <td>{{ email.created_at.astimezone(pytz.timezone('Canada/Eastern')).strftime("%d/%m/%Y, %H:%M") }}</td>
+              <td class="d-flex">
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                  <i class="fas fa-info pr-1 pl-1"></i>
+                </button>
+                <div class="modal email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ email.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        {% autoescape off %}
+                        {{ email.data }}
+                        {% endautoescape %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+  {% endcall %}
+  {% endif %}
+  
+  {% if emails.filter(player_made=True) %}
+  {% call card("Player Emails") %}
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col" />
+          </tr>
+          </thead>
+          <tbody>
+          {% for email in emails.filter(player_made=True) %}
+            <tr>
+              <td data-toggle="tooltip" data-placement="top" title="{{ email.name }}">{{ email.name }}</td>
+              <td>{{ email.created_at.astimezone(pytz.timezone('Canada/Eastern')).strftime("%d/%m/%Y, %H:%M") }}</td>
+              <td class="d-flex">
+                <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".email-{{ email.id }}-details">
+                  <i class="fas fa-info pr-1 pl-1"></i>
+                </button>
+                <div class="modal email-{{ email.id }}-details" tabindex="-1" role="dialog" aria-labelledby="emailDataModal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">{{ email.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>{{ email.data }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+  {% endcall %}
+  {% endif %}
+  {% endif %}
+
+    {% if not game.is_finished and participant.is_player and (participant.user.legacy_points() or ((participant.is_oz or participant.point_modifier >= 15) and participant.user.has_legacy())) %}
+    {% call card("Legacy Tokens") %}
+    
+    {% if points_accu < points_for_permanent %}
+      <p>You currently have {{ participant.user.legacy_points() }} tokens available to use! You have accumulated {{ points_accu }} tokens total and need {{ points_for_permanent - points_accu }} more tokens to achieve legacy status. You may use a legacy token to start a game either as OZ or with 15 points. If you use a token, you gain acccess to the volunteer mission and the ability to customize your player code.</p>
+      {% if participant.is_oz or participant.point_modifier >= 15 %}
+      <p>You are either already an OZ or have 15 points to start with.</p>
+     <!-- <form action="{{ url('change_code') }}" method="post" novalidate>
+        {{ csrf_input }}
+  
+        {% for field in change_code_form %}
+          <div class="ui-form-group">
+            <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+              <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endfor %}
+  
+        <div class="ui-form-group pt-2">
+          <input class="btn btn-block btn-primary" type="submit" value="Change Code">
+        </div>
+      </form>-->
+
+
+      {% else %}
+      {% if game.is_running %}<p>The game has already started, but you can still use legacy tokens to gain 15 points</p>{% endif %}
+      <table><tr>
+      {% if not game.is_running %}
+      <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start as OZ" name="oz">
+        </form></td>
+      {% endif %}
+        <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start with 15 Points" name="pts">
+        </form></td>
+      </tr></table>
+      {% endif %}
+    {% else %}
+      <p>You have successfully achieved Legacy Status! You may request to be OZ or receive 15 starting points every game prior to  game start! You will always have volunteer mission access when you choose to use these perks and can always change your code before game start!</p>
+      {% if participant.is_oz or participant.score() >= 15 %}
+      <p>You are either already an OZ or have 15 points to start with.</p>
+      {% else %}
+      <table><tr>
+      <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start as OZ" name="oz">
+        </form></td>
+        <td scope="col">
+      <form class="mb-0" action="{{ url('dashboard') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-normal" value="Start with 15 Points" name="pts">
+        </form></td>
+      </tr></table>
+      {% endif %}
+    {% endif %}
+    {% if game.is_signups %}
+    <form action="{{ url('change_code') }}" method="post" novalidate>
+         {{ csrf_input }}
+
+         {% for field in change_code_form %}
+           <div class="ui-form-group">
+             <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+             {{ field }}
+             {% for error in field.errors %}
+               <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+             {% endfor %}
+           </div>
+         {% endfor %}
+
+         <div class="ui-form-group pt-2">
+           <input class="btn btn-block btn-primary" type="submit" value="Change Code">
+         </div>
+       </form>
+
+    {% endif %}
     {% endcall %}
-    {% call card("Welcome to the website!") %}
-      <p>This website is still fairly new, and may need some tweaking here and there as we polish it. Please be patient with us while this happens.</p>
-      <p>If you'd like to report some bugs or give us general feedback on the website, contact the mods at <a href="mailto:uwhumansvszombies@gmail.com">uwhumansvszombies@gmail.com</a> and let us know what you think.</p>
-      <p>Alternatively, if you'd like to contribute to the website yourself, you can find us over at <a href="https://github.com/uwhumansvszombies/uwhvz">GitHub</a>.</p>
+    {% endif %}
+    
+{% if game.is_signups %} {% call card("Welcome to the game!") %}
+{{ dashboard_welcome|safe }}
+{% endcall %} {% endif %}
+
+{% call card("System Requirements") %}
+      <p>Currently, this website is fully supported by <b>Chrome</b>, <b>Firefox</b>, and <b>Microsoft Edge</b>. If you are not using one of these browsers, you may experience some technical issues.</p>
     {% endcall %}
   </div>
   <div class="ui-grid align-content-start">
-    {% call card() %}
+
+{% if participant.is_player %}
+<div class="ui-card ui-card--display">
+    <div class="ui-card__header">
+      <h1 class="ui-card__title">My Code</h1>
+    </div>
+    <div class="ui-card__header">
+      <h1 class="ui-card__title"><a href="{{ url('player_code') }}">Carry-card PDF</a></h1>
+    </div>
+    <div class="ui-card__content">{{ participant.code }}
+    </div>
+</div>
+{% endif %}
+
+{% call card() %}
       <a class="twitter-timeline" height="500" href="https://twitter.com/HVZAlertSystem?ref_src=twsrc%5Etfw">Tweets by HVZAlertSystem</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    {% endcall %}
+    
+    {% call card("Lifetime Stats") %}
+      <p>Total Stuns: {{ stuns }}</p>
+      <p>Total Kills: {{ kills }}</p>
+      <p>Total Supply Codes Redeemed: {{ codes }}</p>
+      <p><font style="opacity:0">You found a secret on the website! Sadly this has no in game bonus. Best of luck out there!</font></p>
     {% endcall %}
   </div>
 </div>

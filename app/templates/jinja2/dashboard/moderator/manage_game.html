@@ -3,39 +3,150 @@
 
 {% block title %}Mod Dashboard &mdash; Manage Game{% endblock %}
 
+{% block scripts %}
+    <script>
+        document.getElementById('player-code-input').style.display = "none";
+        $(document).ready(function(){
+            $('#recipient-select').on('change', function() {
+                if (this.value === "Specific User") {
+                    $("#player-code-input").show();
+                } else {
+                    $("#player-code-input").hide();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block pagetitle %}{{ game }} &mdash; Moderator Actions{% endblock %}
 {% block pagesubtitle %}Manage Game{% endblock %}
 
 {% block subcontent %}
 <div class="ui-grid s-dashboard__player-list">
   <div class="ui-grid align-content-start">
+  {% if game.is_finished %}
     {% call card("Start Game") %}
-      <p>This will send all game start emails to players, set OZs as zombies, and start the game.</p>
+    <p>Choose a game name and select the day you want the game to start at. The game will always start at midnight. This is usually a Monday.</p>
       <div class="ui-form-group">
-        <button class="btn btn-block btn-primary"{% if game.is_running %}disabled title="The game has already started."{% endif %}>Start Game</button>
+        <form class="mb-0" action="{{ url('game_start') }}" method="post" role="form">
+          {{ csrf_input }}
+          
+          {% for field in game_start_form %}
+        <div class="ui-form-group">
+         <label class="ui-label" for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+              <span class="ui-form__text ui-form__text--info">{{ field.help_text }}</span>
+            {% endif %}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      
+       <div class="ui-form-group pt-2">
+        <input type="submit" class="btn btn-primary" value="Start Game">
+      </div>
+        </form>
       </div>
     {% endcall %}
+  {% endif %}
+  
+  {% if game.is_signups %}
+    {% call card("Force Start Game") %}
+      <p>The game will automatically start in {{ time_to_start.days }} days, {{ time_to_start.seconds//3600}} hours, and {{ (time_to_start.seconds//60)%60 }} minutes. This button will send all game start emails to players, set OZs as zombies, and start the game immediately.</p>
+      <div class="ui-form-group">
+        <form class="mb-0" action="{{ url('game_set') }}" method="post">
+          {{ csrf_input }}
+       <div class="ui-form-group pt-2">
+        <input type="submit" class="btn btn-danger" value="Start Game Immediately">
+      </div>
+      </form>
+      </div>
+    {% endcall %}
+    {% endif %}
+    
+  {% if game.is_running or user.is_superuser %}
+  
+  {% call card("Impersonate User") %}
+      <p>If you need to, you can exist an impersonation with uwhvz.uwaterloo.ca/su</p>
+       <div class="ui-form-group">
+        <form class="mb-0" action="{{ url('su_login') }}" method="get">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-primary" value="Impersonate!">
+        </form>
+      </div>
+  {% endcall %}
+  {% endif %}
+    
+    {% if game.is_running %}
+    
+    {% call card("End Game") %}
+      <p>This will immediately end the game. Do not accidentally press this if you don't actually want the game to end.</p>
+       <div class="ui-form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="archive" name="archive" checked>
+          <label class="custom-control-label ui-label" for="archive">Archive this game and make the zombie tree public</label>
+        </div>
+      </div>
+       <div class="ui-form-group">
+       <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#EndGameModal" {% if not user.is_superuser %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>End Game{% endif %}</button>
+      </div>
+    {% endcall %}
+    
     {% call card("Kill All Unsupplied Humans") %}
       <p>This will turn all human players who did not attain 5 or more points during the week into zombies.</p>
       <div class="ui-form-group">
-        <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal">Kill All Unsupplied</button>
+        <button class="btn btn-block btn-danger" data-toggle="modal" data-target="#killHumansModal" {% if not user.is_superuser %}disabled title="Only Necro can do this">Only Necro can do this{% else %}>Kill All Unsupplied{% endif %}</button>
       </div>
     {% endcall %}
+    {% endif %} 
+    
   </div>
+  
+  {% if not game.is_finished %}
   <div class="ui-grid">
-    {% call card("All Emails (Use BCC)") %}
-      <textarea class="ui-input" rows="5">{{ all_emails|join(', ') }}</textarea>
-    {% endcall %}
-    {% call card("Human Emails (Use BCC)") %}
-      <textarea class="ui-input" rows="5">{{ human_emails|join(', ') }}</textarea>
-    {% endcall %}
-    {% call card("Zombie Emails (Use BCC)") %}
-      <textarea class="ui-input" rows="5">{{ zombie_emails|join(', ') }}</textarea>
+    {% call card("Message Players") %}
+    <form action="{{ url('manage_game') }}" method="post" novalidate>
+      {{ csrf_input }}
+       {% for field in message_players_form %}
+        <div class="ui-form-group">
+          {{ field }}
+          {% for error in field.errors %}
+            <span class="ui-form__text ui-form__text--error">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <div class="ui-form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="email_mods" name="email_mods" checked>
+          <label class="custom-control-label ui-label" for="email_mods">Mods</label>
+        </div>
+      </div>
+      <div class="ui-form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="email_spectators" name="email_spectators" checked>
+          <label class="custom-control-label ui-label" for="email_spectators">Spectators</label>
+        </div>
+      </div>
+      <div class="ui-form-group">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="html_email" name="html_email">
+          <label class="custom-control-label ui-label" for="html_email">HTML Email Content</label>
+        </div>
+      </div>
+       <div class="ui-form-group pt-2">
+        <input class="btn btn-block btn-primary" type="submit" value="Send">
+      </div>
+    </form>
     {% endcall %}
   </div>
+  {% endif %}
 </div>
 
-<div class="modal fade" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
+
+{% if game.is_running %}
+<div class="modal" id="killHumansModal" tabindex="-1" role="dialog" aria-labelledby="killHumansModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -57,4 +168,28 @@
     </div>
   </div>
 </div>
+
+<div class="modal" id="EndGameModal" tabindex="-1" role="dialog" aria-labelledby="EndGameModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Are you sure about killing all humans?</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The game will immediately stop. This is an <b>irreversible</b> change. Are you sure you want to end it?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">No, Cancel</button>
+        <form class="mb-0" action="{{ url('game_end') }}" method="post">
+          {{ csrf_input }}
+          <input type="submit" class="btn btn-danger" value="Yes, End The Game">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}

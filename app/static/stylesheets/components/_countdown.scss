@@ -6,8 +6,25 @@
   line-height: lh(tighter);
 }
 
+.js-countdown--mobile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  line-height: lh(tighter);
+  margin-left: 2.2rem;
+  margin-bottom: 3rem;
+  width: 60vw;
+}
+
 .js-countdown__block {
   width: 7rem;
+  display: block;
+  text-align: center;
+}
+
+.js-countdown__block--mobile {
+  width: 5.5rem;
   display: block;
   text-align: center;
 }
@@ -18,8 +35,20 @@
   letter-spacing: 0.025em;
 }
 
+.js-countdown__num--mobile {
+  font-family: ff('title');
+  font-size: 6rem;
+  letter-spacing: 0.025em;
+}
+
 .js-countdown__text {
   font-family: ff('title');
   font-size: 2rem;
+  letter-spacing: 0.05em;
+}
+
+.js-countdown__text--mobile {
+  font-family: ff('title');
+  font-size: 1.75rem;
   letter-spacing: 0.05em;
 }

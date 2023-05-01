@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+{% from "components/navbar.html" import navbar %}
+{% from "components/footer.html" import footer %}
+
+{% block title %}UW HvZ{% endblock %}
+
+{% block styles %}
+  {% compress css %}
+    <link href="{% sass_src 'stylesheets/landing.scss' %}" rel="stylesheet" type="text/css">
+  {% endcompress %}
+{% endblock %}
+
+{% block content %}
+
+{{ navbar(user) }}
+
+<main class="ui-layout" id="landing">
+  <div class="full-height">
+  <div class="container">
+  <div class="container">
+  <div class="container">
+      <h1>Weeklong 101 &#38; FAQs</h1>
+      <p>While every weeklong game is made unique by the moderator team, there are a few constants that new players can expect to encounter.</p>
+      <p>If you would prefer to download this, you can do so <a href="{{ static('files/Weeklong 101 & FAQs v1.0.pdf') }}">here</a>.</p>
+  </div>
+  
+  <div class="panel-heading">
+    <h1 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapse101" style="font-size:30px">Weeklong 101</a>
+    </h1>
+  </div>
+  <div id="collapse101" class="panel-collapse collapse">
+   <div class="panel-body">
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true">Sign-ups</a>
+            </h4>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse">
+            <div class="panel-body">
+            <p>Sign-ups for the weeklong are held a week before the game begins. Once the game starts, players may message a mod to join, however there is no guarantee the mods will approve a late join for the sake of fairness. Signup booths are set up around campus, with information posted to the Official UW HvZ Social Media Accounts. Players may also sign up directly on the website.</p>
+
+          <p>When signing up to play, players are able to select if they would like to be considered to start the game as an Original Zombie (OZ). The number of OZs is determined by the moderator team, based on the total number of anticipated players. Players who do not request to be considered for OZ are guaranteed to be human at game start.</p></div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Pre-weeklong Minigames</a>
+            </h4>
+          </div>
+          <div id="collapse2" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>The Sunday night before the weeklong begins, the moderator team will host a series of short mini-missions (~20-30min) located in a single building. New players are highly recommended to attend – this is a great chance to meet other players, get comfortable with your blasters/socks, and try mission designs that may or may not be included in the following week.</p></div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">The Weeklong</a>
+            </h4>
+          </div>
+          <div id="collapse3" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Many events will happen during each day of The Weeklong. Keep reading for some of these events! Players are welcome to attend as many or as few of these events as they would like. Each day of the weeklong, a schedule of events will be sent to each player’s email address. Be sure to check these!</p></div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Team Chats</a>
+            </h4>
+          </div>
+          <div id="collapse4" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Humans and zombie players will traditionally set up Facebook messenger chats to communicate to their teams during the weeklong. These chats are the primary way of socializing with other players and organizing around supply drops/mini-missions. If you’re not a part of one on Monday, please either message someone you know if playing, or post on the UW HvZ Facebook page!</p>
+
+    <p>NOTE: There should be at least one moderator added to each HvZ-related chat, to answer questions about rules and ensure everyone is being treated fairly.</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Midnight Drop</a>
+            </h4>
+          </div>
+          <div id="collapse5" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>At (or around) 12:15am of the Monday of the weeklong, a supply drop is traditionally held. This is the first event, and generally sees large turnout by human players. It’s also a chance to discover who some of the OZs are, and to be added into your team’s chat for the weeklong.</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Points</a>
+            </h4>
+          </div>
+          <div id="collapse6" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Points can be earned by stunning a zombie or cashing in a supply code obtained from a supply drop. If a human doesn't have at least 5 points by Friday afternoon, they become a zombie. Points can be used to buy items like rail / building passes or escape ropes from SLC between 10AM and 4PM as well as 1 hour following main missions.</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Supply Drops</a>
+            </h4>
+          </div>
+          <div id="collapse7" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>During the weeklong, supply drops will be regularly held. A moderator will meet players at a specified location and hand out supply codes, worth 5 points each (unless game mechanics change the value). Moderators will generally have 5 codes to hand out to players. Supply drops last approximately 15-30 minutes. These codes <i>are</i> transferable between players.</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">Mini-missions</a>
+            </h4>
+          </div>
+          <div id="collapse8" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Mini-missions, held during the day, are approximately 30min-1 hour long tasks that humans or zombies need to complete. Winning mini-missions will result in modifications to the main mission that favour the winning team.</p>
+    </div>
+          </div>
+        </div>
+      <div class="container">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">Main Missions</a>
+            </h4>
+          </div>
+          <div id="collapse9" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>Main missions are campus-wide, and approximately 2 hours long (exception: Friday’s main mission is generally 3 hours long), and the heart of the weeklong’s game play. Main missions can reward both humans and zombies with bonuses for the week that favour the winning team (e.g. zombie specials). Emails explaining the objectives of the mission (for each team) will be sent approximately one hour prior to the start time of the main mission.</p>
+    </div>
+          </div>
+        </div>
+<div class="container">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapse10">Main Mission Planning Sessions</a>
+    </h4>
+  </div>
+  <div id="collapse10" class="panel-collapse collapse">
+    <div class="panel-body">
+      <p>Humans and zombies will often hold informal planning sessions approximately one hour before the main missions. Strategizing for the main mission, splitting into groups, and discussing roles are commonly completed here. Depending on the players, organizing the exact time and place will typically happen via emails and/or Facebook Messenger. These sessions are neither mod-run nor mandatory events, but highly recommended to meet other players and ensure that your team has enough people who know what to expect in the main mission.</p>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapse11">Post Mortem</a>
+    </h4>
+  </div>
+  <div id="collapse11" class="panel-collapse collapse">
+    <div class="panel-body">
+      <p>This is a public meeting held following the weeklong game, where all players are invited to attend and give their feedback on things they liked, and things they didn’t like. Whether you’re a new player, a veteran, have lots to say, or nothing to say, everyone is encouraged to attend. Feedback is recorded and used by future moderating teams to better the game.</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+
+  <div class="container">
+  
+  <div class="panel-heading">
+    <h1 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseFAQ" style="font-size:30px">FAQs</a>
+    </h1>
+  </div>
+
+  <div id="collapseFAQ" class="panel-collapse collapse">
+    <div class="panel-body">
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF1" aria-expanded="true">Should I use a sock or blaster?</a>
+            </h2>
+          </div>
+          <div id="collapseF1" class="panel-collapse collapse">
+            <div class="panel-body">
+            <p>​Each player will give you a different answer - there is no right one! Give different loadouts a try during minigames throughout the term, and don’t be afraid to switch your gear up based on your playstyle. NOTE: There are some zombies that can only be stunned by socks. We've also assembled a nifty table below for your convenience!</p></div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF2">Do you actually bring your socks/blasters to class?</a>
+            </h2>
+          </div>
+          <div id="collapseF2" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>​Yes, we do! They need to stay out of sight during the lecture/lab - some people prefer to just risk it and bring no weapons, but zombies have been known to follow humans and wait to tag them as they exit classes.</p></div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF3">How do I get better at playing the game?</a>
+            </h2>
+          </div>
+          <div id="collapseF3" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>​Even though the weeklong is only run once a term, the HvZ club holds minigames once every few weekends where you’re more than welcome to work on skills or loadouts. These events will be posted to the Facebook group page, so make sure to stay connected!</p></div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF4">Everyone seems to know each other - how do I join the fun?</a>
+            </h2>
+          </div>
+          <div id="collapseF4" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>​Coming out to weeklong events and being active in the team chats is a great way for people to recognize you and want to play with you more. Don’t be shy to introduce yourself, especially to older players - many of them love seeing new players join the game, and would love to squad up with you. Once the weeklong is over, feel free to attend any other club events that happen throughout the term, including minigames or nearby invitationals.</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF5">I died but don’t know if I will like playing as a zombie, what should I do?</a>
+            </h2>
+          </div>
+          <div id="collapseF5" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>If the player that tagged you hasn’t already, ask them to add you to the zombie Facebook chat. You can start playing zombie as soon as your stun timer is finished, you do not need to wait for the player who tagged you to report it. We highly recommend giving the zombie side a try. If anything, it helps to learn how zombies play and think - which will help you survive as a human next time!</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF6">There are so many events throughout the day. Do I need to attend them all?</a>
+            </h2>
+          </div>
+          <div id="collapseF6" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>​Certainly not! You can attend as many events (supply drops, mini-missions, main missions) as you want. Some players like to simply survive on campus going from class to class. Others have co-op positions but still try to make nightly missions if they can. Some players will try to attend absolutely every single event they can. It’s really up to you!</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF7">How do I find a group to go to an upcoming mini-mission/supply drop with?</a>
+            </h2>
+          </div>
+          <div id="collapseF7" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>​Message in your team’s Facebook Messenger chat! Don’t worry if you’ve never met anyone playing before - lots of people will happily accept the invitation to go to an event with some backup.</p>
+    </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF8">What are these planning meetings I’m receiving emails about?</a>
+            </h2>
+          </div>
+          <div id="collapseF8" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>​Planning meetings are unofficial (non-mod-run) events that players host prior to each nightly main mission. They allow your team to strategize and split into groups. It’s highly recommended that players attend, if it fits into your schedule.</p>
+    </div>
+          </div>
+        </div>
+      <div class="container">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseF9">I heard that there are much better memes in the other team’s chat. Is there any way for me to read their messages?</a>
+            </h2>
+          </div>
+          <div id="collapseF9" class="panel-collapse collapse">
+            <div class="panel-body">
+      <p>​See if you have any friends (cannot be spectators) in the chat who are ok with sending you screenshots. If not, after the weeklong/when the chats are no longer in use, you can request that a member of the opposite team adds you to their chat. Don’t be shy, and ask to return the favour!</p>
+    </div>
+          </div>
+        </div>
+<div class="container">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseF10">I have some great suggestions for what could have made the weeklong even better! What’s the best way to share my thoughts?</a>
+    </h2>
+  </div>
+  <div id="collapseF10" class="panel-collapse collapse">
+    <div class="panel-body">
+      <p>That's wonderful to hear! But please understand that moderators are very busy running the game during weeklong. Moderators will usually host a Post-Mortem a few weeks after weeklong. This is a designated time for players (both human and zombie) to share their thoughts on the weeklong. What did you like? What would you like to see in the future? These meetings are documented for future moderators to reflect upon in their weeklong design.</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+  <div class="container">
+  <div class="container">
+  <div class="panel-heading">
+    <h1 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseSvB" style="font-size:30px">Socks vs Blasters</a>
+    </h1>
+  </div>
+  <div id="collapseSvB" class="panel-collapse collapse">
+    <div class="panel-body">
+    <div class="panel-group" id="accordion">
+    
+        <table class="table table-dark" style="margin-left:auto;margin-right:auto">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Sock Balls</th>
+            <th>Sock Whips</th>
+            <th>Blasters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Use</th>
+            <td>Melee, medium-range fighting</td>
+            <td>Checking corners, melee</td>
+            <td>Long range fighting</td>
+          </tr>
+          
+          <tr>
+            <th>Stealth</th>
+            <td>High</td>
+            <td>Medium</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <th>Considerations</th>
+            <td>Need to pick up after use</td>
+            <td>Can tangle around legs while running</td>
+            <td>Very visible from a distance</td>
+          </tr>
+          <tr><th colspan=4 style="text-align:center; background-color:#969696">Recommended Against</th></tr>
+          <tr>
+            <th>Normal Zombies</th>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <th>Tanks</th>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Never</td>
+          </tr>
+          <tr>
+            <th>Legionnaires</th>
+            <td>No</td>
+            <td>Occasionally</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <th>Wraiths</th>
+            <td>Yes</td>
+            <td>No</td>
+            <td>Highly</td>
+          </tr>
+        </tbody>
+      </table>
+
+</div>
+</div>
+</div>
+</div>
+
+  <div class="container">
+  <div class="panel-heading">
+    <h1 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapseGl" style="font-size:30px">Glossary</a>
+    </h1>
+  </div>
+  <div id="collapseGl" class="panel-collapse collapse">
+    <div class="panel-body">
+    <div class="panel-group" id="accordion">
+    
+        <table class="table table-dark">
+        <tbody>
+          <tr><td>1v1</td><td>A duel between one human and one zombie</td></tr>
+          <tr><td>Comms</td><td>Chats set up by players to communicate with their team, traditionally via Facebook Messenger.</td></tr>
+          <tr><td>Drop</td><td>Supply drop. An event where moderators hand out codes, worth points, to human players.</td></tr>
+          <tr><td>Flavour</td><td>AKA Lore. Aspects of mission emails that tie into the overall weeklong theme. Usually do not contain relevant details, but are fun to read.</td></tr>
+          <tr><td>Human leader</td><td>A human player who has taken on the unofficial responsibility of organizing human chats, sharing extra supply codes, and coordinating mission planning sessions.</td></tr>
+          <tr><td>Invitational</td><td>A one-day HvZ event, traditionally run by a university’s HvZ club during a weekend. Despite the name, everyone is welcome to attend. If a group of players are interested, we will often organize a roadtrip to unofficially represent UW. Past invitationals that we have attended include Binghampton, New Paltz, RIT (notably End War and FoamCon), and Ithaca.</td></tr>
+          <tr><td>Minigames</td><td>A collection of short (20-30 min) missions that are run during weekend events throughout the term.</td></tr>
+          <tr><td>Mod</td><td>Moderator of the game. Part of the team responsible for organizing, running and settling rules disputes.</td></tr>
+          <tr><td>Necro</td><td>Necromancer. The individual in charge of the team of moderators.</td></tr>
+          <tr><td>OZ</td><td>Original zombie. Refers to players who start the game as zombies</td></tr>
+          <tr><td>Proof (of team)</td><td>AKA Confirmation picture. Often requested in human chats. A photo that clearly shows the player’s team, either of an armband or headband. Players cannot lie about their team in photos.</td></tr>
+          <tr><td>Rail Pass</td><td>An item that allows a human to move safely through tunnels and bridges. Normal pass rules apply.</td></tr>
+          <tr><td>Safe zone</td><td>An area where humans cannot stun zombies, and zombies cannot tag humans.</td></tr>
+          <tr><td>Shield</td><td>Legionnaire. A special zombie who carries a shield that can be used to block darts and socks.</td></tr>
+          <tr><td>Specials</td><td>Refers to the unique zombies that are rewarded throughout the week (including Legionnaire, Wraith, Tank and Zedic)</td></tr>
+          <tr><td>Spectator</td><td>A non-player. Spectators are able to join both human and zombie chats, but cannot comment within them nor influence the game.</td></tr>
+          <tr><td>Stunned</td><td>A zombie who has been hit with either a human sock or nerf dart. They are unable to follow players, work towards mission objectives, or share information for 15 minutes.</td></tr>
+          <tr><td>Supplied</td><td>A human having 5 points. Being unsupplied after Friday afternoon will result in a human being automatically switched to the zombie team.</td></tr>
+          <tr><td>Volunteer mission</td><td>A mission that is available only to players who volunteered in helping support the weeklong (e.g. running a sign-up booth). The volunteer mission provides in-game rewards to the player that completes it first.</td></tr>
+        </tbody>
+      </table>
+
+</div>
+</div>
+
+<br>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+  {{ footer() }}
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ static('scripts/panel.js') }}" >
+</script>
+{% endblock %}
+

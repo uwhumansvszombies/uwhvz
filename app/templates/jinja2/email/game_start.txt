@@ -1,0 +1,4 @@
+You are a {{ 'Moderator' if participant.is_moderator else ('Spectator' if participant.is_spectator else participant.role)}}! Welcome to the game! A follow-up email will be sent shortly!
+
+Sincerely, 
+The UW HvZ Website

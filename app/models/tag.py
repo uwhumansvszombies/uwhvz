@@ -2,9 +2,13 @@ import uuid
 from datetime import datetime
 
 from django.db import models
+from enumfields import Enum, EnumField
 
 from .player import Player
 
+class TagType(Enum):
+    KILL = 'K'
+    STUN = 'S'
 
 class TagManager(models.Manager):
     def create_tag(self, initiator: Player, receiver: Player, tagged_at: datetime, location: str, description: str,
@@ -23,6 +27,7 @@ class TagManager(models.Manager):
             location=location,
             description=description,
             point_modifier=point_modifier,
+            type = TagType.KILL if initiator.is_zombie else TagType.STUN
         )
         tag.save()
         if receiver.is_human:
@@ -41,7 +46,8 @@ class Tag(models.Model):
     tagged_at: datetime = models.DateTimeField()
     location: str = models.CharField(blank=True, max_length=100)
     description: str = models.TextField(blank=True)
-
+    type: Enum = EnumField(enum=TagType, max_length=1, default=TagType.STUN)
+    
     # If the active property is set to False, then this tag is ignored.
     active: bool = models.BooleanField(default=True)
     point_modifier: int = models.IntegerField(default=0)
@@ -54,4 +60,8 @@ class Tag(models.Model):
     def __str__(self):
         initiator = self.initiator
         receiver = self.receiver
-        return f"{initiator} ({initiator.role}) → {receiver} ({receiver.role})"
+        if self.type == TagType.KILL:
+            return f"{initiator} (Zombie) → {receiver} (Human)"
+        else:
+            return f"{initiator} (Human) → {receiver} (Zombie)"
+        
